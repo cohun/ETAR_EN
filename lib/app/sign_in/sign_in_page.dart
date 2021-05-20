@@ -1,7 +1,17 @@
+import 'package:etar_en/app/sign_in/email_sign_in_page.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key key}) : super(key: key);
+
+  void _signInWithEmail(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        fullscreenDialog: false,
+        builder: (context) => EmailSignInPage(),
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -23,17 +33,25 @@ class SignInPage extends StatelessWidget {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: <Widget>[
-          Divider(
-            height: 100,
+          SizedBox(
+            height: 10,
           ),
-          Image.asset('images/ETAR_EN_flat_small.png'),
+          Icon(
+            Icons.arrow_downward_rounded,
+            size: 80,
+            color: Colors.yellowAccent,
+          ),
+          InkWell(
+            child: Image.asset('images/ETAR_EN_flat_small.png'),
+            onTap: () => _signInWithEmail(context),
+          ),
           Divider(
             height: 50,
           ),
           Container(
             constraints: BoxConstraints.expand(
               height:
-                  Theme.of(context).textTheme.headline4.fontSize * 1.1 + 20.0,
+                  Theme.of(context).textTheme.headline4.fontSize * 1.1 + 30.0,
             ),
             padding: const EdgeInsets.all(8.0),
             color: Colors.grey[900],
@@ -43,6 +61,9 @@ class SignInPage extends StatelessWidget {
                     .textTheme
                     .headline4
                     .copyWith(color: Colors.yellowAccent)),
+          ),
+          Divider(
+            height: 50,
           ),
         ],
       ),
