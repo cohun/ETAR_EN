@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class EmailSignInForm extends StatelessWidget {
   const EmailSignInForm({Key key}) : super(key: key);
@@ -23,7 +24,7 @@ class EmailSignInForm extends StatelessWidget {
         style: ElevatedButton.styleFrom(
           primary: Colors.teal,
         ),
-        onPressed: () {},
+        onPressed: _signInAnonymously,
         child: Text('Mehet'),
       ),
       SizedBox(height: 8,),
@@ -31,11 +32,18 @@ class EmailSignInForm extends StatelessWidget {
         style: TextButton.styleFrom(
           primary: Colors.teal,
         ),
-          onPressed: () {},
-          child: Text('Nincs még fiókod? Regisztrálj itt!',
-          style: TextStyle(fontSize: 16),),
+        onPressed: () {},
+        child: Text(
+          'Nincs még fiókod? Regisztrálj itt!',
+          style: TextStyle(fontSize: 16),
+        ),
       ),
     ];
+  }
+
+  Future<void> _signInAnonymously() async {
+    final userCredentials = await FirebaseAuth.instance.signInAnonymously();
+    print('${userCredentials.user.uid}');
   }
 
   @override
