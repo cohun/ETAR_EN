@@ -1,0 +1,91 @@
+{
+  "project_info": {
+    "project_number": "56771901205",
+    "firebase_url": "https://h-itb-d254b.firebaseio.com",
+    "project_id": "h-itb-d254b",
+    "storage_bucket": "h-itb-d254b.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56771901205:android:b1b99fc3b0c5f710d49b1c",
+        "android_client_info": {
+          "package_name": "com.attila.hitb"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56771901205-e11dnrkm6ftff21312573bc3hhgktqk3.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.attila.hitb",
+            "certificate_hash": "fce3f5d04d07b82dc8bc205390769e3fd5766bf8"
+          }
+        },
+        {
+          "client_id": "56771901205-tqo9f1dth6a64lfkt4vq0vl9jr3r9ss7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa2H-1k40v7NkqcfSD94849zVEOjrLa3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56771901205-tqo9f1dth6a64lfkt4vq0vl9jr3r9ss7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "56771901205-5bu7rfbemi9qtk8kbtie0u97k27ra81d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.attila.hitb"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:56771901205:android:5dfe2d17da26b31dd49b1c",
+        "android_client_info": {
+          "package_name": "hu.hitb.etar_en"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "56771901205-tqo9f1dth6a64lfkt4vq0vl9jr3r9ss7.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAa2H-1k40v7NkqcfSD94849zVEOjrLa3o"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "56771901205-tqo9f1dth6a64lfkt4vq0vl9jr3r9ss7.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "56771901205-5bu7rfbemi9qtk8kbtie0u97k27ra81d.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.attila.hitb"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
