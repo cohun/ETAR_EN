@@ -1,14 +1,18 @@
 import 'package:etar_en/app/sign_in/email_sign_in_page.dart';
+import 'package:etar_en/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class SignInPage extends StatelessWidget {
-  const SignInPage({Key key}) : super(key: key);
+  const SignInPage({Key key, @required this.auth}) : super(key: key);
+  final AuthBase auth;
 
   void _signInWithEmail(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute<void>(
         fullscreenDialog: false,
-        builder: (context) => EmailSignInPage(),
+        builder: (context) => EmailSignInPage(
+          auth: auth,
+        ),
       ),
     );
   }

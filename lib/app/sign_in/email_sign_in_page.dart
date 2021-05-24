@@ -1,9 +1,11 @@
 import 'package:etar_en/app/sign_in/email_sign_in_form.dart';
 import 'package:etar_en/app/sign_in/terms_of_use.dart';
+import 'package:etar_en/services/auth.dart';
 import 'package:flutter/material.dart';
 
 class EmailSignInPage extends StatefulWidget {
-  const EmailSignInPage({Key key}) : super(key: key);
+  const EmailSignInPage({Key key, @required this.auth}) : super(key: key);
+  final AuthBase auth;
 
   @override
   _EmailSignInPageState createState() => _EmailSignInPageState();
@@ -44,7 +46,9 @@ class _EmailSignInPageState extends State<EmailSignInPage> {
                 ? TermsOfUse(
                     accept: accept,
                   )
-                : EmailSignInForm(),
+                : EmailSignInForm(
+                    auth: widget.auth,
+                  ),
           ),
         ),
       ),

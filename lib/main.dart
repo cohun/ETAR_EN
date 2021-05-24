@@ -1,4 +1,6 @@
 import 'package:etar_en/app/landing_page.dart';
+import 'package:etar_en/services/auth.dart';
+import 'package:etar_en/services/auth_provider.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
@@ -30,11 +32,14 @@ class _MyAppState extends State<MyApp> {
 
         // Once complete, show your application
         if (snapshot.connectionState == ConnectionState.done) {
-          return MaterialApp(
-            debugShowCheckedModeBanner: false,
-            title: 'Emelőgép üzemvitel',
-            theme: ThemeData.dark(),
-            home: LandingPage(),
+          return AuthProvider(
+            auth: Auth(),
+            child: MaterialApp(
+              debugShowCheckedModeBanner: false,
+              title: 'Emelőgép üzemvitel',
+              theme: ThemeData.dark(),
+              home: LandingPage(auth: Auth()),
+            ),
           );
         }
 
