@@ -1,9 +1,10 @@
+import 'package:etar_en/app/sign_in/validators.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:flutter/material.dart';
 
 enum EmailSignInFormType { signIn, register }
 
-class EmailSignInForm extends StatefulWidget {
+class EmailSignInForm extends StatefulWidget with EmailAndPasswordValidator {
   EmailSignInForm({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
 
@@ -14,6 +15,10 @@ class EmailSignInForm extends StatefulWidget {
 class _EmailSignInFormState extends State<EmailSignInForm> {
   final TextEditingController _emailController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final FocusNode _emailFocusNode = FocusNode();
+  final FocusNode _passwordFocusNode = FocusNode();
+  bool _submitted = false;
+  bool _isLoading = false;
 
   EmailSignInFormType _formType = EmailSignInFormType.signIn;
 
@@ -22,6 +27,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   String get _password => _passwordController.text;
 
   void _submit() async {
+    setState(() {
+      _submitted = true;
+      _isLoading = true;
+    });
     try {
       if (_formType == EmailSignInFormType.signIn) {
         await widget.auth.signInWithEmailAndPassword(_email, _password);
@@ -31,11 +40,20 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       Navigator.of(context).pop();
     } catch (e) {
       print(e.toString());
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
     }
+  }
+
+  _emailEditingComplete() {
+    FocusScope.of(context).requestFocus(_passwordFocusNode);
   }
 
   void _toggleFormType() {
     setState(() {
+      _submitted = false;
       _formType = _formType == EmailSignInFormType.signIn
           ? EmailSignInFormType.register
           : EmailSignInFormType.signIn;
@@ -51,28 +69,17 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
     final secondaryText = _formType == EmailSignInFormType.signIn
         ? 'Nincs még fiókod? Regisztrálj itt!'
         : 'Van már fiókod? Menj a bejelentkezéshez!';
+
+    bool submitEnabled = widget.emailValidator.isValid(_email) &&
+        widget.passwordValidator.isValid(_password) &&
+        !_isLoading;
+
     return [
-      TextField(
-        autocorrect: false,
-        keyboardType: TextInputType.emailAddress,
-        controller: _emailController,
-        decoration: InputDecoration(
-          labelText: 'Email',
-        ),
-      ),
+      _buildEmailTextField(),
       SizedBox(
         height: 8,
       ),
-      TextField(
-        autocorrect: false,
-        controller: _passwordController,
-        decoration: InputDecoration(
-          enabled: true,
-          labelText: 'Jelszó',
-        ),
-        obscureText: true,
-        obscuringCharacter: '*',
-      ),
+      _buildPasswordTextField(),
       SizedBox(
         height: 16,
       ),
@@ -80,10 +87,11 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         style: ElevatedButton.styleFrom(
           primary: Colors.teal,
         ),
-        onPressed: _submit,
+        onPressed: submitEnabled ? _submit : null,
         child: Text(
           primaryText,
-          style: TextStyle(color: Colors.yellowAccent),
+          style: TextStyle(
+              color: submitEnabled ? Colors.yellowAccent : Colors.white),
         ),
       ),
       SizedBox(
@@ -93,13 +101,56 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
         style: TextButton.styleFrom(
           primary: Colors.teal,
         ),
-        onPressed: _toggleFormType,
+        onPressed: !_isLoading ? _toggleFormType : null,
         child: Text(
           secondaryText,
           style: TextStyle(fontSize: 14),
         ),
       ),
     ];
+  }
+
+  TextField _buildPasswordTextField() {
+    bool showErrorText =
+        _submitted && !widget.passwordValidator.isValid(_password);
+    return TextField(
+      autocorrect: false,
+      controller: _passwordController,
+      decoration: InputDecoration(
+        enabled: true,
+        labelText: 'Jelszó',
+        errorText: showErrorText ? widget.invalidPasswordErrorText : null,
+      ),
+      enabled: _isLoading == false,
+      obscureText: true,
+      obscuringCharacter: '*',
+      textInputAction: TextInputAction.done,
+      focusNode: _passwordFocusNode,
+      onEditingComplete: _submit,
+      onChanged: (password) => _updateState(),
+    );
+  }
+
+  TextField _buildEmailTextField() {
+    bool showErrorText = _submitted && !widget.emailValidator.isValid(_email);
+    return TextField(
+      autocorrect: false,
+      keyboardType: TextInputType.emailAddress,
+      controller: _emailController,
+      focusNode: _emailFocusNode,
+      textInputAction: TextInputAction.next,
+      decoration: InputDecoration(
+        labelText: 'Email',
+        errorText: showErrorText ? widget.invalidEmailErrorText : null,
+      ),
+      enabled: _isLoading == false,
+      onEditingComplete: _emailEditingComplete,
+      onChanged: (email) => _updateState(),
+    );
+  }
+
+  _updateState() {
+    setState(() {});
   }
 
   @override
