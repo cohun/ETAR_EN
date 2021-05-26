@@ -88,15 +88,18 @@ class HomePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 1.1,
                 child: Column(
                   children: <Widget>[
-                    Views(
-                        text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
-                        text2:
-                            'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
-                            'Gépi hajtású targoncáknál MSZ 16226 szerint',
-                        text3:
-                            'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
-                            'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
-                            'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                      child: Views(
+                          text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
+                          text2:
+                              'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
+                              'Gépi hajtású targoncáknál MSZ 16226 szerint',
+                          text3:
+                              'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
+                              'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
+                              'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
@@ -113,13 +116,16 @@ class HomePage extends StatelessWidget {
                 height: MediaQuery.of(context).size.height * 1.1,
                 child: Column(
                   children: <Widget>[
-                    Views(
-                        text1: 'EMELŐGÉP NAPLÓ:',
-                        text2:
-                            'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
-                        text3:
-                            'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
-                            'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                      child: Views(
+                          text1: 'EMELŐGÉP NAPLÓ:',
+                          text2:
+                              'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
+                          text3:
+                              'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
+                              'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
