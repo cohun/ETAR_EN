@@ -1,5 +1,6 @@
 import 'package:etar_en/app/sign_in/validators.dart';
 import 'package:etar_en/services/auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 enum EmailSignInFormType { signIn, register }
@@ -40,6 +41,21 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
       Navigator.of(context).pop();
     } catch (e) {
       print(e.toString());
+      showDialog(
+        context: context,
+        builder: (context) {
+          return CupertinoAlertDialog(
+            title: Text('Bejelentkezés sikertelen'),
+            content: Text(e.toString()),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: Text('OK'),
+              ),
+            ],
+          );
+        },
+      );
     } finally {
       setState(() {
         _isLoading = false;
@@ -48,7 +64,10 @@ class _EmailSignInFormState extends State<EmailSignInForm> {
   }
 
   _emailEditingComplete() {
-    FocusScope.of(context).requestFocus(_passwordFocusNode);
+    final newFocus = widget.emailValidator.isValid(_email)
+        ? _passwordFocusNode
+        : _emailFocusNode;
+    FocusScope.of(context).requestFocus(newFocus);
   }
 
   void _toggleFormType() {
