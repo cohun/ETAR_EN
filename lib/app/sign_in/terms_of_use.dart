@@ -23,6 +23,7 @@ class _TermsOfUseState extends State<TermsOfUse> {
       children: [
         Container(
           width: MediaQuery.of(context).size.width,
+          color: Colors.black26,
           padding: EdgeInsets.symmetric(vertical: 12, horizontal: 0),
           child: Card(
             shape: RoundedRectangleBorder(
@@ -47,7 +48,7 @@ class _TermsOfUseState extends State<TermsOfUse> {
                         TextSpan(
                           text: 'Általános Felhasználási Feltételeket\n',
                           style: TextStyle(fontWeight: FontWeight.bold)
-                              .copyWith(fontSize: 17, color: Colors.white),
+                              .copyWith(fontSize: 17, color: Colors.tealAccent),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showDialog(
@@ -100,7 +101,7 @@ class _TermsOfUseState extends State<TermsOfUse> {
                         TextSpan(
                           text: 'Általános Adatvédelmi Irányelveket',
                           style: TextStyle(fontWeight: FontWeight.bold)
-                              .copyWith(fontSize: 17, color: Colors.white),
+                              .copyWith(fontSize: 17, color: Colors.tealAccent),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showDialog(
@@ -142,10 +143,12 @@ class _TermsOfUseState extends State<TermsOfUse> {
             ),
           ),
         ),
-        SizedBox(
+        Container(
+          color: Colors.black26,
           height: 24,
         ),
         Container(
+          color: Colors.black26,
           height: 50.0,
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -164,12 +167,12 @@ class _TermsOfUseState extends State<TermsOfUse> {
                   ),
                   borderRadius: BorderRadius.circular(30.0)),
               child: Container(
-                constraints: BoxConstraints(maxWidth: 300.0, minHeight: 50.0),
+                constraints: BoxConstraints(maxWidth: 400.0, minHeight: 50.0),
                 alignment: Alignment.center,
                 child: Text(
-                  "Bejelentkezés",
+                  "Tovább a bejelentkezéshez",
                   textAlign: TextAlign.center,
-                  style: TextStyle(color: Colors.white),
+                  style: TextStyle(color: Colors.tealAccent, fontSize: 16),
                 ),
               ),
             ),
