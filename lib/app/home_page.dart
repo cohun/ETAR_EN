@@ -2,15 +2,20 @@ import 'package:etar_en/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
 
   @override
+  _HomePageState createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  @override
   Widget build(BuildContext context) {
     Future<void> _signOut() async {
       try {
-        await auth.signOut();
+        await widget.auth.signOut();
       } catch (e) {
         print(e.toString());
       }
@@ -103,7 +108,10 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
-                    Image.asset('images/image.jpg'),
+                    InkWell(
+                      child: Image.asset('images/image.jpg'),
+                      onTap: () => print(widget.auth.currentUser.uid),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
@@ -129,7 +137,10 @@ class HomePage extends StatelessWidget {
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
-                    Image.asset('images/image.jpg'),
+                    InkWell(
+                      child: Image.asset('images/image.jpg'),
+                      onTap: () => print(widget.auth.currentUser.uid),
+                    ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
                     ),
@@ -163,7 +174,7 @@ class Views extends StatelessWidget {
           height: 20.0,
         ),
         Text(
-          'ETAR_EN®️ napló bejegyzések',
+          'ETAR_EN®️ bejegyzések',
           style: TextStyle(color: Colors.teal),
         ),
         SizedBox(
