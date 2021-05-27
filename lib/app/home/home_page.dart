@@ -1,3 +1,5 @@
+import 'package:etar_en/app/home/log_book.dart';
+import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -11,6 +13,20 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
+  _showOpDoc(BuildContext context, String uid) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => OpDoc(uid: uid),
+    ),
+    );
+  }
+  _showLogBook(BuildContext context, String uid) {
+    Navigator.of(context).push(MaterialPageRoute(
+      builder: (context) => LogBook(uid: uid),
+    ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     Future<void> _signOut() async {
@@ -20,6 +36,7 @@ class _HomePageState extends State<HomePage> {
         print(e.toString());
       }
     }
+
 
     _showCupertinoDialog(BuildContext context) {
       showDialog(
@@ -70,7 +87,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Text(
                   'Üzemviteli Dokumentáció',
-                  style: TextStyle(fontSize: 7),
+                  style: TextStyle(fontSize: 7, color: Colors.blueAccent[700]),
                 ),
               ),
               Tab(
@@ -80,7 +97,7 @@ class _HomePageState extends State<HomePage> {
                 ),
                 child: Text(
                   'Emelőgép Napló',
-                  style: TextStyle(fontSize: 7),
+                  style: TextStyle(fontSize: 7, color: Colors.yellow[900]),
                 ),
               ),
             ],
@@ -96,6 +113,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: Views(
+                        color: Colors.blueAccent[700],
                           text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
                           text2:
                               'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
@@ -110,7 +128,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     InkWell(
                       child: Image.asset('images/image.jpg'),
-                      onTap: () => print(widget.auth.currentUser.uid),
+                      onTap: () => _showOpDoc(context, widget.auth.currentUser.uid),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
@@ -127,6 +145,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: Views(
+                        color: Colors.yellow[900],
                           text1: 'EMELŐGÉP NAPLÓ:',
                           text2:
                               'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
@@ -139,7 +158,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     InkWell(
                       child: Image.asset('images/image.jpg'),
-                      onTap: () => print(widget.auth.currentUser.uid),
+                      onTap: () => _showLogBook(context, widget.auth.currentUser.uid),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
@@ -161,10 +180,12 @@ class Views extends StatelessWidget {
     this.text1,
     this.text2,
     this.text3,
+    this.color,
   }) : super(key: key);
   final String text1;
   final String text2;
   final String text3;
+  final Color color;
 
   @override
   Widget build(BuildContext context) {
@@ -188,7 +209,7 @@ class Views extends StatelessWidget {
           style: TextStyle(
               fontWeight: FontWeight.bold,
               fontSize: 18.0,
-              color: Colors.yellowAccent),
+              color: color),
         ),
         Divider(
           height: 20.0,

@@ -1,9 +1,11 @@
-import 'package:etar_en/app/home_page.dart';
+import 'package:etar_en/app/home/home_page.dart';
 import 'package:etar_en/app/lifecycle.dart';
 import 'package:etar_en/app/sign_in/sign_in_page.dart';
 import 'package:etar_en/services/auth.dart';
+import 'package:etar_en/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class LandingPage extends StatefulWidget {
   const LandingPage({Key key, @required this.auth}) : super(key: key);
@@ -27,8 +29,11 @@ class _LandingPageState extends State<LandingPage> {
             );
           }
           return LifeCycle(
-            child: HomePage(
-              auth: widget.auth,
+            child: Provider<Database>(
+              create: (_) => FirestoreDatabase(uid: user.uid),
+              child: HomePage(
+                auth: widget.auth,
+              ),
             ),
           );
         }
