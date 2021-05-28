@@ -3,9 +3,12 @@ import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:etar_en/services/database.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+
+import '../../dialogs/show_alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
@@ -204,19 +207,26 @@ _buildNavigationBar(BuildContext context) {
 }
 
 Future<void> _createOp(BuildContext context, String uid) async {
-  final database = Provider.of<Database>(context, listen: false);
-  await database.createOperand(
-    Operand(
-      name: 'Attila',
-      certificates: [
-        {'nr': 'SS2345/99', 'description': 'Nehézgép kezelő'},
-        {'nr': 'DAB 234/2001', 'description': 'Emelőgép ügyintéző'}
-      ],
-      companies: ['first', 'second', 'third'],
-      role: 'operator',
-      uid: uid,
-    ),
-  );
+  try {
+    final database = Provider.of<Database>(context, listen: false);
+    await database.createOperand(
+      Operand(
+        name: 'Attila',
+        certificates: [
+          {'nr': 'SS2345/99', 'description': 'Nehézgép kezelő'},
+          {'nr': 'DAB 234/2001', 'description': 'Emelőgép ügyintéző'}
+        ],
+        companies: ['first', 'second', 'third'],
+        role: 'operator',
+        uid: uid,
+      ),
+    );
+  } on FirebaseException catch (e) {
+    showAlertDialog(context,
+        title: 'Operation failed',
+        content: e.toString(),
+        defaultActionText: 'OK');
+  }
 }
 
 class Views extends StatelessWidget {
