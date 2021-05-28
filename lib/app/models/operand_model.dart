@@ -1,11 +1,11 @@
-class OperantModel {
+class Operand {
   final String name;
-  final List<String> certificates;
+  final List<Map<String, dynamic>> certificates;
   final List<String> companies;
   final String role;
   final String uid;
 
-  OperantModel({
+  Operand({
     this.name,
     this.companies,
     this.certificates,
@@ -13,17 +13,17 @@ class OperantModel {
     this.uid,
   });
 
-  factory OperantModel.fromMap(Map<String, dynamic> data) {
+  factory Operand.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
     final String name = data['name'];
-    final List<String> certificates = data['certificates'];
+    final List<Map<String, dynamic>> certificates = data['certificates'];
     final List<String> companies = data['companies'];
     final String role = data['role'];
     final String uid = data['uid'];
 
-    return OperantModel(
+    return Operand(
       name: name,
       certificates: certificates,
       companies: companies,

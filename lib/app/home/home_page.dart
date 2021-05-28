@@ -1,8 +1,11 @@
 import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
+import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/services/auth.dart';
+import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
@@ -13,17 +16,19 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   _showOpDoc(BuildContext context, String uid) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => OpDoc(uid: uid),
-    ),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => OpDoc(uid: uid),
+      ),
     );
   }
+
   _showLogBook(BuildContext context, String uid) {
-    Navigator.of(context).push(MaterialPageRoute(
-      builder: (context) => LogBook(uid: uid),
-    ),
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => LogBook(uid: uid),
+      ),
     );
   }
 
@@ -36,7 +41,6 @@ class _HomePageState extends State<HomePage> {
         print(e.toString());
       }
     }
-
 
     _showCupertinoDialog(BuildContext context) {
       showDialog(
@@ -113,7 +117,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: Views(
-                        color: Colors.blueAccent[700],
+                          color: Colors.blueAccent[700],
                           text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
                           text2:
                               'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
@@ -128,7 +132,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     InkWell(
                       child: Image.asset('images/image.jpg'),
-                      onTap: () => _showOpDoc(context, widget.auth.currentUser.uid),
+                      onTap: () =>
+                          _showOpDoc(context, widget.auth.currentUser.uid),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
@@ -145,7 +150,7 @@ class _HomePageState extends State<HomePage> {
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 18.0),
                       child: Views(
-                        color: Colors.yellow[900],
+                          color: Colors.yellow[900],
                           text1: 'EMELŐGÉP NAPLÓ:',
                           text2:
                               'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
@@ -158,7 +163,8 @@ class _HomePageState extends State<HomePage> {
                     ),
                     InkWell(
                       child: Image.asset('images/image.jpg'),
-                      onTap: () => _showLogBook(context, widget.auth.currentUser.uid),
+                      onTap: () =>
+                          _showLogBook(context, widget.auth.currentUser.uid),
                     ),
                     SizedBox(
                       height: MediaQuery.of(context).size.height * .04,
@@ -169,9 +175,48 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
+        bottomNavigationBar: _buildNavigationBar(context),
+        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
+        floatingActionButton: FloatingActionButton(
+          onPressed: () => _createOp(context, widget.auth.currentUser.uid),
+          backgroundColor: Colors.red[600],
+          child: Icon(Icons.add),
+        ),
       ),
     );
   }
+}
+
+_buildNavigationBar(BuildContext context) {
+  return BottomAppBar(
+    color: Colors.indigo[700],
+    shape: CircularNotchedRectangle(),
+    child: Padding(
+      padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
+      child: Text(
+        "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
+        textAlign: TextAlign.justify,
+        style: TextStyle(
+            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+      ),
+    ),
+  );
+}
+
+Future<void> _createOp(BuildContext context, String uid) async {
+  final database = Provider.of<Database>(context, listen: false);
+  await database.createOperand(
+    Operand(
+      name: 'Attila',
+      certificates: [
+        {'nr': 'SS2345/99', 'description': 'Nehézgép kezelő'},
+        {'nr': 'DAB 234/2001', 'description': 'Emelőgép ügyintéző'}
+      ],
+      companies: ['first', 'second', 'third'],
+      role: 'operator',
+      uid: uid,
+    ),
+  );
 }
 
 class Views extends StatelessWidget {
@@ -207,9 +252,7 @@ class Views extends StatelessWidget {
         Text(
           text1,
           style: TextStyle(
-              fontWeight: FontWeight.bold,
-              fontSize: 18.0,
-              color: color),
+              fontWeight: FontWeight.bold, fontSize: 18.0, color: color),
         ),
         Divider(
           height: 20.0,
