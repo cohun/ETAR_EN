@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 abstract class Database {
   Future<void> createOperand(Operand operand);
+
+  Future<void> updateOperand(Map<String, dynamic> operand);
 }
 
 class FirestoreDatabase implements Database {
@@ -14,8 +16,19 @@ class FirestoreDatabase implements Database {
   Future<void> createOperand(Operand operand) =>
       _setData(path: APIPath.operand(uid), data: operand.toMap());
 
+  Future<void> assignOperand(Operand operand) =>
+      _setData(path: APIPath.operand(uid), data: operand.toMap());
+
+  Future<void> updateOperand(Map<String, dynamic> operand) =>
+      _update(path: APIPath.operand(uid), data: operand);
+
   Future<void> _setData({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);
+  }
+
+  Future<void> _update({String path, Map<String, dynamic> data}) async {
+    final reference = FirebaseFirestore.instance.doc(path);
+    await reference.update(data);
   }
 }
