@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/app/models/operand_model.dart';
@@ -123,10 +124,10 @@ class _HomePageState extends State<HomePage> {
                           color: Colors.blueAccent[700],
                           text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
                           text2:
-                              'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
+                          'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
                               'Gépi hajtású targoncáknál MSZ 16226 szerint',
                           text3:
-                              'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
+                          'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
                               'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
                               'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
                     ),
@@ -178,7 +179,8 @@ class _HomePageState extends State<HomePage> {
             ),
           ],
         ),
-        bottomNavigationBar: _buildNavigationBar(context),
+        bottomNavigationBar:
+            _buildNavigationBar(context, widget.auth.currentUser.uid),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
         floatingActionButton: FloatingActionButton(
           onPressed: () => _createOp(context, widget.auth.currentUser.uid),
@@ -190,35 +192,46 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _buildNavigationBar(BuildContext context) {
+Widget _buildNavigationBar(BuildContext context, String uid) {
   final database = Provider.of<Database>(context, listen: false);
-  return StreamBuilder(
-      stream: database.operandsStream(),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final operands = snapshot.data;
-          final user = operands[0].name;
-          return Container(
-            child: Text(user),
-          );
-        } else {
-          return BottomAppBar(
-            color: Colors.indigo[700],
-            shape: CircularNotchedRectangle(),
-            child: Padding(
-              padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
-              child: Text(
-                "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
-                textAlign: TextAlign.justify,
-                style: TextStyle(
-                    fontSize: 14,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white),
-              ),
+
+  return FutureBuilder<DocumentSnapshot>(
+    future: database.getOperand(uid),
+    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+      if (snapshot.hasError) {
+        return Text("Something went wrong");
+      }
+
+      if (snapshot.hasData && !snapshot.data.exists) {
+        return BottomAppBar(
+          color: Colors.indigo[700],
+          shape: CircularNotchedRectangle(),
+          child: Padding(
+            padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
+            child: Text(
+              "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
+              textAlign: TextAlign.justify,
+              style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white),
             ),
-          );
-        }
-      });
+          ),
+        );
+      }
+
+      if (snapshot.connectionState == ConnectionState.done) {
+        final Map<String, dynamic> operand = snapshot.data.data();
+        final user = operand['name'];
+        final certificates = operand['certificates'];
+        return BottomAppBar(
+          child: Text('name: ${certificates}'),
+        );
+      }
+
+      return Text("loading");
+    },
+  );
 }
 
 Future<void> _createOp(BuildContext context, String uid) async {
