@@ -190,20 +190,35 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-_buildNavigationBar(BuildContext context) {
-  return BottomAppBar(
-    color: Colors.indigo[700],
-    shape: CircularNotchedRectangle(),
-    child: Padding(
-      padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
-      child: Text(
-        "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
-        textAlign: TextAlign.justify,
-        style: TextStyle(
-            fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
-      ),
-    ),
-  );
+Widget _buildNavigationBar(BuildContext context) {
+  final database = Provider.of<Database>(context, listen: false);
+  return StreamBuilder(
+      stream: database.operandsStream(),
+      builder: (context, snapshot) {
+        if (snapshot.hasData) {
+          final operands = snapshot.data;
+          final user = operands[0].name;
+          return Container(
+            child: Text(user),
+          );
+        } else {
+          return BottomAppBar(
+            color: Colors.indigo[700],
+            shape: CircularNotchedRectangle(),
+            child: Padding(
+              padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
+              child: Text(
+                "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
+                textAlign: TextAlign.justify,
+                style: TextStyle(
+                    fontSize: 14,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.white),
+              ),
+            ),
+          );
+        }
+      });
 }
 
 Future<void> _createOp(BuildContext context, String uid) async {
@@ -217,7 +232,6 @@ Future<void> _createOp(BuildContext context, String uid) async {
           {'nr': 'DAB 234/2001', 'description': 'Emelőgép ügyintéző'}
         ],
         companies: ['first', 'second', 'third'],
-        role: 'operator',
         uid: uid,
       ),
     );

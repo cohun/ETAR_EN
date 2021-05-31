@@ -6,6 +6,8 @@ import 'package:flutter/material.dart';
 abstract class Database {
   Future<void> createOperand(Operand operand);
 
+  Stream<List<Operand>> operandsStream();
+
   Future<void> updateOperand(Map<String, dynamic> operand);
 }
 
@@ -15,6 +17,20 @@ class FirestoreDatabase implements Database {
 
   Future<void> createOperand(Operand operand) =>
       _setData(path: APIPath.operand(uid), data: operand.toMap());
+
+  Stream<List<Operand>> operandsStream() {
+    final path = APIPath.operands();
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? Operand.fromMap(data) : null;
+        },
+      ),
+    );
+  }
 
   Future<void> assignOperand(Operand operand) =>
       _setData(path: APIPath.operand(uid), data: operand.toMap());
