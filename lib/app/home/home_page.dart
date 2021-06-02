@@ -182,15 +182,20 @@ class _HomePageState extends State<HomePage> {
         bottomNavigationBar:
             _buildNavigationBar(context, widget.auth.currentUser.uid),
         floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: FloatingActionButton(
-          onPressed: () => _createOp(context, widget.auth.currentUser.uid),
-          backgroundColor: Colors.red[600],
-          child: Icon(Icons.add),
-        ),
+        floatingActionButton: _isEmpty
+            ? FloatingActionButton(
+                onPressed: () =>
+                    _createOp(context, widget.auth.currentUser.uid),
+                backgroundColor: Colors.red[600],
+                child: Icon(Icons.add),
+              )
+            : null,
       ),
     );
   }
 }
+
+bool _isEmpty = true;
 
 Widget _buildNavigationBar(BuildContext context, String uid) {
   final database = Provider.of<Database>(context, listen: false);
@@ -203,6 +208,7 @@ Widget _buildNavigationBar(BuildContext context, String uid) {
       }
 
       if (snapshot.hasData && !snapshot.data.exists) {
+        _isEmpty = false;
         return BottomAppBar(
           color: Colors.indigo[700],
           shape: CircularNotchedRectangle(),
@@ -222,10 +228,28 @@ Widget _buildNavigationBar(BuildContext context, String uid) {
 
       if (snapshot.connectionState == ConnectionState.done) {
         final Map<String, dynamic> operand = snapshot.data.data();
-        final user = operand['name'];
-        final certificates = operand['certificates'];
-        return BottomAppBar(
-          child: Text('name: ${certificates}'),
+        final Operand operands = Operand.fromMap(operand);
+        _isEmpty = true;
+
+        return BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(Icons.person),
+              label: '${operands.name}',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.help),
+              label: 'Hey',
+            ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.business),
+              label: 'Hey-ho',
+            ),
+          ],
+          selectedItemColor: Colors.amber[800],
+          currentIndex: 1,
+          onTap: (index) =>
+              index == 0 || index == 2 ? Container(child: Text('Ha')) : null,
         );
       }
 

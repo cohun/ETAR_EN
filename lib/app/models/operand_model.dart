@@ -16,14 +16,21 @@ class Operand {
       return null;
     }
     final String name = data['name'];
-    final List<Map<String, dynamic>> certificates = data['certificates'];
-    final List<String> companies = data['companies'];
+    List<Map<String, dynamic>> cer = [];
+    data['certificates'].forEach(
+      (value) =>
+          cer.add({'description': value['description'], 'nr': value['nr']}),
+    );
+    List<String> comp = [];
+    data['companies'].forEach((val) {
+      comp.add(val);
+    });
     final String uid = data['uid'];
 
     return Operand(
       name: name,
-      certificates: certificates,
-      companies: companies,
+      certificates: cer,
+      companies: comp,
       uid: uid,
     );
   }
