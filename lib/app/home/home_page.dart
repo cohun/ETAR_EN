@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
+import 'package:etar_en/app/home/operands/add_ops_page.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:etar_en/services/database.dart';
@@ -210,8 +211,7 @@ class _HomePageState extends State<HomePage> {
                   FloatingActionButtonLocation.endDocked,
               floatingActionButton: _isEmpty
                   ? FloatingActionButton(
-                      onPressed: () =>
-                          _createOp(context, widget.auth.currentUser.uid),
+                onPressed: () => AddOpPage.show(context),
                       backgroundColor: Colors.red[600],
                       child: Icon(Icons.add),
                     )
