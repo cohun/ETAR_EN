@@ -71,191 +71,200 @@ class _HomePageState extends State<HomePage> {
               ));
     }
 
+    final database = Provider.of<Database>(context, listen: false);
+    var _isEmpty = true;
+    Operand operands;
+
     return DefaultTabController(
       length: 2,
-      child: Scaffold(
-        appBar: AppBar(
-          centerTitle: true,
-          title: Image.asset(
-            'images/ETAR_EN_flat_small.png',
-            height: 50,
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => _showCupertinoDialog(context),
-              child: Text('Logout'),
-            ),
-          ],
-          bottom: TabBar(
-            tabs: [
-              Tab(
-                icon: Image.asset(
-                  'images/LE_Doc.png',
+      child: FutureBuilder<DocumentSnapshot>(
+        future: database.getOperand(widget.auth.currentUser.uid),
+        builder:
+            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+          if (snapshot.hasError) {
+            return Text("Something went wrong");
+          }
+
+          if (snapshot.hasData && !snapshot.data.exists) {
+            _isEmpty = true;
+          }
+
+          if (snapshot.connectionState == ConnectionState.done) {
+            final Map<String, dynamic> operand = snapshot.data.data();
+            operands = Operand.fromMap(operand);
+            operands != null ? _isEmpty = false : _isEmpty = true;
+
+            return Scaffold(
+              appBar: AppBar(
+                centerTitle: true,
+                title: Image.asset(
+                  'images/ETAR_EN_flat_small.png',
                   height: 50,
                 ),
-                child: Text(
-                  'Üzemviteli Dokumentáció',
-                  style: TextStyle(fontSize: 7, color: Colors.blueAccent[700]),
-                ),
-              ),
-              Tab(
-                icon: Image.asset(
-                  'images/logBookIcon.png',
-                  height: 50,
-                ),
-                child: Text(
-                  'Emelőgép Napló',
-                  style: TextStyle(fontSize: 7, color: Colors.yellow[900]),
-                ),
-              ),
-            ],
-          ),
-        ),
-        body: TabBarView(
-          children: [
-            SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 1.1,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Views(
-                          color: Colors.blueAccent[700],
-                          text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
-                          text2:
-                          'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
-                              'Gépi hajtású targoncáknál MSZ 16226 szerint',
-                          text3:
-                          'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
-                              'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
-                              'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                actions: [
+                  TextButton(
+                    onPressed: () => _showCupertinoDialog(context),
+                    child: Text('Logout'),
+                  ),
+                ],
+                bottom: TabBar(
+                  tabs: [
+                    Tab(
+                      icon: Image.asset(
+                        'images/LE_Doc.png',
+                        height: 50,
+                      ),
+                      child: Text(
+                        'Üzemviteli Dokumentáció',
+                        style: TextStyle(
+                            fontSize: 7, color: Colors.blueAccent[700]),
+                      ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .04,
-                    ),
-                    InkWell(
-                      child: Image.asset('images/image.jpg'),
-                      onTap: () =>
-                          _showOpDoc(context, widget.auth.currentUser.uid),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .04,
+                    Tab(
+                      icon: Image.asset(
+                        'images/logBookIcon.png',
+                        height: 50,
+                      ),
+                      child: Text(
+                        'Emelőgép Napló',
+                        style:
+                            TextStyle(fontSize: 7, color: Colors.yellow[900]),
+                      ),
                     ),
                   ],
                 ),
               ),
-            ),
-            SingleChildScrollView(
-              child: Container(
-                height: MediaQuery.of(context).size.height * 1.1,
-                child: Column(
-                  children: <Widget>[
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                      child: Views(
-                          color: Colors.yellow[900],
-                          text1: 'EMELŐGÉP NAPLÓ:',
-                          text2:
-                              'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
-                          text3:
-                              'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
-                              'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+              body: TabBarView(
+                children: [
+                  SingleChildScrollView(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 1.1,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 18.0),
+                            child: Views(
+                                color: Colors.blueAccent[700],
+                                text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
+                                text2:
+                                    'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
+                                    'Gépi hajtású targoncáknál MSZ 16226 szerint',
+                                text3:
+                                    'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
+                                    'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
+                                    'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * .04,
+                          ),
+                          InkWell(
+                            child: Image.asset('images/image.jpg'),
+                            onTap: () => _showOpDoc(
+                                context, widget.auth.currentUser.uid),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * .04,
+                          ),
+                        ],
+                      ),
                     ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .04,
+                  ),
+                  SingleChildScrollView(
+                    child: Container(
+                      height: MediaQuery.of(context).size.height * 1.1,
+                      child: Column(
+                        children: <Widget>[
+                          Padding(
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 18.0),
+                            child: Views(
+                                color: Colors.yellow[900],
+                                text1: 'EMELŐGÉP NAPLÓ:',
+                                text2:
+                                    'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
+                                text3:
+                                    'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
+                                    'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * .04,
+                          ),
+                          InkWell(
+                            child: Image.asset('images/image.jpg'),
+                            onTap: () => _showLogBook(
+                                context, widget.auth.currentUser.uid),
+                          ),
+                          SizedBox(
+                            height: MediaQuery.of(context).size.height * .04,
+                          ),
+                        ],
+                      ),
                     ),
-                    InkWell(
-                      child: Image.asset('images/image.jpg'),
-                      onTap: () =>
-                          _showLogBook(context, widget.auth.currentUser.uid),
-                    ),
-                    SizedBox(
-                      height: MediaQuery.of(context).size.height * .04,
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
-            ),
-          ],
-        ),
-        bottomNavigationBar:
-            _buildNavigationBar(context, widget.auth.currentUser.uid),
-        floatingActionButtonLocation: FloatingActionButtonLocation.endDocked,
-        floatingActionButton: _isEmpty
-            ? FloatingActionButton(
-                onPressed: () =>
-                    _createOp(context, widget.auth.currentUser.uid),
-                backgroundColor: Colors.red[600],
-                child: Icon(Icons.add),
-              )
-            : null,
+              bottomNavigationBar:
+                  _buildNavigationBar(context, _isEmpty, operands),
+              floatingActionButtonLocation:
+                  FloatingActionButtonLocation.endDocked,
+              floatingActionButton: _isEmpty
+                  ? FloatingActionButton(
+                      onPressed: () =>
+                          _createOp(context, widget.auth.currentUser.uid),
+                      backgroundColor: Colors.red[600],
+                      child: Icon(Icons.add),
+                    )
+                  : null,
+            );
+          }
+          return Center(
+            child: CircularProgressIndicator(),
+          );
+        },
       ),
     );
   }
 }
 
-bool _isEmpty = true;
-
-Widget _buildNavigationBar(BuildContext context, String uid) {
-  final database = Provider.of<Database>(context, listen: false);
-
-  return FutureBuilder<DocumentSnapshot>(
-    future: database.getOperand(uid),
-    builder: (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-      if (snapshot.hasError) {
-        return Text("Something went wrong");
-      }
-
-      if (snapshot.hasData && !snapshot.data.exists) {
-        _isEmpty = false;
-        return BottomAppBar(
-          color: Colors.indigo[700],
-          shape: CircularNotchedRectangle(),
-          child: Padding(
-            padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
-            child: Text(
-              "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
-              textAlign: TextAlign.justify,
-              style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Colors.white),
-            ),
-          ),
-        );
-      }
-
-      if (snapshot.connectionState == ConnectionState.done) {
-        final Map<String, dynamic> operand = snapshot.data.data();
-        final Operand operands = Operand.fromMap(operand);
-        _isEmpty = true;
-
-        return BottomNavigationBar(
-          items: <BottomNavigationBarItem>[
-            BottomNavigationBarItem(
-              icon: Icon(Icons.person),
-              label: '${operands.name}',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.help),
-              label: 'Hey',
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.business),
-              label: 'Hey-ho',
-            ),
-          ],
-          selectedItemColor: Colors.amber[800],
-          currentIndex: 1,
-          onTap: (index) =>
-              index == 0 || index == 2 ? Container(child: Text('Ha')) : null,
-        );
-      }
-
-      return Text("loading");
-    },
-  );
+Widget _buildNavigationBar(
+    BuildContext context, bool isEmpty, Operand operands) {
+  if (isEmpty) {
+    return BottomAppBar(
+      color: Colors.indigo[700],
+      shape: CircularNotchedRectangle(),
+      child: Padding(
+        padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
+        child: Text(
+          "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
+          textAlign: TextAlign.justify,
+          style: TextStyle(
+              fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
+        ),
+      ),
+    );
+  } else {
+    return BottomNavigationBar(
+      items: <BottomNavigationBarItem>[
+        BottomNavigationBarItem(
+          icon: Icon(Icons.person),
+          label: '${operands.name}',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.help),
+          label: 'Státusz',
+        ),
+        BottomNavigationBarItem(
+          icon: Icon(Icons.business),
+          label: '${operands.companies[0]}',
+        ),
+      ],
+      selectedItemColor: Colors.amber[800],
+      currentIndex: 1,
+      onTap: (index) =>
+          index == 0 || index == 2 ? Container(child: Text('Ha')) : null,
+    );
+  }
 }
 
 Future<void> _createOp(BuildContext context, String uid) async {
