@@ -17,6 +17,8 @@ class AddOpPage extends StatefulWidget {
 }
 
 class _AddOpPageState extends State<AddOpPage> {
+  var count = 1;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -56,19 +58,20 @@ class _AddOpPageState extends State<AddOpPage> {
       TextFormField(
         decoration: InputDecoration(labelText: 'Név:'),
       ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          color: Colors.deepPurple[900],
-          child: _buildCertificates(),
-        ),
-      ),
-      Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Card(
-          color: Colors.deepPurple[900],
-          child: _buildCertificates(),
-        ),
+      _buildMultipleCertificates(),
+      count == 2
+          ? _buildMultipleCertificates()
+          : Container(
+              height: 0,
+            ),
+      ElevatedButton(
+        onPressed: () {
+          setState(() {
+            count += count;
+          });
+        },
+        child: Text('További bizonyítvány'),
+        style: ElevatedButton.styleFrom(primary: Colors.deepPurple[900]),
       ),
     ];
   }
@@ -84,6 +87,32 @@ class _AddOpPageState extends State<AddOpPage> {
         ),
         TextFormField(
           decoration: InputDecoration(labelText: 'Bizonyítvány érvényessége:'),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildMultipleCertificates() {
+    return Column(
+      children: [
+        Padding(
+          padding: const EdgeInsets.fromLTRB(8, 8, 8, 0),
+          child: Card(
+            color: Colors.grey[900],
+            child: _buildCertificates(),
+          ),
+        ),
+        IconButton(
+          onPressed: () {
+            setState(() {
+              if (count > 1) {
+                count = count - 1;
+              } else {
+                count = 1;
+              }
+            });
+          },
+          icon: Icon(Icons.indeterminate_check_box_sharp),
         ),
       ],
     );
