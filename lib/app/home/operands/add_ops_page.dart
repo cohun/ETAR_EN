@@ -18,13 +18,39 @@ class AddOpPage extends StatefulWidget {
 
 class _AddOpPageState extends State<AddOpPage> {
   var count = 1;
+  final _formKey = GlobalKey<FormState>();
+
+  bool _validateAndSaveForm() {
+    final form = _formKey.currentState;
+    if (form.validate()) {
+      form.save();
+      return true;
+    }
+    return false;
+  }
+
+  void _submit() {
+    if (_validateAndSaveForm()) {
+      print('form saved');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        centerTitle: true,
         elevation: 2.0,
-        title: Text('Adatok felvitele'),
+        title: Text('Egyéni adatok'),
+        actions: [
+          TextButton(
+            onPressed: _submit,
+            child: Text(
+              'Feltöltés',
+              style: TextStyle(fontSize: 18),
+            ),
+          ),
+        ],
       ),
       body: _buildContents(),
     );
@@ -46,6 +72,7 @@ class _AddOpPageState extends State<AddOpPage> {
 
   Widget _buildForm() {
     return Form(
+      key: _formKey,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: _buildFormChildren(),
@@ -57,9 +84,15 @@ class _AddOpPageState extends State<AddOpPage> {
     return [
       TextFormField(
         decoration: InputDecoration(labelText: 'Név:'),
+        keyboardType: TextInputType.name,
       ),
       _buildMultipleCertificates(),
-      count == 2
+      count >= 2
+          ? _buildMultipleCertificates()
+          : Container(
+              height: 0,
+            ),
+      count >= 3
           ? _buildMultipleCertificates()
           : Container(
               height: 0,
@@ -67,7 +100,7 @@ class _AddOpPageState extends State<AddOpPage> {
       ElevatedButton(
         onPressed: () {
           setState(() {
-            count += count;
+            count += 1;
           });
         },
         child: Text('További bizonyítvány'),
@@ -87,6 +120,7 @@ class _AddOpPageState extends State<AddOpPage> {
         ),
         TextFormField(
           decoration: InputDecoration(labelText: 'Bizonyítvány érvényessége:'),
+          keyboardType: TextInputType.datetime,
         ),
       ],
     );

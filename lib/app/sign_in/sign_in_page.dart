@@ -42,7 +42,7 @@ class SignInPage extends StatelessWidget {
           ),
           Icon(
             Icons.arrow_downward_rounded,
-            size: 80,
+            size: 60,
             color: Colors.yellowAccent,
           ),
           InkWell(
@@ -63,7 +63,7 @@ class SignInPage extends StatelessWidget {
             child: Text('Emelőgép üzemvitel',
                 style: Theme.of(context)
                     .textTheme
-                    .headline4
+                    .headline5
                     .copyWith(color: Colors.yellowAccent)),
           ),
           Divider(

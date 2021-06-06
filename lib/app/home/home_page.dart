@@ -236,7 +236,7 @@ Widget _buildNavigationBar(
       child: Padding(
         padding: const EdgeInsets.fromLTRB(10, 18, 0, 18),
         child: Text(
-          "               Felhasználói adatok és cég \n                felvételi kérelem indítása",
+          "              Bejegyzésre jogosult nevének\n            és bizonyítványainak megadása",
           textAlign: TextAlign.justify,
           style: TextStyle(
               fontSize: 14, fontWeight: FontWeight.bold, color: Colors.white),
@@ -331,11 +331,11 @@ class Views extends StatelessWidget {
           height: 15.0,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+          padding: const EdgeInsets.only(left: 2.0, right: 2.0),
           child: Text(
             text2,
             style: TextStyle(
-              fontSize: 15.0,
+              fontSize: 14.0,
             ),
             textAlign: TextAlign.center,
           ),
@@ -344,11 +344,11 @@ class Views extends StatelessWidget {
           height: 20.0,
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 4.0, right: 4.0),
+          padding: const EdgeInsets.only(left: 2.0, right: 2.0),
           child: Text(
             text3,
             style: TextStyle(
-              fontSize: 15.0,
+              fontSize: 14.0,
             ),
             textAlign: TextAlign.center,
           ),
