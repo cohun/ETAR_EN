@@ -2,9 +2,12 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
+import 'package:etar_en/app/home/operands/show_operands_companies.dart';
 import 'package:etar_en/app/models/operand_model.dart';
+import 'package:etar_en/app/models/user_model.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:etar_en/services/database.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -35,6 +38,20 @@ class _HomePageState extends State<HomePage> {
         builder: (context) => LogBook(uid: uid),
       ),
     );
+  }
+
+  int _selectedIndex = 1;
+  String _selectedCompany = 'Cég';
+
+  void _onItemTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
+  void _onSelectCompany(String selectedCompany) {
+    setState(() {
+      _selectedCompany = selectedCompany;
+    });
   }
 
   @override
@@ -75,6 +92,7 @@ class _HomePageState extends State<HomePage> {
     final database = Provider.of<Database>(context, listen: false);
     var _isEmpty = true;
     Operand operands;
+    UserModel user;
 
     return DefaultTabController(
       length: 2,
@@ -108,7 +126,7 @@ class _HomePageState extends State<HomePage> {
                     child: Text('Logout'),
                   ),
                 ],
-                bottom: TabBar(
+                bottom: _selectedIndex == 1 ? TabBar(
                   tabs: [
                     Tab(
                       icon: Image.asset(
@@ -133,9 +151,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ],
-                ),
+                ) : null,
               ),
-              body: TabBarView(
+              body: _selectedIndex == 1 ? TabBarView(
                 children: [
                   SingleChildScrollView(
                     child: Container(
@@ -204,9 +222,10 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ],
-              ),
+              ) : ShowOperandsCompanies(operand: operands, onSelect: _onSelectCompany,),
               bottomNavigationBar:
-                  _buildNavigationBar(context, _isEmpty, operands),
+                  _buildNavigationBar(context, _isEmpty, operands, _selectedIndex,
+                      _onItemTapped, _selectedCompany),
               floatingActionButtonLocation:
                   FloatingActionButtonLocation.endDocked,
               floatingActionButton: _isEmpty
@@ -228,7 +247,8 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget _buildNavigationBar(
-    BuildContext context, bool isEmpty, Operand operands) {
+    BuildContext context, bool isEmpty, Operand operands, int _selectedIndex,
+    Function _onItemTapped, String _selectedCompany) {
   if (isEmpty) {
     return BottomAppBar(
       color: Colors.indigo[700],
@@ -252,17 +272,16 @@ Widget _buildNavigationBar(
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.help),
-          label: 'Státusz',
+          label: _selectedCompany == 'Cég' ? '' : 'Dokumentáció',
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: '${operands.companies[0]}',
+          label: _selectedCompany,
         ),
       ],
       selectedItemColor: Colors.amber[800],
-      currentIndex: 1,
-      onTap: (index) =>
-          index == 0 || index == 2 ? Container(child: Text('Ha')) : null,
+      currentIndex: _selectedIndex,
+      onTap: _onItemTapped,
     );
   }
 }
@@ -357,3 +376,8 @@ class Views extends StatelessWidget {
     );
   }
 }
+
+_getUser(Database database, String uid) {
+  database.getUser(uid);
+
+  }

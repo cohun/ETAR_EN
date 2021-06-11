@@ -35,9 +35,17 @@ dependencies:
   provider: ^5.0.0
 
 
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_launcher_icons: ^0.9.0
+
+flutter_icons:
+  android: true
+  ios: true
+  image_path: "assets/icons/favicon.png"
+  remove_alpha_ios: true"
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -56,6 +64,7 @@ flutter:
   #   - images/a_dot_ham.jpeg
   assets:
     - images/
+    - assets/
     - lib/dialogs/conditions/privacy_policy.md
     - lib/dialogs/conditions/terms_and_conditions.md
 
