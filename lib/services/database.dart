@@ -7,7 +7,7 @@ abstract class Database {
   Future<void> createOperand(Operand operand);
 
   Future<void> getOperand(String uid);
-  Future<void> getUser(String uid);
+  Future<DocumentSnapshot> getUser(String uid);
 
   Stream<List<Operand>> operandsStream();
 
@@ -23,7 +23,7 @@ class FirestoreDatabase implements Database {
 
   Future<void> getOperand(String uid) =>
       FirebaseFirestore.instance.collection('operands').doc(uid).get();
-  Future<void> getUser(String uid) =>
+  Future<DocumentSnapshot> getUser(String uid) =>
       FirebaseFirestore.instance.collection('users').doc(uid).get();
 
   Stream<List<Operand>> operandsStream() {

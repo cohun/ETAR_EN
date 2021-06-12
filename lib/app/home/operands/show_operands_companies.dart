@@ -12,7 +12,10 @@ class ShowOperandsCompanies extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Cégeim'),),
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text('Cégeim'),
+      ),
       body: ListView.builder(
         itemBuilder: (context, index) => CompanyListTile(
           company: operand.companies[index],

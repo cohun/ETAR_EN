@@ -48,6 +48,7 @@ class _HomePageState extends State<HomePage> {
       _selectedIndex = index;
     });
   }
+
   void _onSelectCompany(String selectedCompany) {
     setState(() {
       _selectedCompany = selectedCompany;
@@ -96,159 +97,186 @@ class _HomePageState extends State<HomePage> {
 
     return DefaultTabController(
       length: 2,
-      child: FutureBuilder<DocumentSnapshot>(
-        future: database.getOperand(widget.auth.currentUser.uid),
-        builder:
-            (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
-          if (snapshot.hasError) {
-            return Text("Something went wrong");
-          }
+      child: _buildOperands(
+          database, _isEmpty, operands, _showCupertinoDialog, user),
+    );
+  }
 
-          if (snapshot.hasData && !snapshot.data.exists) {
-            _isEmpty = true;
-          }
+  FutureBuilder<DocumentSnapshot<Object>> _buildOperands(
+      Database database,
+      bool _isEmpty,
+      Operand operands,
+      Null _showCupertinoDialog(BuildContext context),
+      UserModel user
+      ) {
+    database.getUser(widget.auth.currentUser.uid).then((value) {
+      if (value.exists)
+        user = UserModel.fromMap(value.data());
+      if (user != null)
+      print('hey ${user.approvedRole}');
+    });
 
-          if (snapshot.connectionState == ConnectionState.done) {
-            final Map<String, dynamic> operand = snapshot.data.data();
-            operands = Operand.fromMap(operand);
-            operands != null ? _isEmpty = false : _isEmpty = true;
+    return FutureBuilder<DocumentSnapshot>(
+      future: database.getOperand(widget.auth.currentUser.uid),
+      builder:
+          (BuildContext context, AsyncSnapshot<DocumentSnapshot> snapshot) {
+        if (snapshot.hasError) {
+          return Text("Something went wrong");
+        }
 
-            return Scaffold(
-              appBar: AppBar(
-                centerTitle: true,
-                title: Image.asset(
-                  'images/ETAR_EN_flat_small.png',
-                  height: 50,
-                ),
-                actions: [
-                  TextButton(
-                    onPressed: () => _showCupertinoDialog(context),
-                    child: Text('Logout'),
-                  ),
-                ],
-                bottom: _selectedIndex == 1 ? TabBar(
-                  tabs: [
-                    Tab(
-                      icon: Image.asset(
-                        'images/LE_Doc.png',
-                        height: 50,
-                      ),
-                      child: Text(
-                        'Üzemviteli Dokumentáció',
-                        style: TextStyle(
-                            fontSize: 7, color: Colors.blueAccent[700]),
-                      ),
-                    ),
-                    Tab(
-                      icon: Image.asset(
-                        'images/logBookIcon.png',
-                        height: 50,
-                      ),
-                      child: Text(
-                        'Emelőgép Napló',
-                        style:
-                            TextStyle(fontSize: 7, color: Colors.yellow[900]),
-                      ),
-                    ),
-                  ],
-                ) : null,
+        if (snapshot.hasData && !snapshot.data.exists) {
+          _isEmpty = true;
+        }
+
+        if (snapshot.connectionState == ConnectionState.done) {
+          final Map<String, dynamic> operand = snapshot.data.data();
+          operands = Operand.fromMap(operand);
+          operands != null ? _isEmpty = false : _isEmpty = true;
+
+          return Scaffold(
+            appBar: AppBar(
+              centerTitle: true,
+              title: Image.asset(
+                'images/ETAR_EN_flat_small.png',
+                height: 50,
               ),
-              body: _selectedIndex == 1 ? TabBarView(
-                children: [
-                  SingleChildScrollView(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 1.1,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 18.0),
-                            child: Views(
-                                color: Colors.blueAccent[700],
-                                text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
-                                text2:
-                                    'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
-                                    'Gépi hajtású targoncáknál MSZ 16226 szerint',
-                                text3:
-                                    'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
-                                    'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
-                                    'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+              actions: [
+                TextButton(
+                  onPressed: () => _showCupertinoDialog(context),
+                  child: Text('Logout'),
+                ),
+              ],
+              bottom: _selectedIndex == 1
+                  ? TabBar(
+                      tabs: [
+                        Tab(
+                          icon: Image.asset(
+                            'images/LE_Doc.png',
+                            height: 50,
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .04,
+                          child: Text(
+                            'Üzemviteli Dokumentáció',
+                            style: TextStyle(
+                                fontSize: 7, color: Colors.blueAccent[700]),
                           ),
-                          InkWell(
-                            child: Image.asset('images/image.jpg'),
-                            onTap: () => _showOpDoc(
-                                context, widget.auth.currentUser.uid),
+                        ),
+                        Tab(
+                          icon: Image.asset(
+                            'images/logBookIcon.png',
+                            height: 50,
                           ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .04,
+                          child: Text(
+                            'Emelőgép Napló',
+                            style: TextStyle(
+                                fontSize: 7, color: Colors.yellow[900]),
                           ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SingleChildScrollView(
-                    child: Container(
-                      height: MediaQuery.of(context).size.height * 1.1,
-                      child: Column(
-                        children: <Widget>[
-                          Padding(
-                            padding:
-                                const EdgeInsets.symmetric(horizontal: 18.0),
-                            child: Views(
-                                color: Colors.yellow[900],
-                                text1: 'EMELŐGÉP NAPLÓ:',
-                                text2:
-                                    'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
-                                text3:
-                                    'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
-                                    'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .04,
-                          ),
-                          InkWell(
-                            child: Image.asset('images/image.jpg'),
-                            onTap: () => _showLogBook(
-                                context, widget.auth.currentUser.uid),
-                          ),
-                          SizedBox(
-                            height: MediaQuery.of(context).size.height * .04,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                ],
-              ) : ShowOperandsCompanies(operand: operands, onSelect: _onSelectCompany,),
-              bottomNavigationBar:
-                  _buildNavigationBar(context, _isEmpty, operands, _selectedIndex,
-                      _onItemTapped, _selectedCompany),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.endDocked,
-              floatingActionButton: _isEmpty
-                  ? FloatingActionButton(
-                onPressed: () => AddOpPage.show(context),
-                      backgroundColor: Colors.red[600],
-                      child: Icon(Icons.add),
+                        ),
+                      ],
                     )
                   : null,
-            );
-          }
-          return Center(
-            child: CircularProgressIndicator(),
+            ),
+            body: _selectedIndex == 1
+                ? TabBarView(
+                    children: [
+                      SingleChildScrollView(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 1.1,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 18.0),
+                                child: Views(
+                                    color: Colors.blueAccent[700],
+                                    text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
+                                    text2:
+                                        'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
+                                        'Gépi hajtású targoncáknál MSZ 16226 szerint',
+                                    text3:
+                                        'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
+                                        'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
+                                        'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .04,
+                              ),
+                              InkWell(
+                                child: Image.asset('images/image.jpg'),
+                                onTap: () => _showOpDoc(
+                                    context, widget.auth.currentUser.uid),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .04,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                      SingleChildScrollView(
+                        child: Container(
+                          height: MediaQuery.of(context).size.height * 1.1,
+                          child: Column(
+                            children: <Widget>[
+                              Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 18.0),
+                                child: Views(
+                                    color: Colors.yellow[900],
+                                    text1: 'EMELŐGÉP NAPLÓ:',
+                                    text2:
+                                        'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
+                                    text3:
+                                        'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
+                                        'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .04,
+                              ),
+                              InkWell(
+                                child: Image.asset('images/image.jpg'),
+                                onTap: () => _showLogBook(
+                                    context, widget.auth.currentUser.uid),
+                              ),
+                              SizedBox(
+                                height:
+                                    MediaQuery.of(context).size.height * .04,
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  )
+                : ShowOperandsCompanies(
+                    operand: operands,
+                    onSelect: _onSelectCompany,
+                  ),
+            bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
+                operands, _selectedIndex, _onItemTapped, _selectedCompany, user),
+            floatingActionButtonLocation:
+                FloatingActionButtonLocation.endDocked,
+            floatingActionButton: _isEmpty
+                ? FloatingActionButton(
+                    onPressed: () => AddOpPage.show(context),
+                    backgroundColor: Colors.red[600],
+                    child: Icon(Icons.add),
+                  )
+                : null,
           );
-        },
-      ),
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 }
 
-Widget _buildNavigationBar(
-    BuildContext context, bool isEmpty, Operand operands, int _selectedIndex,
-    Function _onItemTapped, String _selectedCompany) {
+Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
+    int _selectedIndex, Function _onItemTapped, String _selectedCompany, UserModel user) {
   if (isEmpty) {
     return BottomAppBar(
       color: Colors.indigo[700],
@@ -276,7 +304,7 @@ Widget _buildNavigationBar(
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: _selectedCompany,
+          label: user == null ?_selectedCompany : user.approvedRole,
         ),
       ],
       selectedItemColor: Colors.amber[800],
@@ -376,8 +404,3 @@ class Views extends StatelessWidget {
     );
   }
 }
-
-_getUser(Database database, String uid) {
-  database.getUser(uid);
-
-  }
