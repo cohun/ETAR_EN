@@ -13,7 +13,7 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-  String _choice = 'operator';
+  List<String> _choice = List.filled(50, 'pending', growable: true);
 
   @override
   Widget build(BuildContext context) {
@@ -63,9 +63,9 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'operator',
-                        groupValue: _choice,
+                        groupValue: _choice[index],
                         onChanged: (value) => setState(() {
-                          _choice = value;
+                          _choice[index] = value;
                         }),
                       ),
                       SizedBox(
@@ -82,9 +82,9 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'inspector',
-                        groupValue: _choice,
+                        groupValue: _choice[index],
                         onChanged: (value) => setState(() {
-                          _choice = value;
+                          _choice[index] = value;
                         }),
                       ),
                       SizedBox(
@@ -101,9 +101,9 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'service',
-                        groupValue: _choice,
+                        groupValue: _choice[index],
                         onChanged: (value) => setState(() {
-                          _choice = value;
+                          _choice[index] = value;
                         }),
                       ),
                       SizedBox(
@@ -119,10 +119,10 @@ class _UsersPageState extends State<UsersPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Radio(
-                        value: 'owner',
-                        groupValue: _choice,
+                        value: 'pending',
+                        groupValue: _choice[index],
                         onChanged: (value) => setState(() {
-                          _choice = value;
+                          _choice[index] = value;
                         }),
                       ),
                       SizedBox(
@@ -130,7 +130,7 @@ class _UsersPageState extends State<UsersPage> {
                       ),
                       Container(
                         width: 100,
-                          child: Text('üzemeltető'),
+                        child: Text('függöben'),
                       ),
                     ],
                   ),
