@@ -10,6 +10,9 @@ abstract class Database {
   Future<DocumentSnapshot> getUser(String uid);
 
   Stream<List<Operand>> operandsStream();
+  Stream<List<Operand>> filteredOperandStream({
+    @required String company,
+  });
 
   Future<void> updateOperand(Map<String, dynamic> operand);
 }
@@ -36,7 +39,31 @@ class FirestoreDatabase implements Database {
           final data = snapshot.data();
           return data != null ? Operand.fromMap(data) : null;
         },
-      ),
+      ).toList(),
+    );
+  }
+  Stream<List<Operand>> filteredOperandStream ( {
+    @required String company,
+  }) {
+    final path = APIPath.operands();
+    final reference = FirebaseFirestore.instance.collection(path).where(
+      'companies', arrayContains: 'first'
+    );
+    final snapshots = reference.snapshots();
+    // snapshots.listen((event) {
+    //   event.docs.forEach((element) {
+    //     print(element.data());
+    //     final dat = Operand.fromMap(element.data());
+    //     print(dat.companies);
+    //   });
+    // });
+    return snapshots.map(
+          (snapshot) => snapshot.docs.map(
+            (snapshot) {
+          final data = snapshot.data();
+          return Operand.fromMap(data);
+        },
+      ).toList(),
     );
   }
 

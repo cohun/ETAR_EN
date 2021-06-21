@@ -3,6 +3,7 @@ import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
 import 'package:etar_en/app/home/operands/show_operands_companies.dart';
+import 'package:etar_en/app/home/users/users_page.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/user_model.dart';
 import 'package:etar_en/services/auth.dart';
@@ -250,7 +251,9 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   )
-                : ShowOperandsCompanies(
+                : user != null ?
+            UsersPage(company: user.company, database: database,):
+            ShowOperandsCompanies(
                     operand: operands,
                     onSelect: _onSelectCompany,
                   ),
