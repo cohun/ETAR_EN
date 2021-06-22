@@ -256,6 +256,7 @@ class _HomePageState extends State<HomePage> {
             ShowOperandsCompanies(
                     operand: operands,
                     onSelect: _onSelectCompany,
+                    database: database,
                   ),
             bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
                 operands, _selectedIndex, _onItemTapped, _selectedCompany, user),

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/services/api_path.dart';
 import 'package:flutter/material.dart';
@@ -15,6 +16,7 @@ abstract class Database {
   });
 
   Future<void> updateOperand(Map<String, dynamic> operand);
+  Future<CounterModel> retrieveCompanyFromCounter(companyId);
 }
 
 class FirestoreDatabase implements Database {
@@ -81,5 +83,12 @@ class FirestoreDatabase implements Database {
   Future<void> _update({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.update(data);
+  }
+
+  Future<CounterModel> retrieveCompanyFromCounter(companyId) async {
+    final ref = FirebaseFirestore.instance.collection('counter');
+    return await ref.doc(companyId.toString()).get().then((value) =>
+        CounterModel.fromMap(value.data())
+    );
   }
 }

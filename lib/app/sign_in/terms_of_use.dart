@@ -48,7 +48,7 @@ class _TermsOfUseState extends State<TermsOfUse> {
                         TextSpan(
                           text: 'Általános Felhasználási Feltételeket\n',
                           style: TextStyle(fontWeight: FontWeight.bold)
-                              .copyWith(fontSize: 17, color: Colors.tealAccent),
+                              .copyWith(fontSize: 14, color: Colors.tealAccent),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showDialog(
@@ -101,7 +101,7 @@ class _TermsOfUseState extends State<TermsOfUse> {
                         TextSpan(
                           text: 'Általános Adatvédelmi Irányelveket',
                           style: TextStyle(fontWeight: FontWeight.bold)
-                              .copyWith(fontSize: 17, color: Colors.tealAccent),
+                              .copyWith(fontSize: 14, color: Colors.tealAccent),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () {
                               showDialog(

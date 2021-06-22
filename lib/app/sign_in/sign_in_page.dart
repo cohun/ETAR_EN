@@ -42,12 +42,15 @@ class SignInPage extends StatelessWidget {
           ),
           Icon(
             Icons.arrow_downward_rounded,
-            size: 60,
+            size: 50,
             color: Colors.yellowAccent,
           ),
-          InkWell(
-            child: Image.asset('images/ETAR_EN_flat_small.png'),
-            onTap: () => _signInWithEmail(context),
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 90.0),
+            child: InkWell(
+              child: Image.asset('images/ETAR_EN_flat_small.png'),
+              onTap: () => _signInWithEmail(context),
+            ),
           ),
           Divider(
             height: 50,
