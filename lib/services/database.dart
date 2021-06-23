@@ -17,6 +17,7 @@ abstract class Database {
 
   Future<void> updateOperand(Map<String, dynamic> operand);
   Future<CounterModel> retrieveCompanyFromCounter(companyId);
+  Future<void> updateCompanies(List<String> _newCompanyList);
 }
 
 class FirestoreDatabase implements Database {
@@ -74,15 +75,14 @@ class FirestoreDatabase implements Database {
 
   Future<void> updateOperand(Map<String, dynamic> operand) =>
       _update(path: APIPath.operand(uid), data: operand);
+  Future<void> _update({String path, Map<String, dynamic> data}) async {
+    final reference = FirebaseFirestore.instance.doc(path);
+    await reference.update(data);
+  }
 
   Future<void> _setData({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.set(data);
-  }
-
-  Future<void> _update({String path, Map<String, dynamic> data}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
-    await reference.update(data);
   }
 
   Future<CounterModel> retrieveCompanyFromCounter(companyId) async {
@@ -90,5 +90,14 @@ class FirestoreDatabase implements Database {
     return await ref.doc(companyId.toString()).get().then((value) =>
         CounterModel.fromMap(value.data())
     );
+  }
+
+  Future<void> updateCompanies(List<String> _newCompanyList) {
+    final reference = FirebaseFirestore.instance.collection('operands');
+    return reference
+        .doc(uid)
+        .update({'companies': _newCompanyList})
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
   }
 }

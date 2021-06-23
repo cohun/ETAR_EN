@@ -60,6 +60,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       _newCompanyList = widget.operand.companies;
       setState(() {
         _newCompanyList.add(_company);
+        widget.database.updateCompanies(_newCompanyList);
       });
       print(_newCompanyList);
     } catch (e) {

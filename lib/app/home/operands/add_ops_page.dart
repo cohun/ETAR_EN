@@ -1,4 +1,6 @@
+import 'package:date_time_picker/date_time_picker.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class AddOpPage extends StatefulWidget {
   const AddOpPage({Key key}) : super(key: key);
@@ -81,9 +83,11 @@ class _AddOpPageState extends State<AddOpPage> {
   }
 
   List<Widget> _buildFormChildren() {
+
     return [
       TextFormField(
         decoration: InputDecoration(labelText: 'Név:'),
+        textAlign: TextAlign.center,
         keyboardType: TextInputType.name,
       ),
       _buildMultipleCertificates(),
@@ -114,13 +118,25 @@ class _AddOpPageState extends State<AddOpPage> {
       children: [
         TextFormField(
           decoration: InputDecoration(labelText: 'Bizonyítvány megnevezése:'),
+          textAlign: TextAlign.center,
         ),
         TextFormField(
           decoration: InputDecoration(labelText: 'Bizonyítvány száma:'),
+          textAlign: TextAlign.center,
         ),
-        TextFormField(
-          decoration: InputDecoration(labelText: 'Bizonyítvány érvényessége:'),
-          keyboardType: TextInputType.datetime,
+        DateTimePicker(
+          textAlign: TextAlign.center,
+          initialValue: '',
+          dateMask: 'yyyy-MM-dd',
+          firstDate: DateTime(2000),
+          lastDate: DateTime(2100),
+          dateLabelText: 'Bizonyítvány érvényessége:',
+          onChanged: (val) => print('Érvényes? $val'),
+          validator: (val) {
+            print(val);
+            return null;
+          },
+          onSaved: (val) => print('Dátum: $val'),
         ),
       ],
     );
