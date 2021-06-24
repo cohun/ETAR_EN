@@ -21,8 +21,11 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
   List<String> _newCompanyList;
   int _companyId = 1;
 
-  _addCompany(BuildContext context) {
-    _showEtarCode(context);
+  // initState
+  @override
+  void initState () {
+    super.initState();
+    _newCompanyList = widget.operand.companies;
   }
 
   Future<void> _showMyDialog() async {
@@ -57,7 +60,6 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       await widget.database
           .retrieveCompanyFromCounter(_companyId)
           .then((value) => _company = value.company);
-      _newCompanyList = widget.operand.companies;
       setState(() {
         _newCompanyList.add(_company);
         widget.database.updateCompanies(_newCompanyList);
@@ -111,10 +113,10 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       ),
       body: ListView.builder(
         itemBuilder: (context, index) => CompanyListTile(
-          company: widget.operand.companies[index],
+          company: _newCompanyList[index],
           onTap: (company) => widget.onSelect(company),
         ),
-        itemCount: widget.operand.companies.length,
+        itemCount: _newCompanyList.length,
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () => _showEtarCode(context),

@@ -26,14 +26,9 @@ class Operand {
           }),
     );
     List<String> comp = [];
-    if (data['companies'].length == 0) {
-      comp.add('Nincs cég hozzárendelve');
-
-    } else {
       data['companies'].forEach((val) {
         comp.add(val);
       });
-    }
 
 
     final String uid = data['uid'];
