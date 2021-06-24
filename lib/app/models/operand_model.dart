@@ -19,7 +19,11 @@ class Operand {
     List<Map<String, dynamic>> cer = [];
     data['certificates'].forEach(
       (value) =>
-          cer.add({'description': value['description'], 'nr': value['nr']}),
+          cer.add({
+            'description': value['description'],
+            'nr': value['nr'],
+            'date': value['date']
+          }),
     );
     List<String> comp = [];
     if (data['companies'].length == 0) {

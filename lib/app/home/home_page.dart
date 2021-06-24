@@ -8,13 +8,10 @@ import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/user_model.dart';
 import 'package:etar_en/services/auth.dart';
 import 'package:etar_en/services/database.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../../dialogs/show_alert_dialog.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
@@ -264,7 +261,8 @@ class _HomePageState extends State<HomePage> {
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: _isEmpty
                 ? FloatingActionButton(
-                    onPressed: () => AddOpPage.show(context),
+                    onPressed: () => AddOpPage.show(context, widget.auth.currentUser.uid, database)
+                        .then((value) => setState(() {})),
                     backgroundColor: Colors.red[600],
                     child: Icon(Icons.add),
                   )
@@ -315,28 +313,6 @@ Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
     );
-  }
-}
-
-Future<void> _createOp(BuildContext context, String uid) async {
-  try {
-    final database = Provider.of<Database>(context, listen: false);
-    await database.createOperand(
-      Operand(
-        name: 'Attila',
-        certificates: [
-          {'nr': 'SS2345/99', 'description': 'Nehézgép kezelő'},
-          {'nr': 'DAB 234/2001', 'description': 'Emelőgép ügyintéző'}
-        ],
-        companies: ['first', 'second', 'third'],
-        uid: uid,
-      ),
-    );
-  } on FirebaseException catch (e) {
-    showAlertDialog(context,
-        title: 'Operation failed',
-        content: e.toString(),
-        defaultActionText: 'OK');
   }
 }
 
