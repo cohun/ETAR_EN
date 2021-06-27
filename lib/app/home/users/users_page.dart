@@ -17,30 +17,34 @@ class _UsersPageState extends State<UsersPage> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.company);
     return Scaffold(
       appBar: AppBar(
         title: Text('Jogosultságok'),
       ),
-      body: StreamBuilder<List<Operand>>(
-        stream: widget.database.filteredOperandStream(company: widget.company),
-        builder: (BuildContext context, snapshot) {
-          if (snapshot.hasData) {
-            final operands = snapshot.data;
-            return _buildListView(operands, context);
-          }
-          if (snapshot.hasError) {
-            return Text('Something went wrong');
-          }
+      body: buildStreamBuilder(context),
+    );
+  }
 
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Text("Loading");
-          }
-          return Center(
-            child: CircularProgressIndicator(),
-          );
-        },
-      ),
+  StreamBuilder<List<Operand>> buildStreamBuilder(BuildContext context) {
+    return StreamBuilder<List<Operand>>(
+      stream: widget.database.filteredOperandStream(company: widget.company),
+      builder: (BuildContext context, snapshot) {
+        if (snapshot.hasData) {
+          final operands = snapshot.data;
+
+          return _buildListView(operands, context);
+        }
+        if (snapshot.hasError) {
+          return Text('Something went wrong');
+        }
+
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return Text("Loading");
+        }
+        return Center(
+          child: CircularProgressIndicator(),
+        );
+      },
     );
   }
 
@@ -51,6 +55,8 @@ class _UsersPageState extends State<UsersPage> {
         thickness: 3,
       ),
       itemBuilder: (BuildContext context, int index) {
+        if (_choice[index] == 'pending')
+        retrieveCompany(operands[index].uid, widget.company, index);
         return ListTile(
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -64,16 +70,19 @@ class _UsersPageState extends State<UsersPage> {
                       Radio(
                         value: 'operator',
                         groupValue: _choice[index],
-                        onChanged: (value) => setState(() {
-                          _choice[index] = value;
-                        }),
+                        onChanged: (value) => assignRole(
+                            uid: operands[index].uid,
+                            company: widget.company,
+                            role: value,
+                            index: index
+                        ),
                       ),
                       SizedBox(
                         width: 5,
                       ),
                       Container(
-                          width: 100,
-                          child: Text('gépkezelő'),
+                        width: 100,
+                        child: Text('gépkezelő'),
                       ),
                     ],
                   ),
@@ -83,16 +92,19 @@ class _UsersPageState extends State<UsersPage> {
                       Radio(
                         value: 'inspector',
                         groupValue: _choice[index],
-                        onChanged: (value) => setState(() {
-                          _choice[index] = value;
-                        }),
+                        onChanged: (value) => assignRole(
+                            uid: operands[index].uid,
+                            company: widget.company,
+                            role: value,
+                            index: index
+                        ),
                       ),
                       SizedBox(
                         width: 5,
                       ),
                       Container(
-                          width: 100,
-                          child: Text('ellenőr'),
+                        width: 100,
+                        child: Text('vizsgáló'),
                       ),
                     ],
                   ),
@@ -102,16 +114,19 @@ class _UsersPageState extends State<UsersPage> {
                       Radio(
                         value: 'service',
                         groupValue: _choice[index],
-                        onChanged: (value) => setState(() {
-                          _choice[index] = value;
-                        }),
+                        onChanged: (value) => assignRole(
+                            uid: operands[index].uid,
+                            company: widget.company,
+                            role: value,
+                            index: index
+                        ),
                       ),
                       SizedBox(
                         width: 5,
                       ),
                       Container(
-                          width: 100,
-                          child: Text('szervíz'),
+                        width: 100,
+                        child: Text('szervíz'),
                       ),
                     ],
                   ),
@@ -119,11 +134,15 @@ class _UsersPageState extends State<UsersPage> {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Radio(
+                        activeColor: Colors.red,
                         value: 'pending',
                         groupValue: _choice[index],
-                        onChanged: (value) => setState(() {
-                          _choice[index] = value;
-                        }),
+                        onChanged: (value) => assignRole(
+                            uid: operands[index].uid,
+                            company: widget.company,
+                            role: value,
+                            index: index
+                        ),
                       ),
                       SizedBox(
                         width: 5,
@@ -145,5 +164,30 @@ class _UsersPageState extends State<UsersPage> {
         );
       },
     );
+  }
+
+  Future<void> retrieveCompany(String uid, String company, int ind) async {
+    try {
+      await widget.database.retrieveCompany(uid, company).then((value) {
+        if (value.role != '') {
+          setState(() {
+            _choice[ind] = value.role;
+          });
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
+  }
+  Future<void> assignRole({String uid, String company, String role, int index}) async {
+    try {
+      await widget.database.assignRole(uid, company, role).then((value) {
+        setState(() {
+          _choice[index] = role;
+        });
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }

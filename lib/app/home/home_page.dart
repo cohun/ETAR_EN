@@ -40,11 +40,16 @@ class _HomePageState extends State<HomePage> {
 
   int _selectedIndex = 1;
   String _selectedCompany = 'Cég';
+  String _role = 'függőben';
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
+  }
+
+  void _getRole(String selectedCompany) {
+
   }
 
   void _onSelectCompany(String selectedCompany) {
@@ -111,7 +116,7 @@ class _HomePageState extends State<HomePage> {
       if (value.exists)
         user = UserModel.fromMap(value.data());
       if (user != null)
-      print('hey ${user.approvedRole}');
+        _role = 'admin';
     });
 
     return FutureBuilder<DocumentSnapshot>(
@@ -256,7 +261,7 @@ class _HomePageState extends State<HomePage> {
                     database: database,
                   ),
             bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
-                operands, _selectedIndex, _onItemTapped, _selectedCompany, user),
+                operands, _selectedIndex, _onItemTapped, _selectedCompany, user, _role),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: _isEmpty
@@ -278,7 +283,7 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
-    int _selectedIndex, Function _onItemTapped, String _selectedCompany, UserModel user) {
+    int _selectedIndex, Function _onItemTapped, String _selectedCompany, UserModel user, String _role) {
   if (isEmpty) {
     return BottomAppBar(
       color: Colors.indigo[700],
@@ -302,14 +307,16 @@ Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.help),
-          label: _selectedCompany == 'Cég' ? '' : 'Dokumentáció',
+          label: _selectedCompany == 'Cég' ? user != null ? user.company : ''
+              : operands.name == null ? 'Dokumentáció'
+              : _role,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: user == null ?_selectedCompany : user.approvedRole,
+          label: user == null ?_selectedCompany : _role,
         ),
       ],
-      selectedItemColor: Colors.amber[800],
+      selectedItemColor: _role == 'függőben' ? Colors.red : Colors.green,
       currentIndex: _selectedIndex,
       onTap: _onItemTapped,
     );
