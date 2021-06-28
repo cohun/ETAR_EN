@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowOperandsCompanies extends StatefulWidget {
-  ShowOperandsCompanies({Key key, @required this.operand, this.onSelect, @required this.database}) : super(key: key);
+  ShowOperandsCompanies(
+      {Key key, @required this.operand, this.onSelect, @required this.database})
+      : super(key: key);
   final Operand operand;
   final Function onSelect;
   final Database database;
@@ -20,10 +22,11 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
   String _company;
   List<String> _newCompanyList;
   int _companyId = 1;
+  List<String> _choice = List.filled(50, 'pending', growable: true);
 
   // initState
   @override
-  void initState () {
+  void initState() {
     super.initState();
     _newCompanyList = widget.operand.companies;
   }
@@ -55,6 +58,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       },
     );
   }
+
   Future<void> retrieveCompany() async {
     try {
       await widget.database
@@ -74,34 +78,34 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
     showDialog(
         context: context,
         builder: (_) => new CupertinoAlertDialog(
-          title: new Text("Kérem a cég ETAR-kódját!"),
-          content: new Text(
-              "Új cég felviteléhez az adott cégtől el kell kérni az ETAR-kódot!"),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Mégsem!'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoTextField(
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              controller: _textController,
-              onChanged: (val) => _companyId = int.tryParse(val),
-              placeholder: 'ETAR-kód',
-              keyboardType: TextInputType.number,
-            ),
-            TextButton(
-              child: Text('Mehet!'),
-              onPressed: () {
-                retrieveCompany();
-                print('Here: $_companyId');
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        ));
+              title: new Text("Kérem a cég ETAR-kódját!"),
+              content: new Text(
+                  "Új cég felviteléhez az adott cégtől el kell kérni az ETAR-kódot!"),
+              actions: <Widget>[
+                TextButton(
+                  child: Text('Mégsem!'),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoTextField(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  controller: _textController,
+                  onChanged: (val) => _companyId = int.tryParse(val),
+                  placeholder: 'ETAR-kód',
+                  keyboardType: TextInputType.number,
+                ),
+                TextButton(
+                  child: Text('Mehet!'),
+                  onPressed: () {
+                    retrieveCompany();
+                    print('Here: $_companyId');
+                    Navigator.of(context).pop();
+                  },
+                ),
+              ],
+            ));
   }
 
   @override
@@ -112,10 +116,14 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
         title: Text('Cégeim'),
       ),
       body: ListView.builder(
-        itemBuilder: (context, index) => CompanyListTile(
-          company: _newCompanyList[index],
-          onTap: (company) => widget.onSelect(company),
-        ),
+        itemBuilder: (context, index) {
+          retrieveCompanyRole(widget.operand.uid, _newCompanyList[index], index);
+          return CompanyListTile(
+            company: _newCompanyList[index],
+            role: _choice[index],
+            onTap: (company) => widget.onSelect(company),
+          );
+        },
         itemCount: _newCompanyList.length,
       ),
       floatingActionButton: FloatingActionButton(
@@ -123,5 +131,46 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
         child: Icon(Icons.add),
       ),
     );
+  }
+
+  Future<void> retrieveCompanyRole(String uid, String company, int ind) async {
+    try {
+      await widget.database.retrieveCompany(uid, company).then((value) {
+        if(value.role == '') _choice[ind] = 'függőben';
+        if (value.role != '') {
+          _choice[ind] = value.role;
+          switch (_choice[ind]) {
+            case 'pending':
+              {
+                _choice[ind] = 'függőben';
+              }
+              break;
+            case 'inspector':
+              {
+                _choice[ind] = 'vizsgáló';
+              }
+              break;
+            case 'operator':
+              {
+                _choice[ind] = 'gépkezelő';
+              }
+              break;
+            case 'service':
+              {
+                _choice[ind] = 'szervíz';
+              }
+              break;
+            default:
+              {
+                _choice[ind] = 'függőben';
+              }
+              break;
+          }
+          if (mounted) setState(() {});
+        }
+      });
+    } catch (e) {
+      print(e);
+    }
   }
 }
