@@ -7,13 +7,14 @@ class UsersPage extends StatefulWidget {
 
   final String company;
   final Database database;
+  List<String> _choice = List.filled(50, 'pending', growable: true);
 
   @override
   _UsersPageState createState() => _UsersPageState();
 }
 
 class _UsersPageState extends State<UsersPage> {
-  List<String> _choice = List.filled(50, 'pending', growable: true);
+
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +56,6 @@ class _UsersPageState extends State<UsersPage> {
         thickness: 3,
       ),
       itemBuilder: (BuildContext context, int index) {
-        if (_choice[index] == 'pending')
         retrieveCompany(operands[index].uid, widget.company, index);
         return ListTile(
           title: Row(
@@ -69,7 +69,7 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'operator',
-                        groupValue: _choice[index],
+                        groupValue: widget._choice[index],
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
@@ -91,7 +91,7 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'inspector',
-                        groupValue: _choice[index],
+                        groupValue: widget._choice[index],
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
@@ -113,7 +113,7 @@ class _UsersPageState extends State<UsersPage> {
                     children: [
                       Radio(
                         value: 'service',
-                        groupValue: _choice[index],
+                        groupValue: widget._choice[index],
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
@@ -136,7 +136,7 @@ class _UsersPageState extends State<UsersPage> {
                       Radio(
                         activeColor: Colors.red,
                         value: 'pending',
-                        groupValue: _choice[index],
+                        groupValue: widget._choice[index],
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
@@ -169,11 +169,11 @@ class _UsersPageState extends State<UsersPage> {
   Future<void> retrieveCompany(String uid, String company, int ind) async {
     try {
       await widget.database.retrieveCompany(uid, company).then((value) {
-        if (value.role != '') {
+          if (value.role != '')
+          if (mounted)
           setState(() {
-            _choice[ind] = value.role;
+            widget._choice[ind] = value.role;
           });
-        }
       });
     } catch (e) {
       print(e);
@@ -182,9 +182,9 @@ class _UsersPageState extends State<UsersPage> {
   Future<void> assignRole({String uid, String company, String role, int index}) async {
     try {
       await widget.database.assignRole(uid, company, role).then((value) {
-        setState(() {
-          _choice[index] = role;
-        });
+
+          widget._choice[index] = role;
+
       });
     } catch (e) {
       print(e);
