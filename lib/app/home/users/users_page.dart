@@ -1,3 +1,4 @@
+import 'package:etar_en/app/home/users/find_productId.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
@@ -14,8 +15,6 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
-
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -62,6 +61,26 @@ class _UsersPageState extends State<UsersPage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(operands[index].name),
+              widget._choice[index] != 'pending'
+                  ? ElevatedButton(
+                      onPressed: () {Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                          builder: (context) => FindProductId(
+                            operandsName: operands[index].name,
+                            company: widget.company,
+                            role: widget._choice[index],
+                          ),
+                          ),
+                      );},
+                      child: Text(
+                        'Emelőgépek',
+                      ),
+                      style: ElevatedButton.styleFrom(primary: Colors.teal),
+                    )
+                  : Container(
+                      width: 0,
+                    ),
               Column(
                 children: [
                   Row(
@@ -74,8 +93,7 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index
-                        ),
+                            index: index),
                       ),
                       SizedBox(
                         width: 5,
@@ -96,8 +114,7 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index
-                        ),
+                            index: index),
                       ),
                       SizedBox(
                         width: 5,
@@ -118,8 +135,7 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index
-                        ),
+                            index: index),
                       ),
                       SizedBox(
                         width: 5,
@@ -141,8 +157,7 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index
-                        ),
+                            index: index),
                       ),
                       SizedBox(
                         width: 5,
@@ -169,8 +184,7 @@ class _UsersPageState extends State<UsersPage> {
   Future<void> retrieveCompany(String uid, String company, int ind) async {
     try {
       await widget.database.retrieveCompany(uid, company).then((value) {
-          if (value.role != '')
-          if (mounted)
+        if (value.role != '') if (mounted)
           setState(() {
             widget._choice[ind] = value.role;
           });
@@ -179,12 +193,12 @@ class _UsersPageState extends State<UsersPage> {
       print(e);
     }
   }
-  Future<void> assignRole({String uid, String company, String role, int index}) async {
+
+  Future<void> assignRole(
+      {String uid, String company, String role, int index}) async {
     try {
       await widget.database.assignRole(uid, company, role).then((value) {
-
-          widget._choice[index] = role;
-
+        widget._choice[index] = role;
       });
     } catch (e) {
       print(e);

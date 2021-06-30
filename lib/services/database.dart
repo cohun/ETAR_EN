@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
+import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
 import 'package:etar_en/services/api_path.dart';
 import 'package:flutter/material.dart';
@@ -22,6 +23,7 @@ abstract class Database {
   Future<void> updateOperand(Map<String, dynamic> operand);
   Future<CounterModel> retrieveCompanyFromCounter(companyId);
   Future<void> updateCompanies(List<String> _newCompanyList);
+  Future<ProductModel> retrieveProductFromId(company, productId);
 }
 
   //***********************************************************************
@@ -159,5 +161,12 @@ class FirestoreDatabase implements Database {
         .update({'companies': _newCompanyList})
         .then((value) => print("User Updated"))
         .catchError((error) => print("Failed to update user: $error"));
+  }
+
+  Future<ProductModel> retrieveProductFromId(company, productId) async {
+    final ref = FirebaseFirestore.instance.collection('companies/$company/products');
+    return await ref.doc(productId).get().then((value) =>
+        ProductModel.fromMap(value.data())
+    );
   }
 }
