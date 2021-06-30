@@ -22,6 +22,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+
   _showOpDoc(BuildContext context, String uid) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -41,6 +42,7 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   String _selectedCompany = 'Cég';
   String _role = 'függőben';
+  UserModel _user;
 
   void _onItemTapped(int index) {
     setState(() {
@@ -48,15 +50,28 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _getRole(String selectedCompany) {
-
-  }
-
   void _onSelectCompany(String selectedCompany) {
     setState(() {
       _selectedCompany = selectedCompany;
     });
   }
+
+  @override
+  void initState() {
+    super.initState();
+    final database = Provider.of<Database>(context, listen: false);
+    database.getUser(widget.auth.currentUser.uid).then((value) {
+      if (value.exists)
+        _user = UserModel.fromMap(value.data());
+      if (_user != null) {
+        print('user_id: ${_user.uid}');
+        print('User_name: ${_user.name}');
+        print('User_company: ${_user.company}');
+        _role = 'admin';
+      }
+    });
+    }
+
 
   @override
   Widget build(BuildContext context) {
@@ -96,12 +111,11 @@ class _HomePageState extends State<HomePage> {
     final database = Provider.of<Database>(context, listen: false);
     var _isEmpty = true;
     Operand operands;
-    UserModel user;
 
     return DefaultTabController(
       length: 2,
       child: _buildOperands(
-          database, _isEmpty, operands, _showCupertinoDialog, user),
+          database, _isEmpty, operands, _showCupertinoDialog),
     );
   }
 
@@ -110,14 +124,8 @@ class _HomePageState extends State<HomePage> {
       bool _isEmpty,
       Operand operands,
       Null _showCupertinoDialog(BuildContext context),
-      UserModel user
       ) {
-    database.getUser(widget.auth.currentUser.uid).then((value) {
-      if (value.exists)
-        user = UserModel.fromMap(value.data());
-      if (user != null)
-        _role = 'admin';
-    });
+
 
     return FutureBuilder<DocumentSnapshot>(
       future: database.getOperand(widget.auth.currentUser.uid),
@@ -135,6 +143,9 @@ class _HomePageState extends State<HomePage> {
           final Map<String, dynamic> operand = snapshot.data.data();
           operands = Operand.fromMap(operand);
           operands != null ? _isEmpty = false : _isEmpty = true;
+          if (_user != null) _isEmpty = true;
+          print('isEmpty: $_isEmpty');
+          print('_role: $_role');
 
           return Scaffold(
             appBar: AppBar(
@@ -253,18 +264,18 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   )
-                : user != null ?
-            UsersPage(company: user.company, database: database,):
+                : _user != null ?
+            UsersPage(company: _user.company, database: database,):
             ShowOperandsCompanies(
                     operand: operands,
                     onSelect: _onSelectCompany,
                     database: database,
                   ),
             bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
-                operands, _selectedIndex, _onItemTapped, _selectedCompany, user, _role),
+                operands, _selectedIndex, _onItemTapped, _selectedCompany, _role, _user),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
-            floatingActionButton: _isEmpty
+            floatingActionButton: _isEmpty && _role == 'függőben'
                 ? FloatingActionButton(
                     onPressed: () => AddOpPage.show(context, widget.auth.currentUser.uid, database)
                         .then((value) => setState(() {})),
@@ -283,8 +294,9 @@ class _HomePageState extends State<HomePage> {
 }
 
 Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
-    int _selectedIndex, Function _onItemTapped, String _selectedCompany, UserModel user, String _role) {
-  if (isEmpty) {
+    int _selectedIndex, Function _onItemTapped, String _selectedCompany,
+    String _role, UserModel _user) {
+  if (isEmpty && _role == 'függőben') {
     return BottomAppBar(
       color: Colors.indigo[700],
       shape: CircularNotchedRectangle(),
@@ -303,17 +315,17 @@ Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
       items: <BottomNavigationBarItem>[
         BottomNavigationBarItem(
           icon: Icon(Icons.person),
-          label: '${operands.name}',
+          label: _user == null ? '${operands.name}' : _user.name,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.help),
-          label: _selectedCompany == 'Cég' ? user != null ? user.company : ''
+          label: _selectedCompany == 'Cég' ? _user != null ? _user.company : ''
               : operands.name == null ? 'Dokumentáció'
               : _role,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: user == null ?_selectedCompany : _role,
+          label: _user == null ?_selectedCompany : _role,
         ),
       ],
       selectedItemColor: _role == 'függőben' ? Colors.red : Colors.green,
