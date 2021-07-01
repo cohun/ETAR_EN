@@ -70,6 +70,7 @@ class _UsersPageState extends State<UsersPage> {
                             operandsName: operands[index].name,
                             company: widget.company,
                             role: widget._choice[index],
+                            database: widget.database,
                           ),
                           ),
                       );},
