@@ -8,6 +8,10 @@ class APIPath {
   static String companyRole(String uid, String company) => 'operands/$uid/companies/$company';
 
   static String productAssignment(
-          String uid, String company, String identifier) =>
-      'operands/$uid/companies/$company/assignments/$identifier';
+      String uid, String company, String identifier) =>
+      'operands/$uid/companies/$company/identifiers/$identifier';
+
+  static String identifiersList(
+          String uid, String company) =>
+      'operands/$uid/companies/$company/identifiers';
 }

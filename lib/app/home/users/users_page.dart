@@ -68,6 +68,7 @@ class _UsersPageState extends State<UsersPage> {
                           MaterialPageRoute(
                           builder: (context) => FindProductId(
                             operandsName: operands[index].name,
+                            uid: operands[index].uid,
                             company: widget.company,
                             role: widget._choice[index],
                             database: widget.database,

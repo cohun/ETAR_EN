@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/models/counter_model.dart';
+import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
@@ -19,6 +20,7 @@ abstract class Database {
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
   Future<RoleModel> retrieveCompany(String uid, String company);
   Future<void> assignRole(String uid, String company, String role);
+  Stream<List<Identifier>> identifiersStream(String uid, String company);
 
   Future<void> updateOperand(Map<String, dynamic> operand);
   Future<CounterModel> retrieveCompanyFromCounter(companyId);
@@ -59,30 +61,22 @@ class FirestoreDatabase implements Database {
   }
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company) {
-    print('Here I am in stream!');
     final path = APIPath.companyRole(uid, company);
-    print('path: $path');
-
     final reference = FirebaseFirestore.instance.collection(path);
 
     final snapshots = reference.snapshots();
-    print('snapshots÷ ${snapshots.length}');
-    snapshots.listen((snapshot) {
-      if (snapshot.docs.length != 0) {
-      snapshot.docs.forEach((element) {
-        print(element.data());
-      });
-    }
-    });
+    // snapshots.listen((snapshot) {
+    //   if (snapshot.docs.length != 0) {
+    //   snapshot.docs.forEach((element) {
+    //   });
+    // }
+    // });
     return snapshots.map(
           (snapshot) {
-            print('snapshot: $snapshot');
             if (snapshot.docs.length != 0) {
               return snapshot.docs.map(
                     (snapshot) {
                   final data = snapshot.data();
-                  print('snapshot: $data');
-                  print(data);
                   return data != null ? RoleModel.fromMap(data) : null;
                 },
               ).toList();
@@ -129,6 +123,21 @@ class FirestoreDatabase implements Database {
       ).toList(),
     );
   }
+
+  Stream<List<Identifier>> identifiersStream(String uid, String company) {
+    final path = APIPath.identifiersList(uid, company);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+          (snapshot) => snapshot.docs.map(
+            (snapshot) {
+          final Map<String, dynamic> data = snapshot.data();
+          return data != null ? Identifier(identifier: data['identifier']) : null;
+        },
+      ).toList(),
+    );
+  }
+
   Future<void> assignRole(String uid, String company, String role) =>
       _setData(path: APIPath.companyRole(uid, company), data: RoleModel(role: role, uid: uid).toMap());
 

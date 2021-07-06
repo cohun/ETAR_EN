@@ -121,7 +121,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
           return CompanyListTile(
             company: _newCompanyList[index],
             role: _choice[index],
-            onTap: (company) => widget.onSelect(company),
+            onTap: (company) => widget.onSelect(company, _choice[index]),
           );
         },
         itemCount: _newCompanyList.length,

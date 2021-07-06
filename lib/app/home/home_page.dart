@@ -50,9 +50,10 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
-  void _onSelectCompany(String selectedCompany) {
+  void _onSelectCompany(String selectedCompany, String role) {
     setState(() {
       _selectedCompany = selectedCompany;
+      _role = role;
     });
   }
 
@@ -64,9 +65,6 @@ class _HomePageState extends State<HomePage> {
       if (value.exists)
         _user = UserModel.fromMap(value.data());
       if (_user != null) {
-        print('user_id: ${_user.uid}');
-        print('User_name: ${_user.name}');
-        print('User_company: ${_user.company}');
         _role = 'admin';
       }
     });
@@ -144,8 +142,6 @@ class _HomePageState extends State<HomePage> {
           operands = Operand.fromMap(operand);
           operands != null ? _isEmpty = false : _isEmpty = true;
           if (_user != null) _isEmpty = true;
-          print('isEmpty: $_isEmpty');
-          print('_role: $_role');
 
           return Scaffold(
             appBar: AppBar(
@@ -318,7 +314,7 @@ Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
           label: _user == null ? '${operands.name}' : _user.name,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.help),
+          icon: _role == 'függőben' ? Icon(Icons.help) : Icon(Icons.assignment_turned_in_outlined),
           label: _selectedCompany == 'Cég' ? _user != null ? _user.company : ''
               : operands.name == null ? 'Dokumentáció'
               : _role,
