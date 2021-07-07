@@ -58,16 +58,28 @@ class SignInPage extends StatelessWidget {
           Container(
             constraints: BoxConstraints.expand(
               height:
-                  Theme.of(context).textTheme.headline4.fontSize * 1.1 + 30.0,
+                  Theme.of(context).textTheme.headline4.fontSize * 1.1 + 54.0,
             ),
             padding: const EdgeInsets.all(8.0),
             color: Colors.grey[900],
             alignment: Alignment.center,
-            child: Text('Emelőgép üzemvitel',
-                style: Theme.of(context)
-                    .textTheme
-                    .headline5
-                    .copyWith(color: Colors.yellowAccent)),
+            child: Column(
+              children: [
+                Text('Emelőgép Napló,',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: Colors.yellowAccent)),
+                Divider(
+                  thickness: 2,
+                ),
+                Text('Emelőgép üzemvitel',
+                    style: Theme.of(context)
+                        .textTheme
+                        .headline5
+                        .copyWith(color: Colors.blueAccent[700])),
+              ],
+            ),
           ),
           Divider(
             height: 50,

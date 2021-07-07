@@ -10,14 +10,22 @@ import 'package:flutter/material.dart';
 abstract class Database {
   Future<void> createOperand(Operand operand);
 
+  Future<void> createId(String id, String company, String uid);
+
+  Future<void> deleteId(String id, String company, String uid);
+
   Future<void> getOperand(String uid);
+
   Future<DocumentSnapshot> getUser(String uid);
 
   Stream<List<Operand>> operandsStream();
+
   Stream<List<Operand>> filteredOperandStream({
     @required String company,
   });
+
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
+
   Future<RoleModel> retrieveCompany(String uid, String company);
   Future<void> assignRole(String uid, String company, String role);
   Stream<List<Identifier>> identifiersStream(String uid, String company);
@@ -37,6 +45,16 @@ class FirestoreDatabase implements Database {
   Future<void> createOperand(Operand operand) =>
       _setData(path: APIPath.operand(uid), data: operand.toMap());
 
+  Future<void> createId(String id, String company, String uid) => _setData(
+      path: APIPath.productAssignment(uid, company, id),
+      data: Identifier(identifier: id).toMap());
+
+  Future<void> deleteId(String id, String company, String uid) =>
+      FirebaseFirestore.instance
+          .collection(APIPath.identifiersList(uid, company))
+          .doc(id)
+          .delete();
+
   Future<void> getOperand(String uid) =>
       FirebaseFirestore.instance.collection('operands').doc(uid).get();
 
@@ -44,7 +62,8 @@ class FirestoreDatabase implements Database {
       FirebaseFirestore.instance.collection('users').doc(uid).get();
 
   Future<RoleModel> retrieveCompany(String uid, String company) async {
-    final ref = FirebaseFirestore.instance.collection(APIPath.operandCompanies(uid));
+    final ref =
+        FirebaseFirestore.instance.collection(APIPath.operandCompanies(uid));
     RoleModel rol;
     if (ref.doc(company).id == company) {
       return await ref.doc(company).get().then((value) {
@@ -65,12 +84,6 @@ class FirestoreDatabase implements Database {
     final reference = FirebaseFirestore.instance.collection(path);
 
     final snapshots = reference.snapshots();
-    // snapshots.listen((snapshot) {
-    //   if (snapshot.docs.length != 0) {
-    //   snapshot.docs.forEach((element) {
-    //   });
-    // }
-    // });
     return snapshots.map(
           (snapshot) {
             if (snapshot.docs.length != 0) {
@@ -107,13 +120,6 @@ class FirestoreDatabase implements Database {
       'companies', arrayContains: company
     );
     final snapshots = reference.snapshots();
-    // snapshots.listen((event) {
-    //   event.docs.forEach((element) {
-    //     print(element.data());
-    //     final dat = Operand.fromMap(element.data());
-    //     print(dat.companies);
-    //   });
-    // });
     return snapshots.map(
           (snapshot) => snapshot.docs.map(
             (snapshot) {

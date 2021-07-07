@@ -36,7 +36,7 @@ class _MyAppState extends State<MyApp> {
             auth: Auth(),
             child: MaterialApp(
               debugShowCheckedModeBanner: false,
-              title: 'Emelőgép üzemvitel',
+              title: 'Emelőgép üzemvitel + Emelőgép napló',
               theme: ThemeData.dark(),
               home: LandingPage(auth: Auth()),
             ),

@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/models/product_model.dart';
+import 'package:etar_en/dialogs/show_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,9 +10,11 @@ class FindProduct extends StatefulWidget {
     Key key,
     this.database,
     this.company,
+    this.uid,
   }) : super(key: key);
   final Database database;
   final String company;
+  final String uid;
 
   @override
   _FindProductState createState() => _FindProductState();
@@ -36,65 +40,65 @@ class _FindProductState extends State<FindProduct> {
         child: Container(
           child: Center(
               child: Column(children: [
-                Padding(padding: EdgeInsets.only(top: 140.0)),
-                Text(
-                  'Az alábbi gyári számú emelőgép hozzáadása:',
-                  style: TextStyle(
-                    color: Colors.teal[800],
-                    fontSize: 16.0,
-                    fontWeight: FontWeight.bold,
+            Padding(padding: EdgeInsets.only(top: 140.0)),
+            Text(
+              'Az alábbi gyári számú emelőgép hozzáadása:',
+              style: TextStyle(
+                color: Colors.teal[800],
+                fontSize: 16.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            Padding(padding: EdgeInsets.only(top: 30.0)),
+            Form(
+              key: _opStartKey,
+              child: TextFormField(
+                controller: _textController,
+                focusNode: _textFocusNode,
+                decoration: InputDecoration(
+                  labelText: "Gyári szám:",
+                  fillColor: Colors.teal[800],
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(20.0),
+                    borderSide: BorderSide(),
                   ),
+                  //fillColor: Colors.green
                 ),
-                Padding(padding: EdgeInsets.only(top: 30.0)),
-                Form(
-                  key: _opStartKey,
-                  child: TextFormField(
-                    controller: _textController,
-                    focusNode: _textFocusNode,
-                    decoration: InputDecoration(
-                      labelText: "Gyári szám:",
-                      fillColor: Colors.teal[800],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20.0),
-                        borderSide: BorderSide(),
-                      ),
-                      //fillColor: Colors.green
-                    ),
-                    autocorrect: false,
-                    validator: (val) {
-                      if (val.length == 0) {
-                        return "Adj meg egy értéket!";
-                      } else {
-                        return null;
-                      }
-                    },
-                    keyboardType: TextInputType.text,
-                    style: TextStyle(
-                      fontFamily: "Poppins",
-                      fontWeight: FontWeight.bold,
-                      fontSize: 28,
-                      color: Colors.teal[800],
-                    ),
-                    textAlign: TextAlign.center,
-                    onSaved: (value) => productId = value,
-                    onEditingComplete: _submit,
-                  ),
+                autocorrect: false,
+                validator: (val) {
+                  if (val.length == 0) {
+                    return "Adj meg egy értéket!";
+                  } else {
+                    return null;
+                  }
+                },
+                keyboardType: TextInputType.text,
+                style: TextStyle(
+                  fontFamily: "Poppins",
+                  fontWeight: FontWeight.bold,
+                  fontSize: 28,
+                  color: Colors.teal[800],
                 ),
-                SizedBox(
-                  height: 10,
-                ),
-                IconButton(
-                  iconSize: 80,
-                  icon: Icon(
-                    Icons.check_box,
-                    color: Colors.teal[800],
-                    size: 90,
-                  ),
-                  onPressed: _submit,
-                ),
-                SizedBox(height: 12),
-                showResult(context),
-              ])),
+                textAlign: TextAlign.center,
+                onSaved: (value) => productId = value,
+                onEditingComplete: _submit,
+              ),
+            ),
+            SizedBox(
+              height: 10,
+            ),
+            IconButton(
+              iconSize: 80,
+              icon: Icon(
+                Icons.check_box,
+                color: Colors.teal[800],
+                size: 90,
+              ),
+              onPressed: _submit,
+            ),
+            SizedBox(height: 12),
+            showResult(context),
+          ])),
         ));
   }
 
@@ -145,18 +149,27 @@ class _FindProductState extends State<FindProduct> {
               children: [
                 empty == false
                     ? Text(
-                  '${productResult.type}  ${productResult.length}  ${productResult.description}',
-                  style: Theme.of(context).textTheme.bodyText1,
-                )
+                        '${productResult.type}  ${productResult.length}  ${productResult.description}',
+                        style: Theme.of(context).textTheme.bodyText1,
+                      )
                     : Text(
-                  'Nincs találat! ',
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                ),
-                empty == false ?
-                IconButton(
-                    icon: Icon(Icons.chevron_right, size: 36,),
-                    onPressed: () => print('mehet')) :
-                Container(width: 0,),
+                        'Nincs találat! ',
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      ),
+                empty == false
+                    ? IconButton(
+                        icon: Icon(
+                          Icons.chevron_right,
+                          size: 36,
+                        ),
+                        onPressed: () {
+                          print('mehet');
+                          _createId(context, productResult.identifier,
+                              widget.company, widget.uid);
+                        })
+                    : Container(
+                        width: 0,
+                      ),
 
                 //       Navigator.of(context).push(
                 //         MaterialPageRoute(
@@ -185,5 +198,22 @@ class _FindProductState extends State<FindProduct> {
         ),
       ),
     );
+  }
+
+  Future<void> _createId(
+      BuildContext context, String id, String company, String uid) async {
+    try {
+      await widget.database.createId(
+        id,
+        company,
+        uid,
+      );
+      Navigator.of(context).pop();
+    } on FirebaseException catch (e) {
+      showAlertDialog(context,
+          title: 'Operation failed',
+          content: e.toString(),
+          defaultActionText: 'OK');
+    }
   }
 }

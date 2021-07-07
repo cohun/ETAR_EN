@@ -6,7 +6,12 @@ import 'find_product_page.dart';
 
 class FindProductId extends StatefulWidget {
   FindProductId(
-      {Key key, this.operandsName, this.company, this.role, this.database, this.uid})
+      {Key key,
+      this.operandsName,
+      this.company,
+      this.role,
+      this.database,
+      this.uid})
       : super(key: key);
   final String operandsName;
   final String uid;
@@ -27,24 +32,26 @@ class _FindProductIdState extends State<FindProductId> {
     return Scaffold(
       backgroundColor: Colors.teal[100],
       appBar: AppBar(
-        title: !_showList ?
-            Text('További emelőgép hozzáadása') :
-        Text('Emelőgép lista'),
+        title: !_showList
+            ? Text('További emelőgép hozzáadása')
+            : Text('Emelőgép lista'),
         centerTitle: true,
         elevation: 10.0,
         backgroundColor: Colors.teal[800],
       ),
       body: _buildContents(context),
-      floatingActionButton: _showList ? FloatingActionButton(
-        child: Icon(
-          Icons.add,
-        ),
-        onPressed: () {
-          setState(() {
-            _showList = false;
-          });
-        },
-      ) : null,
+      floatingActionButton: _showList
+          ? FloatingActionButton(
+              child: Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                setState(() {
+                  _showList = false;
+                });
+              },
+            )
+          : null,
     );
   }
 
@@ -87,16 +94,19 @@ class _FindProductIdState extends State<FindProductId> {
             style: TextStyle(color: Colors.teal[900]),
             textAlign: TextAlign.center,
           ),
-          Divider(height: 8,),
+          Divider(
+            height: 8,
+          ),
           _showList
               ? AssignedProductsPage(
-              database: widget.database,
-            company: widget.company,
-            uid: widget.uid,
-          )
+                  database: widget.database,
+                  company: widget.company,
+                  uid: widget.uid,
+                )
               : FindProduct(
                   database: widget.database,
                   company: widget.company,
+                  uid: widget.uid,
                 ),
         ],
       ),
@@ -128,5 +138,3 @@ class _FindProductIdState extends State<FindProductId> {
     }
   }
 }
-
-
