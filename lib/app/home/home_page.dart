@@ -264,21 +264,32 @@ class _HomePageState extends State<HomePage> {
             UsersPage(company: _user.company, database: database,):
             ShowOperandsCompanies(
                     operand: operands,
-                    onSelect: _onSelectCompany,
-                    database: database,
-                  ),
+                        onSelect: _onSelectCompany,
+                        database: database,
+                        selectedCompany: _selectedCompany,
+                      ),
             bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
                 operands, _selectedIndex, _onItemTapped, _selectedCompany, _role, _user),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: _isEmpty && _role == 'függőben'
                 ? FloatingActionButton(
-                    onPressed: () => AddOpPage.show(context, widget.auth.currentUser.uid, database)
+                    onPressed: () => AddOpPage.show(
+                            context, widget.auth.currentUser.uid, database)
                         .then((value) => setState(() {})),
                     backgroundColor: Colors.red[600],
                     child: Icon(Icons.add),
                   )
                 : null,
+            bottomSheet: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'gyáriszáma:',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+              ],
+            ),
           );
         }
         return Center(

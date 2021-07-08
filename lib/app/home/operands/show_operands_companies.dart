@@ -6,11 +6,16 @@ import 'package:flutter/material.dart';
 
 class ShowOperandsCompanies extends StatefulWidget {
   ShowOperandsCompanies(
-      {Key key, @required this.operand, this.onSelect, @required this.database})
+      {Key key,
+      @required this.operand,
+      this.onSelect,
+      @required this.database,
+      this.selectedCompany})
       : super(key: key);
   final Operand operand;
   final Function onSelect;
   final Database database;
+  final String selectedCompany;
 
   @override
   _ShowOperandsCompaniesState createState() => _ShowOperandsCompaniesState();
@@ -23,12 +28,37 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
   List<String> _newCompanyList;
   int _companyId = 1;
   List<String> _choice = List.filled(50, 'pending', growable: true);
+  bool _showProducts = false;
+  int _index = 0;
 
   // initState
   @override
   void initState() {
     super.initState();
     _newCompanyList = widget.operand.companies;
+  }
+
+  _changeShowProduct(String company, String role, int index) {
+    print('company: $company, selcted: ${widget.selectedCompany}');
+    setState(() {
+      _company = company;
+      if (_company == widget.selectedCompany && role != 'függőben') {
+        _showProducts = !_showProducts;
+      } else {
+        _snackbar(context, company, widget.selectedCompany);
+      }
+    });
+  }
+
+  _snackbar(BuildContext context, String company, String selected) {
+    return ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content:
+            Text('Jelenleg $selected van kiválasztva, és nincs jogosultság '
+                'a $company adataihoz!'),
+        duration: Duration(seconds: 4),
+      ),
+    );
   }
 
   Future<void> _showMyDialog() async {
@@ -100,7 +130,6 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
                   child: Text('Mehet!'),
                   onPressed: () {
                     retrieveCompany();
-                    print('Here: $_companyId');
                     Navigator.of(context).pop();
                   },
                 ),
@@ -115,28 +144,40 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
         centerTitle: true,
         title: Text('Cégeim'),
       ),
-      body: ListView.builder(
-        itemBuilder: (context, index) {
-          retrieveCompanyRole(widget.operand.uid, _newCompanyList[index], index);
-          return CompanyListTile(
-            company: _newCompanyList[index],
-            role: _choice[index],
-            onTap: (company) => widget.onSelect(company, _choice[index]),
-          );
-        },
-        itemCount: _newCompanyList.length,
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _showEtarCode(context),
-        child: Icon(Icons.add),
-      ),
+      body: _showProducts && _company == widget.selectedCompany
+          ? Center(
+              child: Text(': $_company - ${_newCompanyList[_index]}'),
+            )
+          : ListView.builder(
+              itemBuilder: (context, index) {
+                retrieveCompanyRole(
+                    widget.operand.uid, _newCompanyList[index], index);
+                return CompanyListTile(
+                    showProduct: _changeShowProduct,
+                    company: _newCompanyList[index],
+                    role: _choice[index],
+                    index: index,
+                    onTap: (company) {
+                      _index = index;
+                      print('inside: $_index');
+                      return widget.onSelect(company, _choice[index]);
+                    });
+              },
+              itemCount: _newCompanyList.length,
+            ),
+      floatingActionButton: _showProducts
+          ? null
+          : FloatingActionButton(
+              onPressed: () => _showEtarCode(context),
+              child: Icon(Icons.add),
+            ),
     );
   }
 
   Future<void> retrieveCompanyRole(String uid, String company, int ind) async {
     try {
       await widget.database.retrieveCompany(uid, company).then((value) {
-        if(value.role == '') _choice[ind] = 'függőben';
+        if (value.role == '') _choice[ind] = 'függőben';
         if (value.role != '') {
           _choice[ind] = value.role;
           switch (_choice[ind]) {
