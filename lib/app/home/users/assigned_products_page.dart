@@ -40,27 +40,28 @@ class _AssignedProductsPageState extends State<AssignedProductsPage> {
   _showCupertinoDialog(
       BuildContext context, String id, String company, String uid) {
     showDialog(
-        context: context,
-        builder: (_) => new CupertinoAlertDialog(
-              title: new Text("Kijelölt tétel törlése"),
-              content: new Text(
-                  "Törlés után adott felhasználó hozzáférése megszűnik"),
-              actions: <Widget>[
-                TextButton(
-                  child: Text('Mégsem!'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                TextButton(
-                  child: Text('Törlés!'),
-                  onPressed: () {
-                    _deleteId(context, id, company, uid);
-                    Navigator.of(context).pop();
-                  },
-                ),
-              ],
-            ));
+      context: context,
+      builder: (_) => new CupertinoAlertDialog(
+        title: new Text("Kijelölt tétel törlése"),
+        content:
+            new Text("Törlés után adott felhasználó hozzáférése megszűnik"),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Mégsem!'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Törlés!'),
+            onPressed: () {
+              _deleteId(context, id, company, uid);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> _deleteId(

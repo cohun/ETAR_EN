@@ -53,10 +53,61 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
   _snackbar(BuildContext context, String company, String selected) {
     return ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
-        content:
-            Text('Jelenleg $selected van kiválasztva, és nincs jogosultság '
-                'a $company adataihoz!'),
-        duration: Duration(seconds: 4),
+        content: Container(
+          height: 90,
+          child: Column(
+            children: [
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Text('Jelenleg '),
+                    Text(
+                      selected,
+                      style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(' van kiválasztva,'),
+                  ],
+                ),
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Text(' és nincs jogosultság a '),
+                    Text(
+                      company,
+                      style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold),
+                    ),
+                    Text(' adataihoz. '),
+                  ],
+                ),
+              ),
+              Divider(
+                thickness: 4,
+              ),
+              SingleChildScrollView(
+                scrollDirection: Axis.horizontal,
+                child: Row(
+                  children: [
+                    Text('Ha van jogosultságod, válaszd: '),
+                    Text(
+                      company,
+                      style: TextStyle(
+                          color: Colors.deepOrange,
+                          fontWeight: FontWeight.bold),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        duration: Duration(seconds: 5),
       ),
     );
   }
@@ -146,7 +197,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       ),
       body: _showProducts && _company == widget.selectedCompany
           ? Center(
-              child: Text(': $_company - ${_newCompanyList[_index]}'),
+        child: Text(': $_company - ${widget.selectedCompany}'),
             )
           : ListView.builder(
               itemBuilder: (context, index) {
