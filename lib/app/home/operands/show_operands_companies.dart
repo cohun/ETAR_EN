@@ -1,16 +1,17 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/operands/company_list_tile.dart';
 import 'package:etar_en/app/models/operand_model.dart';
+import 'package:etar_en/dialogs/show_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class ShowOperandsCompanies extends StatefulWidget {
-  ShowOperandsCompanies(
-      {Key key,
-      @required this.operand,
-      this.onSelect,
-      @required this.database,
-      this.selectedCompany})
+  ShowOperandsCompanies({Key key,
+    @required this.operand,
+    this.onSelect,
+    @required this.database,
+    this.selectedCompany})
       : super(key: key);
   final Operand operand;
   final Function onSelect;
@@ -29,7 +30,6 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
   int _companyId = 1;
   List<String> _choice = List.filled(50, 'pending', growable: true);
   bool _showProducts = false;
-  int _index = 0;
 
   // initState
   @override
@@ -38,7 +38,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
     _newCompanyList = widget.operand.companies;
   }
 
-  _changeShowProduct(String company, String role, int index) {
+  _changeShowProduct(String company, String role) {
     print('company: $company, selcted: ${widget.selectedCompany}');
     setState(() {
       _company = company;
@@ -155,6 +155,18 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
     }
   }
 
+  Future<void> removeCompany(String company) async {
+    try {
+      setState(() {
+        _newCompanyList.remove(company);
+        widget.database.updateCompanies(_newCompanyList);
+      });
+      print(_newCompanyList);
+    } catch (e) {
+      await _showMyDialog();
+    }
+  }
+
   _showEtarCode(BuildContext context) {
     showDialog(
         context: context,
@@ -165,19 +177,19 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
               actions: <Widget>[
                 TextButton(
                   child: Text('Mégsem!'),
-                  onPressed: () {
-                    Navigator.of(context).pop();
-                  },
-                ),
-                CupertinoTextField(
-                  textAlign: TextAlign.center,
-                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-                  controller: _textController,
-                  onChanged: (val) => _companyId = int.tryParse(val),
-                  placeholder: 'ETAR-kód',
-                  keyboardType: TextInputType.number,
-                ),
-                TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            CupertinoTextField(
+              textAlign: TextAlign.center,
+              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+              controller: _textController,
+              onChanged: (val) => _companyId = int.tryParse(val),
+              placeholder: 'ETAR-kód',
+              keyboardType: TextInputType.number,
+            ),
+            TextButton(
                   child: Text('Mehet!'),
                   onPressed: () {
                     retrieveCompany();
@@ -186,6 +198,47 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
                 ),
               ],
             ));
+  }
+
+  _showCupertinoDialog(BuildContext context, String company) {
+    showDialog(
+      context: context,
+      builder: (_) => new CupertinoAlertDialog(
+        title: new Text("$company törlése"),
+        content: new Text("Törlés után a hozzáférés megszűnik"),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Mégsem!'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Törlés!'),
+            onPressed: () {
+              _deleteId(context, company);
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteId(BuildContext context, String company) async {
+    try {
+      await widget.database.deleteCompany(company, widget.operand.uid);
+      await removeCompany(company);
+    } on FirebaseException catch (e) {
+      showAlertDialog(context,
+          title: 'Operation failed',
+          content: e.toString(),
+          defaultActionText: 'OK');
+    }
+    setState(() {
+      _showProducts = false;
+      _newCompanyList = widget.operand.companies;
+    });
   }
 
   @override
@@ -197,31 +250,29 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
       ),
       body: _showProducts && _company == widget.selectedCompany
           ? Center(
-        child: Text(': $_company - ${widget.selectedCompany}'),
+              child: Text(': $_company - ${widget.selectedCompany}'),
             )
           : ListView.builder(
-              itemBuilder: (context, index) {
-                retrieveCompanyRole(
-                    widget.operand.uid, _newCompanyList[index], index);
-                return CompanyListTile(
-                    showProduct: _changeShowProduct,
+        itemBuilder: (context, index) {
+          retrieveCompanyRole(
+              widget.operand.uid, _newCompanyList[index], index);
+          return CompanyListTile(
+              showProduct: _changeShowProduct,
                     company: _newCompanyList[index],
                     role: _choice[index],
-                    index: index,
+                    deleteCompany: _showCupertinoDialog,
                     onTap: (company) {
-                      _index = index;
-                      print('inside: $_index');
                       return widget.onSelect(company, _choice[index]);
                     });
-              },
-              itemCount: _newCompanyList.length,
-            ),
+        },
+        itemCount: _newCompanyList.length,
+      ),
       floatingActionButton: _showProducts
           ? null
           : FloatingActionButton(
-              onPressed: () => _showEtarCode(context),
-              child: Icon(Icons.add),
-            ),
+        onPressed: () => _showEtarCode(context),
+        child: Icon(Icons.add),
+      ),
     );
   }
 

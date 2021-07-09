@@ -112,8 +112,6 @@ class _AssignedProductsPageState extends State<AssignedProductsPage> {
                                     color: Colors.red,
                                   ),
                                   onTap: () {
-                                    print(
-                                        'delete ${identifiers[index].identifier}');
                                     _showCupertinoDialog(
                                         context,
                                         identifiers[index].identifier,

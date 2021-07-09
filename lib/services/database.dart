@@ -14,6 +14,8 @@ abstract class Database {
 
   Future<void> deleteId(String id, String company, String uid);
 
+  Future<void> deleteCompany(String company, String uid);
+
   Future<void> getOperand(String uid);
 
   Future<DocumentSnapshot> getUser(String uid);
@@ -53,6 +55,12 @@ class FirestoreDatabase implements Database {
       FirebaseFirestore.instance
           .collection(APIPath.identifiersList(uid, company))
           .doc(id)
+          .delete();
+
+  Future<void> deleteCompany(String company, String uid) =>
+      FirebaseFirestore.instance
+          .collection(APIPath.operandCompanies(uid))
+          .doc(company)
           .delete();
 
   Future<void> getOperand(String uid) =>
