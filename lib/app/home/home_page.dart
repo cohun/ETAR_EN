@@ -12,7 +12,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-
 class HomePage extends StatefulWidget {
   const HomePage({Key key, @required this.auth}) : super(key: key);
   final AuthBase auth;
@@ -22,7 +21,6 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-
   _showOpDoc(BuildContext context, String uid) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -42,6 +40,8 @@ class _HomePageState extends State<HomePage> {
   int _selectedIndex = 1;
   String _selectedCompany = 'Cég';
   String _role = 'függőben';
+  String _selectedType = '';
+  String _id = "";
   UserModel _user;
 
   void _onItemTapped(int index) {
@@ -57,19 +57,25 @@ class _HomePageState extends State<HomePage> {
     });
   }
 
+  void _onSelectItem(String type, String id) {
+    setState(() {
+      _selectedType = type;
+      _id = id;
+      _selectedIndex = 1;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
     final database = Provider.of<Database>(context, listen: false);
     database.getUser(widget.auth.currentUser.uid).then((value) {
-      if (value.exists)
-        _user = UserModel.fromMap(value.data());
+      if (value.exists) _user = UserModel.fromMap(value.data());
       if (_user != null) {
         _role = 'admin';
       }
     });
-    }
-
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -112,19 +118,16 @@ class _HomePageState extends State<HomePage> {
 
     return DefaultTabController(
       length: 2,
-      child: _buildOperands(
-          database, _isEmpty, operands, _showCupertinoDialog),
+      child: _buildOperands(database, _isEmpty, operands, _showCupertinoDialog),
     );
   }
 
   FutureBuilder<DocumentSnapshot<Object>> _buildOperands(
-      Database database,
-      bool _isEmpty,
-      Operand operands,
-      Null _showCupertinoDialog(BuildContext context),
-      ) {
-
-
+    Database database,
+    bool _isEmpty,
+    Operand operands,
+    Null _showCupertinoDialog(BuildContext context),
+  ) {
     return FutureBuilder<DocumentSnapshot>(
       future: database.getOperand(widget.auth.currentUser.uid),
       builder:
@@ -260,16 +263,27 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ],
                   )
-                : _user != null ?
-            UsersPage(company: _user.company, database: database,):
-            ShowOperandsCompanies(
-                    operand: operands,
+                : _user != null
+                    ? UsersPage(
+                        company: _user.company,
+                        database: database,
+                      )
+                    : ShowOperandsCompanies(
+                        operand: operands,
                         onSelect: _onSelectCompany,
                         database: database,
                         selectedCompany: _selectedCompany,
+                        onItemSelect: _onSelectItem,
                       ),
-            bottomNavigationBar: _buildNavigationBar(context, _isEmpty,
-                operands, _selectedIndex, _onItemTapped, _selectedCompany, _role, _user),
+            bottomNavigationBar: _buildNavigationBar(
+                context,
+                _isEmpty,
+                operands,
+                _selectedIndex,
+                _onItemTapped,
+                _selectedCompany,
+                _role,
+                _user),
             floatingActionButtonLocation:
                 FloatingActionButtonLocation.endDocked,
             floatingActionButton: _isEmpty && _role == 'függőben'
@@ -285,8 +299,20 @@ class _HomePageState extends State<HomePage> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'gyáriszáma:',
+                  'Típus:',
                   style: Theme.of(context).textTheme.caption,
+                ),
+                Text(
+                  ' $_selectedType, ',
+                  style: TextStyle(color: Colors.green, fontSize: 11),
+                ),
+                Text(
+                  'gy.sz.:',
+                  style: Theme.of(context).textTheme.caption,
+                ),
+                Text(
+                  ' $_id',
+                  style: TextStyle(color: Colors.green, fontSize: 11),
                 ),
               ],
             ),
@@ -300,9 +326,15 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
-    int _selectedIndex, Function _onItemTapped, String _selectedCompany,
-    String _role, UserModel _user) {
+Widget _buildNavigationBar(
+    BuildContext context,
+    bool isEmpty,
+    Operand operands,
+    int _selectedIndex,
+    Function _onItemTapped,
+    String _selectedCompany,
+    String _role,
+    UserModel _user) {
   if (isEmpty && _role == 'függőben') {
     return BottomAppBar(
       color: Colors.indigo[700],
@@ -325,14 +357,20 @@ Widget _buildNavigationBar(BuildContext context, bool isEmpty, Operand operands,
           label: _user == null ? '${operands.name}' : _user.name,
         ),
         BottomNavigationBarItem(
-          icon: _role == 'függőben' ? Icon(Icons.help) : Icon(Icons.assignment_turned_in_outlined),
-          label: _selectedCompany == 'Cég' ? _user != null ? _user.company : ''
-              : operands.name == null ? 'Dokumentáció'
-              : _role,
+          icon: _role == 'függőben'
+              ? Icon(Icons.help)
+              : Icon(Icons.assignment_turned_in_outlined),
+          label: _selectedCompany == 'Cég'
+              ? _user != null
+                  ? _user.company
+                  : ''
+              : operands.name == null
+                  ? 'Dokumentáció'
+                  : _role,
         ),
         BottomNavigationBarItem(
           icon: Icon(Icons.business),
-          label: _user == null ?_selectedCompany : _role,
+          label: _user == null ? _selectedCompany : _role,
         ),
       ],
       selectedItemColor: _role == 'függőben' ? Colors.red : Colors.green,

@@ -8,11 +8,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class AssignedProductsPage extends StatefulWidget {
-  const AssignedProductsPage({Key key, this.database, this.company, this.uid})
-      : super(key: key);
+  const AssignedProductsPage({
+    Key key,
+    this.database,
+    this.company,
+    this.uid,
+    this.forOperands = false,
+    this.onItemSelect,
+  }) : super(key: key);
   final Database database;
   final String company;
   final String uid;
+  final bool forOperands;
+  final Function onItemSelect;
 
   @override
   _AssignedProductsPageState createState() => _AssignedProductsPageState();
@@ -106,21 +114,34 @@ class _AssignedProductsPageState extends State<AssignedProductsPage> {
                               );
                             } else {
                               return ListTile(
-                                trailing: InkWell(
-                                  child: Icon(
-                                    Icons.delete,
-                                    color: Colors.red,
-                                  ),
-                                  onTap: () {
-                                    _showCupertinoDialog(
-                                        context,
-                                        identifiers[index].identifier,
-                                        widget.company,
-                                        widget.uid);
-                                  },
-                                ),
+                                onTap: () {
+                                  if (widget.forOperands) {
+                                    var type = productResult[index].type;
+                                    var id = productResult[index].identifier;
+                                    productResult = [];
+                                    return widget.onItemSelect(type, id);
+                                  }
+                                  return Container(
+                                    height: 0,
+                                  );
+                                },
+                                trailing: !widget.forOperands
+                                    ? InkWell(
+                                        child: Icon(
+                                          Icons.delete,
+                                          color: Colors.red,
+                                        ),
+                                        onTap: () {
+                                          _showCupertinoDialog(
+                                              context,
+                                              identifiers[index].identifier,
+                                              widget.company,
+                                              widget.uid);
+                                        },
+                                      )
+                                    : null,
                                 subtitle: Text(
-                                  'gyári szám: ${identifiers[index].identifier}',
+                                  'gyári szám: ${productResult[index].identifier}',
                                   style: TextStyle(color: Colors.indigo[900]),
                                 ),
                                 title: SingleChildScrollView(
