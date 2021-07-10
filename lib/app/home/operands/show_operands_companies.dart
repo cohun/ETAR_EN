@@ -261,6 +261,7 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
                     role: _choice[index],
                     deleteCompany: _showCupertinoDialog,
                     onTap: (company) {
+                      widget.onItemSelect('', '');
                       return widget.onSelect(company, _choice[index]);
                     });
         },

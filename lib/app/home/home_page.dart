@@ -22,9 +22,15 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   _showOpDoc(BuildContext context, String uid) {
+    final database = Provider.of<Database>(context, listen: false);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => OpDoc(uid: uid),
+        builder: (context) => OpDoc(
+          uid: uid,
+          productId: _id,
+          database: database,
+          company: _selectedCompany,
+        ),
       ),
     );
   }
@@ -32,7 +38,10 @@ class _HomePageState extends State<HomePage> {
   _showLogBook(BuildContext context, String uid) {
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => LogBook(uid: uid),
+        builder: (context) => LogBook(
+          uid: uid,
+          productId: _id,
+        ),
       ),
     );
   }
@@ -295,18 +304,20 @@ class _HomePageState extends State<HomePage> {
                     child: Icon(Icons.add),
                   )
                 : null,
-            bottomSheet: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Text(
-                  'Típus:',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Text(
-                  ' $_selectedType, ',
-                  style: TextStyle(color: Colors.green, fontSize: 11),
-                ),
-                Text(
+            bottomSheet: _role == 'függőben'
+                ? null
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        'Típus:',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Text(
+                        ' $_selectedType, ',
+                        style: TextStyle(color: Colors.green, fontSize: 11),
+                      ),
+                      Text(
                   'gy.sz.:',
                   style: Theme.of(context).textTheme.caption,
                 ),
