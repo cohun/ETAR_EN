@@ -1,4 +1,3 @@
-import 'package:etar_en/app/home/users/assigned_products_page.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -45,37 +44,29 @@ class _OpDocState extends State<OpDoc> {
           style: TextStyle(color: Colors.black87),
         ),
       ),
-      body: widget.role == 'admin'
-          ? Container(
-              child: AssignedProductsPage(
-                company: widget.company,
-                uid: widget.uid,
-                database: widget.database,
-              ),
-            )
-          : FutureBuilder(
-              future: widget.database
-                  .retrieveProductFromId(widget.company, widget.productId),
-              builder: (context, AsyncSnapshot snapshot) {
-                if (!snapshot.hasData) {
-                  return Center(child: CircularProgressIndicator());
-                } else {
-                  return PageView(
-                    controller: _controller,
+      body: FutureBuilder(
+        future: widget.database
+            .retrieveProductFromId(widget.company, widget.productId),
+        builder: (context, AsyncSnapshot snapshot) {
+          if (!snapshot.hasData) {
+            return Center(child: CircularProgressIndicator());
+          } else {
+            return PageView(
+              controller: _controller,
+              children: [
+                Center(
+                  child: Column(
                     children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            SizedBox(
-                              height: 8,
-                            ),
-                            Text(
-                              'Emelőgép fö műszaki adatai:',
-                              style: Theme.of(context).textTheme.headline5,
-                            ),
-                            SizedBox(
-                              height: 24,
-                            ),
+                      SizedBox(
+                        height: 8,
+                      ),
+                      Text(
+                        'Emelőgép fö műszaki adatai:',
+                        style: Theme.of(context).textTheme.headline5,
+                      ),
+                      SizedBox(
+                        height: 24,
+                      ),
                             Container(
                               width: MediaQuery.of(context).size.width * 0.8,
                               height: MediaQuery.of(context).size.height * 0.7,

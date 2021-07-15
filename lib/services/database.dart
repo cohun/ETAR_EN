@@ -34,6 +34,9 @@ abstract class Database {
 
   Stream<List<Assignees>> assigneesStream(String company, String identifier);
 
+  Future<void> setAssigneesItem(
+      String company, String id, String name, String role);
+
   Future<RoleModel> retrieveCompany(String uid, String company);
 
   Future<void> assignRole(String uid, String company, String role);
@@ -180,6 +183,12 @@ class FirestoreDatabase implements Database {
         path: APIPath.assignees(company, identifier),
         builder: (data) => Assignees.fromMap(data),
       );
+
+  Future<void> setAssigneesItem(
+          String company, String id, String name, String role) =>
+      _service.setData(
+          path: APIPath.logAssignment(company, id),
+          data: Assignees(name: name, role: role).toMap());
 
   Future<void> assignRole(String uid, String company, String role) =>
       _service.setData(

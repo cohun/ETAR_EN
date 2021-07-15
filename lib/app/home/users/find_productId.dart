@@ -107,6 +107,8 @@ class _FindProductIdState extends State<FindProductId> {
                   database: widget.database,
                   company: widget.company,
                   uid: widget.uid,
+                  operandsName: widget.operandsName,
+                  role: widget.role,
                 ),
         ],
       ),

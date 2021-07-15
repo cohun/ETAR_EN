@@ -30,7 +30,7 @@ class _HomePageState extends State<HomePage> {
           uid: uid,
           productId: _id,
           database: database,
-          company: _selectedCompany,
+          company: _user != null ? _user.company : _selectedCompany,
           role: _role,
         ),
       ),

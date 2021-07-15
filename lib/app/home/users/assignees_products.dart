@@ -39,14 +39,11 @@ class _AssigneesProductsState extends State<AssigneesProducts> {
   }
 
   StreamBuilder<List<ProductModel>> _buildProductsStream() {
-    print('first');
-    print(widget.company);
     return StreamBuilder(
       stream: widget.database.productStream(widget.company),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
           products = snapshot.data;
-          print('products: ${products.length}');
           return ListView.builder(
               itemCount: products.length,
               itemBuilder: (context, index) {
@@ -58,15 +55,12 @@ class _AssigneesProductsState extends State<AssigneesProducts> {
             child: Text('Nem sikerült!'),
           );
         }
-        print('this ${products.length}');
         return CircularProgressIndicator();
       },
     );
   }
 
   StreamBuilder<List<Assignees>> _buildAssigneesStream(int index) {
-    print('second');
-    print(index);
     return StreamBuilder(
       stream: widget.database
           .assigneesStream(widget.company, products[index].identifier),
@@ -110,7 +104,6 @@ class _AssigneesProductsState extends State<AssigneesProducts> {
             child: Text('Nem sikerült!'),
           );
         }
-        print('this ${products.length}');
         return CircularProgressIndicator();
       },
     );

@@ -11,10 +11,14 @@ class FindProduct extends StatefulWidget {
     this.database,
     this.company,
     this.uid,
+    this.operandsName,
+    this.role,
   }) : super(key: key);
   final Database database;
   final String company;
   final String uid;
+  final String operandsName;
+  final String role;
 
   @override
   _FindProductState createState() => _FindProductState();
@@ -164,8 +168,13 @@ class _FindProductState extends State<FindProduct> {
                         ),
                         onPressed: () {
                           print('mehet');
-                          _createId(context, productResult.identifier,
-                              widget.company, widget.uid);
+                          _createId(
+                              context,
+                              productResult.identifier,
+                              widget.company,
+                              widget.uid,
+                              widget.operandsName,
+                              widget.role);
                         })
                     : Container(
                         width: 0,
@@ -200,14 +209,15 @@ class _FindProductState extends State<FindProduct> {
     );
   }
 
-  Future<void> _createId(
-      BuildContext context, String id, String company, String uid) async {
+  Future<void> _createId(BuildContext context, String id, String company,
+      String uid, String name, String role) async {
     try {
       await widget.database.createId(
         id,
         company,
         uid,
       );
+      await widget.database.setAssigneesItem(company, id, name, role);
       Navigator.of(context).pop();
     } on FirebaseException catch (e) {
       showAlertDialog(context,
