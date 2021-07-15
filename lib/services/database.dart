@@ -1,10 +1,12 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etar_en/app/models/assignees_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
 import 'package:etar_en/services/api_path.dart';
+import 'package:etar_en/services/firestore_service.dart';
 import 'package:flutter/material.dart';
 
 abstract class Database {
@@ -28,28 +30,41 @@ abstract class Database {
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
 
+  Stream<List<ProductModel>> productStream(String company);
+
+  Stream<List<Assignees>> assigneesStream(String company, String identifier);
+
   Future<RoleModel> retrieveCompany(String uid, String company);
+
   Future<void> assignRole(String uid, String company, String role);
+
   Stream<List<Identifier>> identifiersStream(String uid, String company);
 
   Future<void> updateOperand(Map<String, dynamic> operand);
+
   Future<CounterModel> retrieveCompanyFromCounter(companyId);
+
   Future<void> updateCompanies(List<String> _newCompanyList);
+
   Future<ProductModel> retrieveProductFromId(company, productId);
 }
 
-  //***********************************************************************
+//***********************************************************************
+
+String documentIdFromCurrentDate() => DateTime.now().toIso8601String();
 
 class FirestoreDatabase implements Database {
   FirestoreDatabase({@required this.uid}) : assert(uid != null);
   final String uid;
+  final _service = FirestoreService.instance;
 
   Future<void> createOperand(Operand operand) =>
-      _setData(path: APIPath.operand(uid), data: operand.toMap());
+      _service.setData(path: APIPath.operand(uid), data: operand.toMap());
 
-  Future<void> createId(String id, String company, String uid) => _setData(
-      path: APIPath.productAssignment(uid, company, id),
-      data: Identifier(identifier: id).toMap());
+  Future<void> createId(String id, String company, String uid) =>
+      _service.setData(
+          path: APIPath.productAssignment(uid, company, id),
+          data: Identifier(identifier: id).toMap());
 
   Future<void> deleteId(String id, String company, String uid) =>
       FirebaseFirestore.instance
@@ -143,31 +158,43 @@ class FirestoreDatabase implements Database {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
     return snapshots.map(
-          (snapshot) => snapshot.docs.map(
-            (snapshot) {
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
           final Map<String, dynamic> data = snapshot.data();
-          return data != null ? Identifier(identifier: data['identifier']) : null;
+          return data != null
+              ? Identifier(identifier: data['identifier'])
+              : null;
         },
       ).toList(),
     );
   }
 
+  Stream<List<ProductModel>> productStream(String company) =>
+      _service.collectionStream(
+        path: APIPath.products(company),
+        builder: (data) => ProductModel.fromMap(data),
+      );
+
+  Stream<List<Assignees>> assigneesStream(String company, String identifier) =>
+      _service.collectionStream(
+        path: APIPath.assignees(company, identifier),
+        builder: (data) => Assignees.fromMap(data),
+      );
+
   Future<void> assignRole(String uid, String company, String role) =>
-      _setData(path: APIPath.companyRole(uid, company), data: RoleModel(role: role, uid: uid).toMap());
+      _service.setData(
+          path: APIPath.companyRole(uid, company),
+          data: RoleModel(role: role, uid: uid).toMap());
 
   Future<void> assignOperand(Operand operand) =>
-      _setData(path: APIPath.operand(uid), data: operand.toMap());
+      _service.setData(path: APIPath.operand(uid), data: operand.toMap());
 
   Future<void> updateOperand(Map<String, dynamic> operand) =>
       _update(path: APIPath.operand(uid), data: operand);
+
   Future<void> _update({String path, Map<String, dynamic> data}) async {
     final reference = FirebaseFirestore.instance.doc(path);
     await reference.update(data);
-  }
-
-  Future<void> _setData({String path, Map<String, dynamic> data}) async {
-    final reference = FirebaseFirestore.instance.doc(path);
-    await reference.set(data);
   }
 
   Future<CounterModel> retrieveCompanyFromCounter(companyId) async {

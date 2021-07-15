@@ -163,7 +163,6 @@ class _AssignedProductsPageState extends State<AssignedProductsPage> {
                   });
               // return ListView(children: children,);
             }
-            print('2');
             return Center(
               child: CircularProgressIndicator(),
             );

@@ -1,29 +1,29 @@
-class Assignment {
+class Assignees {
   final String role;
-  final String uid;
+  final String name;
 
-  Assignment({
-    this.uid,
+  Assignees({
+    this.name,
     this.role,
   });
 
-  factory Assignment.fromMap(Map<String, dynamic> data) {
+  factory Assignees.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
     final String role = data['role'];
-    final String uid = data['uid'];
+    final String name = data['name'];
 
-    return Assignment(
+    return Assignees(
       role: role,
-      uid: uid,
+      name: name,
     );
   }
 
   Map<String, dynamic> toMap() {
     return {
       'role': role,
-      'uid': uid,
+      'name': name,
     };
   }
 }

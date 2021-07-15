@@ -3,6 +3,7 @@ import 'package:etar_en/app/home/log_book.dart';
 import 'package:etar_en/app/home/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
 import 'package:etar_en/app/home/operands/show_operands_companies.dart';
+import 'package:etar_en/app/home/users/assignees_products.dart';
 import 'package:etar_en/app/home/users/users_page.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/user_model.dart';
@@ -30,6 +31,7 @@ class _HomePageState extends State<HomePage> {
           productId: _id,
           database: database,
           company: _selectedCompany,
+          role: _role,
         ),
       ),
     );
@@ -209,7 +211,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 18.0),
                                 child: Views(
-                                    color: Colors.blueAccent[700],
+                                    color: Colors.blue,
                                     text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
                                     text2:
                                         'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
@@ -232,6 +234,25 @@ class _HomePageState extends State<HomePage> {
                                 height:
                                     MediaQuery.of(context).size.height * .04,
                               ),
+                              _user != null
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AssigneesProducts(
+                                                    database: database,
+                                                    company: _user.company,
+                                                    onSelect: _onSelectItem,
+                                                  )),
+                                        );
+                                      },
+                                      child: Text('Emelőgép kiválasztása'),
+                                    )
+                                  : Container(
+                                      height: 0,
+                                    ),
                             ],
                           ),
                         ),
@@ -266,6 +287,29 @@ class _HomePageState extends State<HomePage> {
                                 height:
                                     MediaQuery.of(context).size.height * .04,
                               ),
+                              _user != null
+                                  ? ElevatedButton(
+                                      onPressed: () {
+                                        Navigator.push(
+                                          context,
+                                          MaterialPageRoute(
+                                              builder: (context) =>
+                                                  AssigneesProducts(
+                                                    database: database,
+                                                    company: _user.company,
+                                                    onSelect: _onSelectItem,
+                                                  )),
+                                        );
+                                      },
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.yellow[900]),
+                                      child: Text(
+                                        'Emelőgép kiválasztása',
+                                      ),
+                                    )
+                                  : Container(
+                                      height: 0,
+                                    ),
                             ],
                           ),
                         ),
