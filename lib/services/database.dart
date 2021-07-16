@@ -49,6 +49,9 @@ abstract class Database {
 
   Future<void> updateCompanies(List<String> _newCompanyList);
 
+  Future<void> updateCompaniesFromUser(
+      List<String> _newCompanyList, String uid);
+
   Future<ProductModel> retrieveProductFromId(company, productId);
 }
 
@@ -222,10 +225,22 @@ class FirestoreDatabase implements Database {
         .catchError((error) => print("Failed to update user: $error"));
   }
 
+  Future<void> updateCompaniesFromUser(
+      List<String> _newCompanyList, String uid) {
+    final reference = FirebaseFirestore.instance.collection('operands');
+    return reference
+        .doc(uid)
+        .update({'companies': _newCompanyList})
+        .then((value) => print("User Updated"))
+        .catchError((error) => print("Failed to update user: $error"));
+  }
+
   Future<ProductModel> retrieveProductFromId(company, productId) async {
-    final ref = FirebaseFirestore.instance.collection('companies/$company/products');
-    return await ref.doc(productId).get().then((value) =>
-        ProductModel.fromMap(value.data())
-    );
+    final ref =
+        FirebaseFirestore.instance.collection('companies/$company/products');
+    return await ref
+        .doc(productId)
+        .get()
+        .then((value) => ProductModel.fromMap(value.data()));
   }
 }

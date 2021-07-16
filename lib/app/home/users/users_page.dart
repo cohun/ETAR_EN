@@ -1,6 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/users/find_productId.dart';
 import 'package:etar_en/app/models/operand_model.dart';
+import 'package:etar_en/dialogs/show_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class UsersPage extends StatefulWidget {
@@ -15,6 +18,8 @@ class UsersPage extends StatefulWidget {
 }
 
 class _UsersPageState extends State<UsersPage> {
+  List<String> _newCompanyList;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -63,25 +68,36 @@ class _UsersPageState extends State<UsersPage> {
               Text(operands[index].name),
               widget._choice[index] != 'pending'
                   ? ElevatedButton(
-                      onPressed: () {Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                          builder: (context) => FindProductId(
-                            operandsName: operands[index].name,
-                            uid: operands[index].uid,
-                            company: widget.company,
-                            role: widget._choice[index],
-                            database: widget.database,
+                onPressed: () {Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => FindProductId(
+                      operandsName: operands[index].name,
+                      uid: operands[index].uid,
+                      company: widget.company,
+                              role: widget._choice[index],
+                              database: widget.database,
+                            ),
                           ),
-                          ),
-                      );},
+                        );
+                      },
                       child: Text(
                         'Emelőgépek',
                       ),
                       style: ElevatedButton.styleFrom(primary: Colors.teal),
                     )
-                  : Container(
-                      width: 0,
+                  : InkWell(
+                      child: Icon(
+                        Icons.delete,
+                        color: Colors.red,
+                      ),
+                      onTap: () => _showCupertinoDialog(
+                        context,
+                        operands[index].name,
+                        widget.company,
+                        operands[index].uid,
+                        operands[index].companies,
+                      ),
                     ),
               Column(
                 children: [
@@ -94,8 +110,8 @@ class _UsersPageState extends State<UsersPage> {
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
-                            role: value,
-                            index: index),
+                                role: value,
+                                index: index),
                       ),
                       SizedBox(
                         width: 5,
@@ -204,6 +220,59 @@ class _UsersPageState extends State<UsersPage> {
       });
     } catch (e) {
       print(e);
+    }
+  }
+
+  _showCupertinoDialog(BuildContext context, String operand, String company,
+      String uid, List<String> companies) {
+    showDialog(
+      context: context,
+      builder: (_) => new CupertinoAlertDialog(
+        title: new Text("$operand törlése"),
+        content: new Text(
+            "Először törölj ki minden hozzárendelt emelőgépet, majd gyere ide vissza "
+            "és a törlés gomb megnyomásával vezesd ki $operand -t a listáról"),
+        actions: <Widget>[
+          TextButton(
+            child: Text('Mégsem!'),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+          TextButton(
+            child: Text('Törlés!'),
+            onPressed: () {
+              _deleteOp(
+                context,
+                company,
+                uid,
+                companies,
+              );
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+    );
+  }
+
+  Future<void> _deleteOp(BuildContext context, String company, String uid,
+      List<String> companies) async {
+    _newCompanyList = companies;
+    print(company);
+    print(companies);
+
+    try {
+      await widget.database.deleteCompany(company, uid);
+      setState(() {
+        _newCompanyList.remove(company);
+        widget.database.updateCompaniesFromUser(_newCompanyList, uid);
+      });
+    } on FirebaseException catch (e) {
+      showAlertDialog(context,
+          title: 'Operation failed',
+          content: e.toString(),
+          defaultActionText: 'OK');
     }
   }
 }
