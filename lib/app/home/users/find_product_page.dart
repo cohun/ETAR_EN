@@ -217,7 +217,7 @@ class _FindProductState extends State<FindProduct> {
         company,
         uid,
       );
-      await widget.database.setAssigneesItem(company, id, name, role);
+      await widget.database.setAssigneesItem(company, id, name, role, uid);
       Navigator.of(context).pop();
     } on FirebaseException catch (e) {
       showAlertDialog(context,

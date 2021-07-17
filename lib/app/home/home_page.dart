@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:etar_en/app/home/log_book.dart';
-import 'package:etar_en/app/home/op_doc.dart';
+import 'package:etar_en/app/home/logs/log_book.dart';
+import 'package:etar_en/app/home/logs/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
 import 'package:etar_en/app/home/operands/show_operands_companies.dart';
 import 'package:etar_en/app/home/users/assignees_products.dart';

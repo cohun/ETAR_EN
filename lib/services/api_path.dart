@@ -12,8 +12,8 @@ class APIPath {
           String uid, String company, String identifier) =>
       'operands/$uid/companies/$company/identifiers/$identifier';
 
-  static String logAssignment(String company, String identifier) =>
-      'companies/$company/products/$identifier/assignees/$identifier';
+  static String logAssignment(String company, String identifier, String uid) =>
+      'companies/$company/products/$identifier/assignees/$uid';
 
   static String assignees(String company, String identifier) =>
       'companies/$company/products/$identifier/assignees';
