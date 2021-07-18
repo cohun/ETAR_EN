@@ -43,7 +43,7 @@ class _OpDocState extends State<OpDoc> {
         backgroundColor: Colors.blueAccent[700],
         title: Text(
           'Üzemviteli dokumentáció',
-          style: TextStyle(color: Colors.black87),
+          style: TextStyle(color: Colors.black87, fontSize: 19),
         ),
       ),
       body: FutureBuilder(
@@ -57,154 +57,156 @@ class _OpDocState extends State<OpDoc> {
               controller: _controller,
               children: [
                 Center(
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: 12,
-                      ),
-                      Text(
-                        'Emelőgép fö műszaki adatai:',
-                        style: Theme.of(context).textTheme.headline6,
-                      ),
-                      SizedBox(
-                        height: 18,
-                      ),
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.8,
-                        height: MediaQuery.of(context).size.height * 0.7,
-                        child: Card(
-                          color: Colors.teal,
-                          child: Padding(
-                            padding: const EdgeInsets.all(16.0),
-                            child: SingleChildScrollView(
-                              child: Column(
-                                children: [
-                                  Text(
-                                    'Besorolás : ${snapshot.data.productGroup}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Típus : ${snapshot.data.type}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Megnevezés : ${snapshot.data.description}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Teherbírás : ${snapshot.data.capacity}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Hossz : ${snapshot.data.length}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Gyártó : ${snapshot.data.manufacturer}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Gyáriszám : ${snapshot.data.identifier}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Gyártási év : ${snapshot.data.productionDate}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Extra azonosító : ${snapshot.data.extraNr}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'NFC kód : ${snapshot.data.nfc}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Üzemeltető : ${snapshot.data.company}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Üzemeltetési helyszín : ${snapshot.data.site}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  Text(
-                                    'Megbízott felelős : ${snapshot.data.person}',
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  Divider(
-                                    thickness: 2,
-                                  ),
-                                  SizedBox(
-                                    height: 12,
-                                  ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceEvenly,
-                                    children: [
-                                      TextButton(
+                  child: SingleChildScrollView(
+                    child: Column(
+                      children: [
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Text(
+                          'Emelőgép fö műszaki adatai:',
+                          style: Theme.of(context).textTheme.headline6,
+                        ),
+                        SizedBox(
+                          height: 18,
+                        ),
+                        Container(
+                          width: MediaQuery.of(context).size.width * 0.85,
+                          height: MediaQuery.of(context).size.height * 1.1,
+                          child: Card(
+                            color: Colors.teal,
+                            child: Padding(
+                              padding: const EdgeInsets.all(16.0),
+                              child: SingleChildScrollView(
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Besorolás : ${snapshot.data.productGroup}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Típus : ${snapshot.data.type}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Megnevezés : ${snapshot.data.description}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Teherbírás : ${snapshot.data.capacity}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Hossz : ${snapshot.data.length}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Gyártó : ${snapshot.data.manufacturer}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Gyáriszám : ${snapshot.data.identifier}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Gyártási év : ${snapshot.data.productionDate}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Extra azonosító : ${snapshot.data.extraNr}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'NFC kód : ${snapshot.data.nfc}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Üzemeltető : ${snapshot.data.company}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Üzemeltetési helyszín : ${snapshot.data.site}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    Text(
+                                      'Megbízott felelős : ${snapshot.data.person}',
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    Divider(
+                                      thickness: 2,
+                                    ),
+                                    SizedBox(
+                                      height: 12,
+                                    ),
+                                    Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        TextButton(
+                                            onPressed: () {
+                                              _controller.jumpToPage(1);
+                                            },
+                                            child: Text(
+                                              'Kezelők és egyéb jogosultak',
+                                              style: TextStyle(
+                                                  color: Colors.amber),
+                                            )),
+                                        IconButton(
                                           onPressed: () {
                                             _controller.jumpToPage(1);
                                           },
-                                          child: Text(
-                                            'Kezelők és egyéb jogosultak',
-                                            style:
-                                                TextStyle(color: Colors.amber),
-                                          )),
-                                      IconButton(
-                                        onPressed: () {
-                                          _controller.jumpToPage(1);
-                                        },
-                                        icon: Icon(
-                                          Icons.arrow_forward,
-                                          size: 30,
-                                          color: Colors.amber,
+                                          icon: Icon(
+                                            Icons.arrow_forward,
+                                            size: 30,
+                                            color: Colors.amber,
+                                          ),
                                         ),
-                                      ),
-                                    ],
-                                  ),
-                                ],
+                                      ],
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
                 SecondPage(

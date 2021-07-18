@@ -62,140 +62,212 @@ class _SecondPageState extends State<SecondPage> {
             }
           }
           return Center(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 12,
-                ),
-                Text(
-                  'Alábbi személyek jogosultak naplóbejegyzésre:',
-                  style: Theme
-                      .of(context)
-                      .textTheme
-                      .overline,
-                ),
-                SizedBox(
-                  height: 24,
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.4,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.04,
-                      child: Card(
-                        color: Colors.indigo[900],
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(
-                              'Vizsgálók:',
-                              style: TextStyle(
-                                color: Colors.amber,
+            child: SingleChildScrollView(
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Text(
+                    'Alábbi személyek jogosultak naplóbejegyzésre:',
+                    style: Theme.of(context).textTheme.overline,
+                  ),
+                  SizedBox(
+                    height: 24,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.1,
+                        child: Card(
+                          color: Color(0xff0B0157),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                'Kezelők:',
+                                style: TextStyle(
+                                  color: Colors.white,
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                    Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.4,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.04,
-                      child: Card(
-                        color: Colors.pink,
-                        child: Padding(
-                          padding: const EdgeInsets.all(4.0),
-                          child: SingleChildScrollView(
-                            scrollDirection: Axis.horizontal,
-                            child: Text(
-                              'Vizsgálók:',
-                              style: TextStyle(
-                                color: Colors.green,
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.1,
+                        child: Card(
+                          color: Colors.blue[200],
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                'Karbantartók:',
+                                style: TextStyle(
+                                  color: Colors.brown[800],
+                                ),
                               ),
                             ),
                           ),
                         ),
                       ),
-                    ),
-                  ],
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.4,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.5,
-                      child: ListView.builder(
-                          itemCount: inspector.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              color: Colors.amber,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    '${inspector[index].name}',
-                                    style: TextStyle(
-                                      color: Colors.indigo[900],
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: ListView.builder(
+                            itemCount: operator.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.white70,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(
+                                      '${operator[index].name}',
+                                      style: TextStyle(
+                                        color: Color(0xff0B0157),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                            );
-                          }),
-                    ),
-                    Container(
-                      width: MediaQuery
-                          .of(context)
-                          .size
-                          .width * 0.4,
-                      height: MediaQuery
-                          .of(context)
-                          .size
-                          .height * 0.5,
-                      child: ListView.builder(
-                          itemCount: service.length,
-                          itemBuilder: (context, index) {
-                            return Card(
-                              color: Colors.green,
-                              child: Padding(
-                                padding: const EdgeInsets.all(4.0),
-                                child: SingleChildScrollView(
-                                  scrollDirection: Axis.horizontal,
-                                  child: Text(
-                                    '${service[index].name}',
-                                    style: TextStyle(
-                                      color: Colors.pink,
+                              );
+                            }),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: ListView.builder(
+                            itemCount: service.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.blueGrey[700],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(
+                                      '${service[index].name}',
+                                      style: TextStyle(
+                                        color: Colors.blue[100],
+                                      ),
                                     ),
                                   ),
                                 ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.1,
+                        child: Card(
+                          color: Colors.orange[100],
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                'Vizsgálók:',
+                                style: TextStyle(
+                                  color: Colors.green[900],
+                                ),
                               ),
-                            );
-                          }),
-                    ),
-                  ],
-                ),
-              ],
+                            ),
+                          ),
+                        ),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.width * 0.1,
+                        child: Card(
+                          color: Color(0xff02569b),
+                          child: Padding(
+                            padding: const EdgeInsets.all(4.0),
+                            child: SingleChildScrollView(
+                              scrollDirection: Axis.horizontal,
+                              child: Text(
+                                'Adminok:',
+                                style: TextStyle(
+                                  color: Colors.yellow,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: ListView.builder(
+                            itemCount: inspector.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.teal[800],
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(
+                                      '${inspector[index].name}',
+                                      style: TextStyle(
+                                        color: Colors.orange[100],
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.4,
+                        height: MediaQuery.of(context).size.height * 0.5,
+                        child: ListView.builder(
+                            itemCount: admin.length,
+                            itemBuilder: (context, index) {
+                              return Card(
+                                color: Colors.yellow,
+                                child: Padding(
+                                  padding: const EdgeInsets.all(4.0),
+                                  child: SingleChildScrollView(
+                                    scrollDirection: Axis.horizontal,
+                                    child: Text(
+                                      '${admin[index].name}',
+                                      style: TextStyle(
+                                        color: Color(0xff02569b),
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              );
+                            }),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
             ),
           );
         }
@@ -205,3 +277,4 @@ class _SecondPageState extends State<SecondPage> {
       },
     );
   }
+}

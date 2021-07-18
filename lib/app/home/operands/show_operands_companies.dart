@@ -172,25 +172,24 @@ class _ShowOperandsCompaniesState extends State<ShowOperandsCompanies> {
     showDialog(
         context: context,
         builder: (_) => new CupertinoAlertDialog(
-              title: new Text("Kérem a cég ETAR-kódját!"),
-              content: new Text(
-                  "Új cég felviteléhez az adott cégtől el kell kérni az ETAR-kódot!"),
+              title: new Text("ETAR-kód"),
+              content: new Text("Új cég felviteléhez add meg az ETAR-kódot!"),
               actions: <Widget>[
                 TextButton(
                   child: Text('Mégsem!'),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            CupertinoTextField(
-              textAlign: TextAlign.center,
-              style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
-              controller: _textController,
-              onChanged: (val) => _companyId = int.tryParse(val),
-              placeholder: 'ETAR-kód',
-              keyboardType: TextInputType.number,
-            ),
-            TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                CupertinoTextField(
+                  textAlign: TextAlign.center,
+                  style: TextStyle(color: Color.fromARGB(255, 255, 255, 255)),
+                  controller: _textController,
+                  onChanged: (val) => _companyId = int.tryParse(val),
+                  placeholder: 'ETAR-kód',
+                  keyboardType: TextInputType.number,
+                ),
+                TextButton(
                   child: Text('Mehet!'),
                   onPressed: () {
                     retrieveCompany();

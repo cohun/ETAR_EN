@@ -65,40 +65,46 @@ class _UsersPageState extends State<UsersPage> {
           title: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(operands[index].name),
-              widget._choice[index] != 'pending'
-                  ? ElevatedButton(
-                onPressed: () {Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => FindProductId(
-                      operandsName: operands[index].name,
-                      uid: operands[index].uid,
-                      company: widget.company,
-                              role: widget._choice[index],
-                              database: widget.database,
-                            ),
+              Column(
+                children: [
+                  Text(operands[index].name),
+                  SizedBox(height: 8),
+                  widget._choice[index] != 'pending'
+                      ? ElevatedButton(
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => FindProductId(
+                                  operandsName: operands[index].name,
+                                  uid: operands[index].uid,
+                                  company: widget.company,
+                                  role: widget._choice[index],
+                                  database: widget.database,
+                                ),
+                              ),
+                            );
+                          },
+                          child: Text(
+                            'Emelőgépek',
                           ),
-                        );
-                      },
-                      child: Text(
-                        'Emelőgépek',
-                      ),
-                      style: ElevatedButton.styleFrom(primary: Colors.teal),
-                    )
-                  : InkWell(
-                      child: Icon(
-                        Icons.delete,
-                        color: Colors.red,
-                      ),
-                      onTap: () => _showCupertinoDialog(
-                        context,
-                        operands[index].name,
-                        widget.company,
-                        operands[index].uid,
-                        operands[index].companies,
-                      ),
-                    ),
+                          style: ElevatedButton.styleFrom(primary: Colors.teal),
+                        )
+                      : InkWell(
+                          child: Icon(
+                            Icons.delete,
+                            color: Colors.red,
+                          ),
+                          onTap: () => _showCupertinoDialog(
+                            context,
+                            operands[index].name,
+                            widget.company,
+                            operands[index].uid,
+                            operands[index].companies,
+                          ),
+                        ),
+                ],
+              ),
               Column(
                 children: [
                   Row(
