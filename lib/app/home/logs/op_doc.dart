@@ -1,3 +1,4 @@
+import 'package:etar_en/app/home/logs/classification_periodical_controlling.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -57,22 +58,51 @@ class _OpDocState extends State<OpDoc> {
               controller: _controller,
               children: [
                 Center(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      children: [
-                        SizedBox(
-                          height: 12,
-                        ),
-                        Text(
-                          'Emelőgép fö műszaki adatai:',
-                          style: Theme.of(context).textTheme.headline6,
-                        ),
-                        SizedBox(
-                          height: 18,
-                        ),
-                        Container(
-                          width: MediaQuery.of(context).size.width * 0.85,
-                          height: MediaQuery.of(context).size.height * 1.1,
+                  child: Column(
+                    children: [
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          TextButton(
+                              onPressed: () {
+                                _controller.jumpToPage(1);
+                              },
+                              child: Text(
+                                'Bejegyzésre jogosultak',
+                                style: TextStyle(color: Colors.amber),
+                              )),
+                          IconButton(
+                            onPressed: () {
+                              _controller.jumpToPage(1);
+                            },
+                            icon: Icon(
+                              Icons.arrow_forward,
+                              size: 30,
+                              color: Colors.amber,
+                            ),
+                          ),
+                        ],
+                      ),
+                      Divider(
+                        thickness: 2,
+                      ),
+                      SizedBox(
+                        height: 12,
+                      ),
+                      Text(
+                        'Emelőgép fö műszaki adatai:',
+                        style: Theme.of(context).textTheme.headline6,
+                      ),
+                      SizedBox(
+                        height: 18,
+                      ),
+                      Container(
+                        width: MediaQuery.of(context).size.width * 0.85,
+                        height: MediaQuery.of(context).size.height * 0.65,
+                        child: SingleChildScrollView(
                           child: Card(
                             color: Colors.teal,
                             child: Padding(
@@ -174,42 +204,24 @@ class _OpDocState extends State<OpDoc> {
                                     SizedBox(
                                       height: 12,
                                     ),
-                                    Column(
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        TextButton(
-                                            onPressed: () {
-                                              _controller.jumpToPage(1);
-                                            },
-                                            child: Text(
-                                              'Kezelők és egyéb jogosultak',
-                                              style: TextStyle(
-                                                  color: Colors.amber),
-                                            )),
-                                        IconButton(
-                                          onPressed: () {
-                                            _controller.jumpToPage(1);
-                                          },
-                                          icon: Icon(
-                                            Icons.arrow_forward,
-                                            size: 30,
-                                            color: Colors.amber,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
                                   ],
                                 ),
                               ),
                             ),
                           ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
                 ),
                 SecondPage(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                Classification(
                   controller: _controller,
                   snapshot: snapshot,
                   company: widget.company,

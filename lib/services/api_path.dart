@@ -25,4 +25,13 @@ class APIPath {
 
   static String identifiersList(String uid, String company) =>
       'operands/$uid/companies/$company/identifiers';
+
+  // ********************************************************
+
+  static String classifications(String company, String identifier) =>
+      'companies/$company/products/$identifier/classifications';
+
+  static String classification(
+          String company, String identifier, String entryId) =>
+      'companies/$company/products/$identifier/classifications/$entryId';
 }

@@ -68,6 +68,35 @@ class _SecondPageState extends State<SecondPage> {
                   SizedBox(
                     height: 12,
                   ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          widget._controller.jumpToPage(2);
+                        },
+                        icon: Icon(
+                          Icons.arrow_back,
+                          size: 30,
+                          color: Colors.amber,
+                        ),
+                      ),
+                      TextButton(
+                          onPressed: () {
+                            widget._controller.jumpToPage(2);
+                          },
+                          child: Text(
+                            'Fő adatok',
+                            style: TextStyle(color: Colors.amber),
+                          )),
+                    ],
+                  ),
+                  Divider(
+                    thickness: 2,
+                  ),
+                  SizedBox(
+                    height: 12,
+                  ),
                   Text(
                     'Alábbi személyek jogosultak naplóbejegyzésre:',
                     style: Theme.of(context).textTheme.overline,
@@ -123,7 +152,7 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                             itemCount: operator.length,
                             itemBuilder: (context, index) {
@@ -146,7 +175,7 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                             itemCount: service.length,
                             itemBuilder: (context, index) {
@@ -220,7 +249,7 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                             itemCount: inspector.length,
                             itemBuilder: (context, index) {
@@ -243,7 +272,7 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.5,
+                        height: MediaQuery.of(context).size.height * 0.45,
                         child: ListView.builder(
                             itemCount: admin.length,
                             itemBuilder: (context, index) {

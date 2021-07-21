@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/models/assignees_model.dart';
+import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
@@ -102,10 +103,31 @@ class FirestoreDatabase implements Database {
           rol = RoleModel(role: '', uid: '');
         }
         return rol;
-      }
-      );
+      });
     }
     return rol;
+  }
+
+  Future<void> setClassification(Classification classification, String company,
+          String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.classification(company, identifier, entryId),
+        data: classification.toMap(),
+      );
+
+  Stream<List<Classification>> classificationStream(
+      String company, String identifier) {
+    final path = APIPath.classifications(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? Classification.fromMap(data) : null;
+        },
+      ).toList(),
+    );
   }
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company) {
@@ -113,11 +135,10 @@ class FirestoreDatabase implements Database {
     final reference = FirebaseFirestore.instance.collection(path);
 
     final snapshots = reference.snapshots();
-    return snapshots.map(
+    return snapshots.map((snapshot) {
+      if (snapshot.docs.length != 0) {
+        return snapshot.docs.map(
           (snapshot) {
-            if (snapshot.docs.length != 0) {
-              return snapshot.docs.map(
-                    (snapshot) {
                   final data = snapshot.data();
                   return data != null ? RoleModel.fromMap(data) : null;
                 },
