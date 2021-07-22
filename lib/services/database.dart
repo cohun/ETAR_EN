@@ -29,6 +29,9 @@ abstract class Database {
     @required String company,
   });
 
+  Stream<List<ClassificationModel>> classificationStream(
+      String company, String identifier);
+
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
 
   Stream<List<ProductModel>> productStream(String company);
@@ -39,6 +42,9 @@ abstract class Database {
       String company, String id, String name, String role, String uid);
 
   Future<RoleModel> retrieveCompany(String uid, String company);
+
+  Future<void> setClassification(ClassificationModel classification, String company,
+      String identifier, String entryId);
 
   Future<void> assignRole(String uid, String company, String role);
 
@@ -108,14 +114,14 @@ class FirestoreDatabase implements Database {
     return rol;
   }
 
-  Future<void> setClassification(Classification classification, String company,
+  Future<void> setClassification(ClassificationModel classification, String company,
           String identifier, String entryId) async =>
       await _service.setData(
         path: APIPath.classification(company, identifier, entryId),
         data: classification.toMap(),
       );
 
-  Stream<List<Classification>> classificationStream(
+  Stream<List<ClassificationModel>> classificationStream(
       String company, String identifier) {
     final path = APIPath.classifications(company, identifier);
     final reference = FirebaseFirestore.instance.collection(path);
@@ -124,7 +130,7 @@ class FirestoreDatabase implements Database {
       (snapshot) => snapshot.docs.map(
         (snapshot) {
           final data = snapshot.data();
-          return data != null ? Classification.fromMap(data) : null;
+          return data != null ? ClassificationModel.fromMap(data) : null;
         },
       ).toList(),
     );

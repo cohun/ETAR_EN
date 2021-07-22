@@ -73,7 +73,7 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       IconButton(
                         onPressed: () {
-                          widget._controller.jumpToPage(2);
+                          widget._controller.jumpToPage(0);
                         },
                         icon: Icon(
                           Icons.arrow_back,
@@ -83,7 +83,7 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       TextButton(
                           onPressed: () {
-                            widget._controller.jumpToPage(2);
+                            widget._controller.jumpToPage(0);
                           },
                           child: Text(
                             'Fő adatok',

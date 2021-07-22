@@ -22,12 +22,13 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  _showOpDoc(BuildContext context, String uid) {
+  _showOpDoc(BuildContext context, String uid, Operand operands) {
     final database = Provider.of<Database>(context, listen: false);
     Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => OpDoc(
           uid: uid,
+          name: _user != null ? _user.name : operands.name,
           productId: _id,
           database: database,
           company: _user != null ? _user.company : _selectedCompany,
@@ -228,7 +229,7 @@ class _HomePageState extends State<HomePage> {
                               InkWell(
                                 child: Image.asset('images/image.jpg'),
                                 onTap: () => _showOpDoc(
-                                    context, widget.auth.currentUser.uid),
+                                    context, widget.auth.currentUser.uid, operands),
                               ),
                               SizedBox(
                                 height:

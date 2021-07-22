@@ -10,12 +10,14 @@ class OpDoc extends StatefulWidget {
   const OpDoc({
     Key key,
     @required this.uid,
+    this.name,
     this.productId,
     this.company,
     this.database,
     this.role,
   }) : super(key: key);
   final String uid;
+  final String name;
   final String productId;
   final String company;
   final Database database;
@@ -26,6 +28,7 @@ class OpDoc extends StatefulWidget {
 }
 
 class _OpDocState extends State<OpDoc> {
+  int _value = 1;
   PageController _controller = PageController(
     initialPage: 0,
   );
@@ -67,16 +70,43 @@ class _OpDocState extends State<OpDoc> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           TextButton(
-                              onPressed: () {
-                                _controller.jumpToPage(1);
-                              },
-                              child: Text(
-                                'Bejegyzésre jogosultak',
-                                style: TextStyle(color: Colors.amber),
-                              )),
-                          IconButton(
                             onPressed: () {
                               _controller.jumpToPage(1);
+                            },
+                            child: Container(
+                              padding: EdgeInsets.all(20.0),
+                              child: DropdownButton(
+                                iconEnabledColor: Colors.amber,
+                                  value: _value,
+                                  items: [
+                                    DropdownMenuItem(
+                                      child: Text(
+                                        'Bejegyzésre jogosultak',
+                                        style: TextStyle(color: Colors.amber),
+                                      ),
+                                      value: 1,
+                                    ),
+                                    DropdownMenuItem(
+                                      child: Text("Vizsgálati csoportszám",
+                                          style: TextStyle(color: Colors.amber),
+                                      ),
+                                      value: 2,
+                                    ),
+                                    DropdownMenuItem(
+                                        child: Text("Third Item"), value: 3),
+                                    DropdownMenuItem(
+                                        child: Text("Fourth Item"), value: 4)
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _value = value;
+                                    });
+                                  }),
+                            ),
+                          ),
+                          IconButton(
+                            onPressed: () {
+                              _controller.jumpToPage(_value);
                             },
                             icon: Icon(
                               Icons.arrow_forward,
@@ -224,6 +254,7 @@ class _OpDocState extends State<OpDoc> {
                 Classification(
                   controller: _controller,
                   snapshot: snapshot,
+                  name: widget.name,
                   company: widget.company,
                   productId: widget.productId,
                   database: widget.database,

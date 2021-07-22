@@ -1,4 +1,4 @@
-class Classification {
+class ClassificationModel {
   final String id;
   final DateTime date;
   final String name;
@@ -9,7 +9,7 @@ class Classification {
   final String periodThoroughEx;
   final String periodInspection;
 
-  Classification({
+  ClassificationModel({
     this.id,
     this.date,
     this.name,
@@ -21,7 +21,7 @@ class Classification {
     this.periodInspection,
   });
 
-  factory Classification.fromMap(Map<String, dynamic> data) {
+  factory ClassificationModel.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
@@ -35,9 +35,9 @@ class Classification {
     final String periodThoroughEx = data['periodThoroughEx'];
     final String periodInspection = data['periodInspection'];
 
-    return Classification(
+    return ClassificationModel(
       id: id,
-      date: DateTime.fromMillisecondsSinceEpoch(date),
+      date: DateTime.fromMicrosecondsSinceEpoch(date),
       name: name,
       cerId: cerId,
       cerDate: DateTime.fromMicrosecondsSinceEpoch(cerDate),

@@ -9,7 +9,8 @@ class Format {
   }
 
   static String date(DateTime date) {
-    return DateFormat.yMMMd().format(date);
+    final DateFormat formatted = DateFormat('yyyy-MM-dd');
+    return formatted.format(date);
   }
 
   static String dayOfWeek(DateTime date) {
