@@ -34,4 +34,11 @@ class APIPath {
   static String classification(
           String company, String identifier, String entryId) =>
       'companies/$company/products/$identifier/classifications/$entryId';
+
+  static String operations(String company, String identifier) =>
+      'companies/$company/products/$identifier/operations';
+
+  static String operation(
+      String company, String identifier, String entryId) =>
+      'companies/$company/products/$identifier/operations/$entryId';
 }

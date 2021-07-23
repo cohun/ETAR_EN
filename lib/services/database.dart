@@ -4,6 +4,7 @@ import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
+import 'package:etar_en/app/models/operation_model.dart';
 import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
 import 'package:etar_en/services/api_path.dart';
@@ -32,6 +33,9 @@ abstract class Database {
   Stream<List<ClassificationModel>> classificationStream(
       String company, String identifier);
 
+  Stream<List<OperationModel>> operationStream(
+      String company, String identifier);
+
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
 
   Stream<List<ProductModel>> productStream(String company);
@@ -46,6 +50,9 @@ abstract class Database {
   Future<RoleModel> retrieveCompany(String uid, String company);
 
   Future<void> setClassification(ClassificationModel classification, String company,
+      String identifier, String entryId);
+
+  Future<void> setOperation(OperationModel operation, String company,
       String identifier, String entryId);
 
   Future<void> assignRole(String uid, String company, String role);
@@ -116,6 +123,8 @@ class FirestoreDatabase implements Database {
     return rol;
   }
 
+    //*********************************************************************
+
   Future<void> setClassification(ClassificationModel classification, String company,
           String identifier, String entryId) async =>
       await _service.setData(
@@ -137,6 +146,30 @@ class FirestoreDatabase implements Database {
       ).toList(),
     );
   }
+
+  Future<void> setOperation(OperationModel operation, String company,
+      String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.operation(company, identifier, entryId),
+        data: operation.toMap(),
+      );
+
+  Stream<List<OperationModel>> operationStream(
+      String company, String identifier) {
+    final path = APIPath.operations(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+          (snapshot) => snapshot.docs.map(
+            (snapshot) {
+          final data = snapshot.data();
+          return data != null ? OperationModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+    //******************************************************************
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company) {
     final path = APIPath.companyRole(uid, company);

@@ -1,4 +1,5 @@
 import 'package:etar_en/app/home/logs/classification_periodical_controlling.dart';
+import 'package:etar_en/app/home/logs/operation_data_page.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -93,7 +94,9 @@ class _OpDocState extends State<OpDoc> {
                                       value: 2,
                                     ),
                                     DropdownMenuItem(
-                                        child: Text("Third Item"), value: 3),
+                                        child: Text("Üzemeltetésre vonatkozó adatok",
+                                          style: TextStyle(color: Colors.amber),
+                                        ), value: 3),
                                     DropdownMenuItem(
                                         child: Text("Fourth Item"), value: 4)
                                   ],
@@ -252,6 +255,14 @@ class _OpDocState extends State<OpDoc> {
                   database: widget.database,
                 ),
                 Classification(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                Operation(
                   controller: _controller,
                   snapshot: snapshot,
                   name: widget.name,
