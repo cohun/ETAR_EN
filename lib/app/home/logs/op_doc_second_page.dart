@@ -32,11 +32,20 @@ class _SecondPageState extends State<SecondPage> {
 
   @override
   Widget build(BuildContext context) {
+
+    return StreamBuilder<List<Assignees>>(
+        stream: widget.database.adminsStream(widget.company),
+    builder: (context, snapshot) {
+    if (snapshot.hasData) {
+    var admins = snapshot.data;
+    admins.removeWhere((element) => element.role == 'hyper' ||
+        element.role == 'hyperSuper' || element.role == 'readOnly');
+
     return StreamBuilder<List<Assignees>>(
       stream: widget.database.assigneesStream(widget.company, widget.productId),
       builder: (context, snapshot) {
         if (snapshot.hasData) {
-          final assignees = snapshot.data;
+          final assignees = snapshot.data..addAll(admins);
           for (var assignee in assignees) {
             switch (assignee.role) {
               case 'inspector':
@@ -154,7 +163,7 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.45,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: ListView.builder(
                             itemCount: operator.length,
                             itemBuilder: (context, index) {
@@ -181,7 +190,7 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.height * 0.45,
+                        height: MediaQuery.of(context).size.height * 0.35,
                         child: ListView.builder(
                             itemCount: service.length,
                             itemBuilder: (context, index) {
@@ -319,11 +328,20 @@ class _SecondPageState extends State<SecondPage> {
               ),
             ),
           );
+
         }
         return Center(
           child: CircularProgressIndicator(),
         );
       },
     );
+
+    }
+    return Center(
+      child: CircularProgressIndicator(),
+    );
+    },
+    );
+
   }
 }

@@ -38,6 +38,8 @@ abstract class Database {
 
   Stream<List<Assignees>> assigneesStream(String company, String identifier);
 
+  Stream<List<Assignees>> adminsStream(String company);
+
   Future<void> setAssigneesItem(
       String company, String id, String name, String role, String uid);
 
@@ -196,6 +198,26 @@ class FirestoreDatabase implements Database {
           final Map<String, dynamic> data = snapshot.data();
           return data != null
               ? Identifier(identifier: data['identifier'])
+              : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Stream<List<Assignees>> adminsStream(String company) {
+    final path = 'users/';
+    final reference = FirebaseFirestore.instance.collection(path).where(
+        'company', isEqualTo: company
+    );
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+          (snapshot) => snapshot.docs.map(
+
+            (snapshot) {
+          final Map<String, dynamic> data = snapshot.data();
+
+          return data != null
+              ? Assignees(name: data['name'], role: data['approvedRole'])
               : null;
         },
       ).toList(),
