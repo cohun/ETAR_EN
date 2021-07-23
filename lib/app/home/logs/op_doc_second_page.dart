@@ -109,17 +109,18 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.1,
+                        height: 40,
                         child: Card(
-                          color: Color(0xff0B0157),
+                          color: Colors.green[200],
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(
                                 'Kezelők:',
                                 style: TextStyle(
-                                  color: Colors.white,
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -128,17 +129,18 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.1,
+                        height: 40,
                         child: Card(
                           color: Colors.blue[200],
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(
                                 'Karbantartók:',
                                 style: TextStyle(
-                                  color: Colors.brown[800],
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -157,16 +159,20 @@ class _SecondPageState extends State<SecondPage> {
                             itemCount: operator.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                color: Colors.white70,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), // if you need this
+                                  side: BorderSide(
+                                    color: Colors.green[200],
+                                    width: 3,
+                                  ),
+                                ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      '${operator[index].name}',
-                                      style: TextStyle(
-                                        color: Color(0xff0B0157),
-                                      ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${operator[index].name}',
+                                    style: TextStyle(
+                                      color: Color(0xff0B0157),
                                     ),
                                   ),
                                 ),
@@ -180,16 +186,20 @@ class _SecondPageState extends State<SecondPage> {
                             itemCount: service.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                color: Colors.blueGrey[700],
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), // if you need this
+                                  side: BorderSide(
+                                    color: Colors.blue[200],
+                                    width: 3,
+                                  ),
+                                ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      '${service[index].name}',
-                                      style: TextStyle(
-                                        color: Colors.blue[100],
-                                      ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${service[index].name}',
+                                    style: TextStyle(
+                                      color: Color(0xff0B0157),
                                     ),
                                   ),
                                 ),
@@ -206,17 +216,18 @@ class _SecondPageState extends State<SecondPage> {
                     children: [
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.1,
+                        height: 40,
                         child: Card(
                           color: Colors.orange[100],
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(
                                 'Vizsgálók:',
                                 style: TextStyle(
-                                  color: Colors.green[900],
+                                  color: Colors.black,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -225,17 +236,18 @@ class _SecondPageState extends State<SecondPage> {
                       ),
                       Container(
                         width: MediaQuery.of(context).size.width * 0.4,
-                        height: MediaQuery.of(context).size.width * 0.1,
+                        height: 40,
                         child: Card(
                           color: Color(0xff02569b),
                           child: Padding(
-                            padding: const EdgeInsets.all(4.0),
+                            padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(
                               scrollDirection: Axis.horizontal,
                               child: Text(
                                 'Adminok:',
                                 style: TextStyle(
                                   color: Colors.yellow,
+                                  fontWeight: FontWeight.bold,
                                 ),
                               ),
                             ),
@@ -254,16 +266,20 @@ class _SecondPageState extends State<SecondPage> {
                             itemCount: inspector.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                color: Colors.teal[800],
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), // if you need this
+                                  side: BorderSide(
+                                    color: Colors.orange[100],
+                                    width: 3,
+                                  ),
+                                ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      '${inspector[index].name}',
-                                      style: TextStyle(
-                                        color: Colors.orange[100],
-                                      ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${inspector[index].name}',
+                                    style: TextStyle(
+                                      color: Color(0xff0B0157),
                                     ),
                                   ),
                                 ),
@@ -277,16 +293,20 @@ class _SecondPageState extends State<SecondPage> {
                             itemCount: admin.length,
                             itemBuilder: (context, index) {
                               return Card(
-                                color: Colors.yellow,
+                                color: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(10), // if you need this
+                                  side: BorderSide(
+                                    color: Color(0xff02569b),
+                                    width: 3,
+                                  ),
+                                ),
                                 child: Padding(
-                                  padding: const EdgeInsets.all(4.0),
-                                  child: SingleChildScrollView(
-                                    scrollDirection: Axis.horizontal,
-                                    child: Text(
-                                      '${admin[index].name}',
-                                      style: TextStyle(
-                                        color: Color(0xff02569b),
-                                      ),
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: Text(
+                                    '${admin[index].name}',
+                                    style: TextStyle(
+                                      color: Color(0xff0B0157),
                                     ),
                                   ),
                                 ),

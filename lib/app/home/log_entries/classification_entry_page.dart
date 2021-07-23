@@ -44,7 +44,7 @@ class ClassificationEntryPage extends StatefulWidget {
 }
 
 class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
-
+  String _id;
   DateTime _date;
   String _name;
   String _cerId;
