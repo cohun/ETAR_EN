@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etar_en/app/home/logs/empty_content.dart';
 import 'package:etar_en/app/home/logs/log_book.dart';
 import 'package:etar_en/app/home/logs/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
@@ -26,7 +27,11 @@ class _HomePageState extends State<HomePage> {
     final database = Provider.of<Database>(context, listen: false);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => OpDoc(
+        builder: (context) => _id == '' ? Scaffold(
+          appBar: AppBar(),
+          body: EmptyContent(title: 'nincs emelőgép kiválasztva',
+          message: 'Válassz ki előbb egy emelőgépet',),
+        ) : OpDoc(
           uid: uid,
           name: _user != null ? _user.name : operands.name,
           productId: _id,

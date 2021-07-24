@@ -46,7 +46,7 @@ class SignInPage extends StatelessWidget {
             color: Colors.yellowAccent,
           ),
           Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 90.0),
+            padding: const EdgeInsets.symmetric(horizontal: 110.0),
             child: InkWell(
               child: Image.asset('images/ETAR_EN_flat_small.png'),
               onTap: () => _signInWithEmail(context),
@@ -71,7 +71,7 @@ class SignInPage extends StatelessWidget {
                         .headline5
                         .copyWith(color: Colors.yellowAccent)),
                 Divider(
-                  thickness: 2,
+                  thickness: 6,
                 ),
                 Text('Emelőgép üzemvitel',
                     style: Theme.of(context)

@@ -168,7 +168,7 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
 
   Widget _buildCerDate() {
     return DateTimePicker(
-      labelText: 'vizsgálati jegyzőkönyv kelte',
+      labelText: 'jegyzőkönyv kelte',
       selectedDate: _cerDate,
       onSelectedDate: (cerDate) => setState(() => _cerDate = cerDate),
     );
@@ -176,7 +176,7 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
 
   Widget _buildStartDate() {
     return DateTimePicker(
-      labelText: 'üzembehelyezés kelte',
+      labelText: _state ? 'üzembehelyezés kelte' : 'üzemeltetés leállításának kelte',
       selectedDate: _startDate,
       onSelectedDate: (startDate) => setState(() => _startDate = startDate),
     );
