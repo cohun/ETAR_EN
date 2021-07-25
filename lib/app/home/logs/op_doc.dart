@@ -1,5 +1,6 @@
 import 'package:etar_en/app/home/logs/classification_periodical_controlling.dart';
 import 'package:etar_en/app/home/logs/operation_data_page.dart';
+import 'package:etar_en/app/home/logs/parts_page.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -78,17 +79,17 @@ class _OpDocState extends State<OpDoc> {
                               child: Container(
                                 padding: EdgeInsets.all(8.0),
                                 child: DropdownButton(
-                                  iconEnabledColor: Colors.amber,
+                                  iconEnabledColor: Colors.blue,
                                     value: _value,
                                     items: [
                                       DropdownMenuItem(
                                         child: Row(
                                           children: [
-                                            Icon(Icons.person_add_sharp, color: Colors.amber,),
+                                            Icon(Icons.person_add_sharp, color: _value == 1 ? Colors.amber : null,),
                                             SizedBox(width: 16,),
                                             Text(
                                               'Bejegyzésre jogosultak',
-                                              style: TextStyle(color: Colors.amber),
+                                              style: _value == 1 ? TextStyle(color: Colors.blue) : null,
                                             ),
                                           ],
                                         ),
@@ -97,10 +98,10 @@ class _OpDocState extends State<OpDoc> {
                                       DropdownMenuItem(
                                         child: Row(
                                           children: [
-                                            Icon(Icons.approval, color: Colors.amber,),
+                                            Icon(Icons.approval, color: _value == 2 ? Colors.amber : null,),
                                             SizedBox(width: 16,),
                                             Text("Vizsgálati csoportszám",
-                                                style: TextStyle(color: Colors.amber),
+                                              style: _value == 2 ? TextStyle(color: Colors.blue) : null,
                                             ),
                                           ],
                                         ),
@@ -109,60 +110,60 @@ class _OpDocState extends State<OpDoc> {
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.article_outlined, color: Colors.amber,),
+                                              Icon(Icons.article_outlined, color: _value == 3 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Üzemeltetésre vonatkozó adatok",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 3 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 3),
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.six_ft_apart_outlined, color: Colors.amber,),
+                                              Icon(Icons.six_ft_apart_outlined, color: _value == 4 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Cserélt fő darabok. részegységek",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 4 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 4),
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.bolt, color: Colors.amber,),
+                                              Icon(Icons.bolt, color: _value == 5 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Érintésvédelem",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 5 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 5),
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.assignment_turned_in_outlined, color: Colors.amber,),
+                                              Icon(Icons.assignment_turned_in_outlined, color: _value == 6 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Időszakos vizsgálatok",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 6 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 6),
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.monitor_weight, color: Colors.amber,),
+                                              Icon(Icons.monitor_weight, color: _value == 7 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Terhelési próba",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 7 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 7),
                                       DropdownMenuItem(
                                           child: Row(
                                             children: [
-                                              Icon(Icons.view_stream_sharp, color: Colors.amber,),
+                                              Icon(Icons.view_stream_sharp, color: _value == 8 ? Colors.amber : null,),
                                               SizedBox(width: 16,),
                                               Text("Egyenértékű biztonság igazolása",
-                                                style: TextStyle(color: Colors.amber),
+                                                style: _value == 8 ? TextStyle(color: Colors.blue) : null,
                                               ),
                                             ],
                                           ), value: 8),
@@ -365,6 +366,14 @@ class _OpDocState extends State<OpDoc> {
                   database: widget.database,
                 ),
                 Operation(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                PartsPage(
                   controller: _controller,
                   snapshot: snapshot,
                   name: widget.name,

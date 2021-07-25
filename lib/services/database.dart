@@ -5,6 +5,7 @@ import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/operation_model.dart';
+import 'package:etar_en/app/models/parts_model.dart';
 import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
 import 'package:etar_en/services/api_path.dart';
@@ -36,6 +37,9 @@ abstract class Database {
   Stream<List<OperationModel>> operationStream(
       String company, String identifier);
 
+  Stream<List<PartsModel>> partsStream(
+      String company, String identifier);
+
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
 
   Stream<List<ProductModel>> productStream(String company);
@@ -53,6 +57,9 @@ abstract class Database {
       String identifier, String entryId);
 
   Future<void> setOperation(OperationModel operation, String company,
+      String identifier, String entryId);
+
+  Future<void> setParts(PartsModel parts, String company,
       String identifier, String entryId);
 
   Future<void> assignRole(String uid, String company, String role);
@@ -164,6 +171,28 @@ class FirestoreDatabase implements Database {
             (snapshot) {
           final data = snapshot.data();
           return data != null ? OperationModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Future<void> setParts(PartsModel parts, String company,
+      String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.part(company, identifier, entryId),
+        data: parts.toMap(),
+      );
+
+  Stream<List<PartsModel>> partsStream(
+      String company, String identifier) {
+    final path = APIPath.parts(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+          (snapshot) => snapshot.docs.map(
+            (snapshot) {
+          final data = snapshot.data();
+          return data != null ? PartsModel.fromMap(data) : null;
         },
       ).toList(),
     );
