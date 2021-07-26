@@ -1,4 +1,3 @@
-import 'package:etar_en/app/home/log_entries/operation_entry_page.dart';
 import 'package:etar_en/app/home/log_entries/part_entry_page.dart';
 import 'package:etar_en/app/home/logs/empty_content.dart';
 import 'package:etar_en/app/models/parts_model.dart';
@@ -104,22 +103,42 @@ class _PartsPageState extends State<PartsPage> {
                                 leading: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text(
-                                        'csere kelte: ${parts[index].date.toString().substring(0, 10)}'),
-                                    Text(
-                                        'cserét végző: ${parts[index].serviceName}'),
+                                    Padding(
+                                      padding: const EdgeInsets.all(4.0),
+                                      child: Row(
+                                        children: [
+                                          Text(
+                                              'csere kelte: '),
+                                          Text(
+                                              '${parts[index].date.toString().substring(0, 10)}',
+                                          style: TextStyle(color: Colors.deepOrangeAccent),),
+                                        ],
+                                        mainAxisSize: MainAxisSize.min,
+                                      ),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(2.0),
+                                      child: Text(
+                                          'cserét végző: ${parts[index].serviceName}'),
+                                    ),
                                   ],
                                 ),
                                 title: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Card(
-                                      child: Text(
-                                          'Azonosító: ${parts[index].partId}'),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            'Azonosító: ${parts[index].partId}'),
+                                      ),
                                     ),
                                     Card(
-                                      child: Text(
-                                          'Megnevezés: ${parts[index].partName}'),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Text(
+                                            'Megnevezés: ${parts[index].partName}'),
+                                      ),
                                     ),
                                   ],
                                 ),

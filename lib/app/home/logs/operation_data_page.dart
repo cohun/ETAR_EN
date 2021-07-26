@@ -136,9 +136,12 @@ class _OperationState extends State<Operation> {
                                   children: [
                                     operations[index].state ?
                                     Card(
-                                      child: Text(
-                                          '${operations[index].startDate
-                                              .toString().substring(0, 10)}'),
+                                      child: Padding(
+                                        padding: const EdgeInsets.all(4.0),
+                                        child: Text(
+                                            '${operations[index].startDate
+                                                .toString().substring(0, 10)}'),
+                                      ),
                                     ) :
                                     Card(
                                       child: Text(

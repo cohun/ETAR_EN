@@ -122,19 +122,31 @@ class _ClassificationState extends State<Classification> {
                               ],
                             ),
                             title: Card(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                      'üzemi csoportszám: ${classifications[index]
-                                          .classNr}'),
-                                  Text(
-                                      'fővizsgálatok: ${classifications[index]
-                                          .periodThoroughEx}'),
-                                  Text(
-                                      'szerkezeti vizsgálatok: ${classifications[index]
-                                          .periodInspection}'),
-                                ],
+                              child: Padding(
+                                padding: const EdgeInsets.all(4.0),
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: Text(
+                                          'üzemi csoportszám: ${classifications[index]
+                                              .classNr}'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: Text(
+                                          'fővizsgálatok: ${classifications[index]
+                                              .periodThoroughEx}'),
+                                    ),
+                                    Padding(
+                                      padding: const EdgeInsets.all(1.0),
+                                      child: Text(
+                                          'szerkezeti vizsgálatok: ${classifications[index]
+                                              .periodInspection}'),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ),
                             subtitle: Column(
