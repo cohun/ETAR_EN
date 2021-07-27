@@ -3,8 +3,8 @@ import 'package:flutter/material.dart';
 
 import 'input_dropdown.dart';
 
-class DateTimePicker extends StatelessWidget {
-  const DateTimePicker({
+class DatePicker extends StatelessWidget {
+  const DatePicker({
     Key key,
     this.labelText,
     this.selectedDate,
@@ -23,19 +23,11 @@ class DateTimePicker extends StatelessWidget {
     final pickedDate = await showDatePicker(
       context: context,
       initialDate: selectedDate,
-      firstDate: DateTime(2000, 1),
-      lastDate: DateTime(2100),
+      firstDate: DateTime(1999, 1),
+      lastDate: DateTime(2050),
     );
     if (pickedDate != null && pickedDate != selectedDate) {
       onSelectedDate(pickedDate);
-    }
-  }
-
-  Future<void> _selectTime(BuildContext context) async {
-    final pickedTime =
-        await showTimePicker(context: context, initialTime: selectedTime);
-    if (pickedTime != null && pickedTime != selectedTime) {
-      onSelectedTime(pickedTime);
     }
   }
 
@@ -52,15 +44,6 @@ class DateTimePicker extends StatelessWidget {
             valueText: Format.date(selectedDate),
             valueStyle: valueStyle,
             onPressed: () => _selectDate(context),
-          ),
-        ),
-        SizedBox(width: 12.0),
-        Expanded(
-          flex: 4,
-          child: InputDropdown(
-            valueText: selectedTime.format(context),
-            valueStyle: valueStyle,
-            onPressed: () => _selectTime(context),
           ),
         ),
       ],

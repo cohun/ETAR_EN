@@ -27,29 +27,46 @@ class _HomePageState extends State<HomePage> {
     final database = Provider.of<Database>(context, listen: false);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => _id == '' ? Scaffold(
-          appBar: AppBar(),
-          body: EmptyContent(title: 'nincs emelőgép kiválasztva',
-          message: 'Válassz ki előbb egy emelőgépet',),
-        ) : OpDoc(
-          uid: uid,
-          name: _user != null ? _user.name : operands.name,
-          productId: _id,
-          database: database,
-          company: _user != null ? _user.company : _selectedCompany,
-          role: _role,
-        ),
+        builder: (context) => _id == ''
+            ? Scaffold(
+                appBar: AppBar(),
+                body: EmptyContent(
+                  title: 'nincs emelőgép kiválasztva',
+                  message: 'Válassz ki előbb egy emelőgépet',
+                ),
+              )
+            : OpDoc(
+                uid: uid,
+                name: _user != null ? _user.name : operands.name,
+                productId: _id,
+                database: database,
+                company: _user != null ? _user.company : _selectedCompany,
+                role: _role,
+              ),
       ),
     );
   }
 
-  _showLogBook(BuildContext context, String uid) {
+  _showLogBook(BuildContext context, String uid, Operand operands) {
+    final database = Provider.of<Database>(context, listen: false);
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => LogBook(
-          uid: uid,
-          productId: _id,
-        ),
+        builder: (context) => _id == ''
+            ? Scaffold(
+                appBar: AppBar(),
+                body: EmptyContent(
+                  title: 'nincs emelőgép kiválasztva',
+                  message: 'Válassz ki előbb egy emelőgépet',
+                ),
+              )
+            : LogBook(
+                uid: uid,
+                name: _user != null ? _user.name : operands.name,
+                productId: _id,
+                database: database,
+                company: _user != null ? _user.company : _selectedCompany,
+                role: _role,
+              ),
       ),
     );
   }
@@ -242,6 +259,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               _user != null
                                   ? ElevatedButton(
+                                      style: ElevatedButton.styleFrom(
+                                          primary: Colors.blue[800]),
                                       onPressed: () {
                                         Navigator.push(
                                           context,
@@ -272,7 +291,7 @@ class _HomePageState extends State<HomePage> {
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 18.0),
                                 child: Views(
-                                    color: Colors.yellow[900],
+                                    color: Colors.orange[800],
                                     text1: 'EMELŐGÉP NAPLÓ:',
                                     text2:
                                         'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
@@ -286,8 +305,8 @@ class _HomePageState extends State<HomePage> {
                               ),
                               InkWell(
                                 child: Image.asset('images/image.jpg'),
-                                onTap: () => _showLogBook(
-                                    context, widget.auth.currentUser.uid),
+                                onTap: () => _showLogBook(context,
+                                    widget.auth.currentUser.uid, operands),
                               ),
                               SizedBox(
                                 height:
@@ -308,7 +327,7 @@ class _HomePageState extends State<HomePage> {
                                         );
                                       },
                                       style: ElevatedButton.styleFrom(
-                                          primary: Colors.yellow[900]),
+                                          primary: Colors.orange[900]),
                                       child: Text(
                                         'Emelőgép kiválasztása',
                                       ),

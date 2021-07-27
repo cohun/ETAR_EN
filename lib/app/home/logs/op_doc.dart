@@ -260,7 +260,7 @@ class _OpDocState extends State<OpDoc> {
                           height: MediaQuery.of(context).size.height * 0.65,
                           child: SingleChildScrollView(
                             child: Card(
-                              color: Colors.teal[800],
+                              color: Colors.teal[900],
                               child: Padding(
                                 padding: const EdgeInsets.all(16.0),
                                 child: SingleChildScrollView(

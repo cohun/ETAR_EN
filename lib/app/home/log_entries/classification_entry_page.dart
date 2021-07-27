@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:etar_en/app/home/logs/date_time_picker.dart';
+import 'package:etar_en/app/home/logs/date_picker.dart';
 import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/dialogs/show_exception_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
@@ -143,7 +143,7 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
   }
 
   Widget _buildDate() {
-    return DateTimePicker(
+    return DatePicker(
       labelText: 'bejegyzés dátuma',
       selectedDate: _date,
       onSelectedDate: (date) => setState(() => _date = date),
@@ -151,7 +151,7 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
   }
 
   Widget _buildCerDate() {
-    return DateTimePicker(
+    return DatePicker(
       labelText: 'jegyzőkönyv kelte',
       selectedDate: _cerDate,
       onSelectedDate: (cerDate) => setState(() => _cerDate = cerDate),

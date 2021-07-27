@@ -3,6 +3,7 @@ import 'package:etar_en/app/models/assignees_model.dart';
 import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
+import 'package:etar_en/app/models/log_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/operation_model.dart';
 import 'package:etar_en/app/models/parts_model.dart';
@@ -37,8 +38,9 @@ abstract class Database {
   Stream<List<OperationModel>> operationStream(
       String company, String identifier);
 
-  Stream<List<PartsModel>> partsStream(
-      String company, String identifier);
+  Stream<List<PartsModel>> partsStream(String company, String identifier);
+
+  Stream<List<LogModel>> logsStream(String company, String identifier);
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company);
 
@@ -53,14 +55,17 @@ abstract class Database {
 
   Future<RoleModel> retrieveCompany(String uid, String company);
 
-  Future<void> setClassification(ClassificationModel classification, String company,
-      String identifier, String entryId);
+  Future<void> setClassification(ClassificationModel classification,
+      String company, String identifier, String entryId);
 
   Future<void> setOperation(OperationModel operation, String company,
       String identifier, String entryId);
 
-  Future<void> setParts(PartsModel parts, String company,
-      String identifier, String entryId);
+  Future<void> setParts(
+      PartsModel parts, String company, String identifier, String entryId);
+
+  Future<void> setLog(
+      LogModel log, String company, String identifier, String entryId);
 
   Future<void> assignRole(String uid, String company, String role);
 
@@ -189,8 +194,8 @@ class FirestoreDatabase implements Database {
     final reference = FirebaseFirestore.instance.collection(path);
     final snapshots = reference.snapshots();
     return snapshots.map(
-          (snapshot) => snapshot.docs.map(
-            (snapshot) {
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
           final data = snapshot.data();
           return data != null ? PartsModel.fromMap(data) : null;
         },
@@ -198,7 +203,28 @@ class FirestoreDatabase implements Database {
     );
   }
 
-    //******************************************************************
+  Future<void> setLog(LogModel log, String company, String identifier,
+          String entryId) async =>
+      await _service.setData(
+        path: APIPath.log(company, identifier, entryId),
+        data: log.toMap(),
+      );
+
+  Stream<List<LogModel>> logsStream(String company, String identifier) {
+    final path = APIPath.logs(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? LogModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  //******************************************************************
 
   Stream<List<RoleModel>> operandCompaniesStream(String uid, String company) {
     final path = APIPath.companyRole(uid, company);
@@ -209,7 +235,7 @@ class FirestoreDatabase implements Database {
       if (snapshot.docs.length != 0) {
         return snapshot.docs.map(
           (snapshot) {
-                  final data = snapshot.data();
+            final data = snapshot.data();
                   return data != null ? RoleModel.fromMap(data) : null;
                 },
               ).toList();

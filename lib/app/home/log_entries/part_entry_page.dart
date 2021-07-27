@@ -1,5 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:etar_en/app/home/logs/date_time_picker.dart';
+import 'package:etar_en/app/home/logs/date_picker.dart';
 import 'package:etar_en/app/models/parts_model.dart';
 import 'package:etar_en/dialogs/show_exception_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
@@ -132,7 +132,7 @@ class _PartEntryPageState extends State<PartEntryPage> {
   }
 
   Widget _buildDate() {
-    return DateTimePicker(
+    return DatePicker(
       labelText: 'csere dátuma',
       selectedDate: _date,
       onSelectedDate: (date) => setState(() => _date = date),

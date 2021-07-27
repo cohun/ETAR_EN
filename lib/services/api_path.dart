@@ -38,14 +38,18 @@ class APIPath {
   static String operations(String company, String identifier) =>
       'companies/$company/products/$identifier/operations';
 
-  static String operation(
-      String company, String identifier, String entryId) =>
+  static String operation(String company, String identifier, String entryId) =>
       'companies/$company/products/$identifier/operations/$entryId';
 
   static String parts(String company, String identifier) =>
       'companies/$company/products/$identifier/parts';
 
-  static String part(
-      String company, String identifier, String entryId) =>
+  static String part(String company, String identifier, String entryId) =>
       'companies/$company/products/$identifier/parts/$entryId';
+
+  static String logs(String company, String identifier) =>
+      'companies/$company/products/$identifier/logs';
+
+  static String log(String company, String identifier, String entryId) =>
+      'companies/$company/products/$identifier/logs/$entryId';
 }
