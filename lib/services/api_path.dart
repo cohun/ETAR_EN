@@ -52,4 +52,17 @@ class APIPath {
 
   static String log(String company, String identifier, String entryId) =>
       'companies/$company/products/$identifier/logs/$entryId';
+
+  static String electricShocks(String company, String identifier) =>
+      'companies/$company/products/$identifier/electricShocks';
+
+  static String electricShock(
+          String company, String identifier, String entryId) =>
+      'companies/$company/products/$identifier/electricShocks/$entryId';
+
+  static String inspections(String company, String identifier) =>
+      'companies/$company/products/$identifier/inspections';
+
+  static String inspection(String company, String identifier, String entryId) =>
+      'companies/$company/products/$identifier/inspections/$entryId';
 }

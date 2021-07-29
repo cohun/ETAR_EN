@@ -1,4 +1,6 @@
 import 'package:etar_en/app/home/logs/classification_periodical_controlling.dart';
+import 'package:etar_en/app/home/logs/electric_shock_page.dart';
+import 'package:etar_en/app/home/logs/inspection_page.dart';
 import 'package:etar_en/app/home/logs/operation_data_page.dart';
 import 'package:etar_en/app/home/logs/parts_page.dart';
 import 'package:etar_en/services/database.dart';
@@ -374,6 +376,22 @@ class _OpDocState extends State<OpDoc> {
                   database: widget.database,
                 ),
                 PartsPage(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                ElectricShock(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                Inspection(
                   controller: _controller,
                   snapshot: snapshot,
                   name: widget.name,

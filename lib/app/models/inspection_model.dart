@@ -1,4 +1,4 @@
-class OperationModel {
+class InspectionModel {
   final String id;
   final DateTime date;
   final String name;
@@ -6,13 +6,10 @@ class OperationModel {
   final DateTime cerDate;
   final String cerName;
   final String cerAuthority;
-  final String startName;
-  final String startAuthority;
-  final DateTime startDate;
-  final bool state;
-  final String cause;
+  final String kind;
+  final String statement;
 
-  OperationModel({
+  InspectionModel({
     this.id,
     this.date,
     this.name,
@@ -20,14 +17,11 @@ class OperationModel {
     this.cerDate,
     this.cerName,
     this.cerAuthority,
-    this.startName,
-    this.startAuthority,
-    this.startDate,
-    this.state,
-    this.cause,
+    this.kind,
+    this.statement,
   });
 
-  factory OperationModel.fromMap(Map<String, dynamic> data) {
+  factory InspectionModel.fromMap(Map<String, dynamic> data) {
     if (data == null) {
       return null;
     }
@@ -38,13 +32,10 @@ class OperationModel {
     final int cerDate = data['cerDate'];
     final String cerName = data['cerName'];
     final String cerAuthority = data['cerAuthority'];
-    final String startName = data['startName'];
-    final String startAuthority = data['startAuthority'];
-    final int startDate = data['startDate'];
-    final bool state = data['state'];
-    final String cause = data['cause'];
+    final String kind = data['kind'];
+    final String statement = data['statement'];
 
-    return OperationModel(
+    return InspectionModel(
       id: id,
       date: DateTime.fromMicrosecondsSinceEpoch(date),
       name: name,
@@ -52,11 +43,8 @@ class OperationModel {
       cerDate: DateTime.fromMicrosecondsSinceEpoch(cerDate),
       cerName: cerName,
       cerAuthority: cerAuthority,
-      startName: startName,
-      startAuthority: startAuthority,
-      startDate: DateTime.fromMicrosecondsSinceEpoch(startDate),
-      state: state,
-      cause: cause,
+      kind: kind,
+      statement: statement,
     );
   }
 
@@ -69,11 +57,8 @@ class OperationModel {
       'cerDate': cerDate.microsecondsSinceEpoch,
       'cerName': cerName,
       'cerAuthority': cerAuthority,
-      'startName': startName,
-      'startAuthority': startAuthority,
-      'startDate': startDate.microsecondsSinceEpoch,
-      'state': state,
-      'cause': cause,
+      'kind': kind,
+      'statement': statement,
     };
   }
 }

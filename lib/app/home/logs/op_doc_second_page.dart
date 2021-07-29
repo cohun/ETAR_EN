@@ -37,29 +37,33 @@ class _SecondPageState extends State<SecondPage> {
         stream: widget.database.adminsStream(widget.company),
     builder: (context, snapshot) {
     if (snapshot.hasData) {
-    var admins = snapshot.data;
-    admins.removeWhere((element) => element.role == 'hyper' ||
-        element.role == 'hyperSuper' || element.role == 'readOnly');
+          List<Assignees> admins = [];
+          admins = snapshot.data;
+          admins.removeWhere((element) =>
+              element.role == 'hyper' ||
+              element.role == 'hyperSuper' ||
+              element.role == 'readOnly');
 
-    return StreamBuilder<List<Assignees>>(
-      stream: widget.database.assigneesStream(widget.company, widget.productId),
-      builder: (context, snapshot) {
-        if (snapshot.hasData) {
-          final assignees = snapshot.data..addAll(admins);
-          for (var assignee in assignees) {
-            switch (assignee.role) {
-              case 'inspector':
-                {
-                  inspector.add(assignee);
-                }
-                break;
-              case 'operator':
-                {
-                  operator.add(assignee);
-                }
-                break;
-              case 'service':
-                {
+          return StreamBuilder<List<Assignees>>(
+            stream: widget.database
+                .assigneesStream(widget.company, widget.productId),
+            builder: (context, snapshot) {
+              if (snapshot.hasData) {
+                final assignees = snapshot.data..addAll(admins);
+                for (var assignee in assignees) {
+                  switch (assignee.role) {
+                    case 'inspector':
+                      {
+                        inspector.add(assignee);
+                      }
+                      break;
+                    case 'operator':
+                      {
+                        operator.add(assignee);
+                      }
+                      break;
+                    case 'service':
+                      {
                   service.add(assignee);
                 }
                 break;

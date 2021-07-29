@@ -2,7 +2,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/models/assignees_model.dart';
 import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
+import 'package:etar_en/app/models/electric_shock_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
+import 'package:etar_en/app/models/inspection_model.dart';
 import 'package:etar_en/app/models/log_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/operation_model.dart';
@@ -38,6 +40,12 @@ abstract class Database {
   Stream<List<OperationModel>> operationStream(
       String company, String identifier);
 
+  Stream<List<ElectricShockModel>> electricShockStream(
+      String company, String identifier);
+
+  Stream<List<InspectionModel>> inspectionStream(
+      String company, String identifier);
+
   Stream<List<PartsModel>> partsStream(String company, String identifier);
 
   Stream<List<LogModel>> logsStream(String company, String identifier);
@@ -63,6 +71,12 @@ abstract class Database {
 
   Future<void> setParts(
       PartsModel parts, String company, String identifier, String entryId);
+
+  Future<void> setElectricShock(ElectricShockModel electricShock,
+      String company, String identifier, String entryId);
+
+  Future<void> setInspection(InspectionModel inspection, String company,
+      String identifier, String entryId);
 
   Future<void> setLog(
       LogModel log, String company, String identifier, String entryId);
@@ -212,13 +226,59 @@ class FirestoreDatabase implements Database {
 
   Stream<List<LogModel>> logsStream(String company, String identifier) {
     final path = APIPath.logs(company, identifier);
-    final reference = FirebaseFirestore.instance.collection(path);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('date', descending: true);
     final snapshots = reference.snapshots();
     return snapshots.map(
       (snapshot) => snapshot.docs.map(
         (snapshot) {
           final data = snapshot.data();
           return data != null ? LogModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Future<void> setElectricShock(ElectricShockModel electricShock,
+          String company, String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.electricShock(company, identifier, entryId),
+        data: electricShock.toMap(),
+      );
+
+  Stream<List<ElectricShockModel>> electricShockStream(
+      String company, String identifier) {
+    final path = APIPath.electricShocks(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? ElectricShockModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Future<void> setInspection(InspectionModel inspection, String company,
+          String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.inspection(company, identifier, entryId),
+        data: inspection.toMap(),
+      );
+
+  Stream<List<InspectionModel>> inspectionStream(
+      String company, String identifier) {
+    final path = APIPath.inspections(company, identifier);
+    final reference = FirebaseFirestore.instance.collection(path);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? InspectionModel.fromMap(data) : null;
         },
       ).toList(),
     );

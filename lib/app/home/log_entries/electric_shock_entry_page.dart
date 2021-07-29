@@ -1,81 +1,86 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/logs/date_picker.dart';
-import 'package:etar_en/app/models/parts_model.dart';
+import 'package:etar_en/app/models/electric_shock_model.dart';
 import 'package:etar_en/dialogs/show_exception_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
 
-class PartEntryPage extends StatefulWidget {
-  const PartEntryPage(
+class ElectricShockEntryPage extends StatefulWidget {
+  const ElectricShockEntryPage(
       {@required this.database,
-        @required this.company,
-        this.productId,
-        this.part,
-        this.name});
+      @required this.company,
+      this.productId,
+      this.electricShock,
+      this.name});
 
   final Database database;
   final String company;
   final String name;
   final String productId;
-  final PartsModel part;
+  final ElectricShockModel electricShock;
 
   static Future<void> show(
       {BuildContext context,
-        Database database,
-        String company,
-        String name,
-        String productId,
-        PartsModel part}) async {
+      Database database,
+      String company,
+      String name,
+      String productId,
+      ElectricShockModel electricShock}) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
-        builder: (context) => PartEntryPage(
+        builder: (context) => ElectricShockEntryPage(
             database: database,
             company: company,
             name: name,
             productId: productId,
-            part: part),
+            electricShock: electricShock),
         fullscreenDialog: true,
       ),
     );
   }
 
   @override
-  State<StatefulWidget> createState() => _PartEntryPageState();
+  State<StatefulWidget> createState() => _ElectricShockEntryPageState();
 }
 
-class _PartEntryPageState extends State<PartEntryPage> {
+class _ElectricShockEntryPageState extends State<ElectricShockEntryPage> {
   String _id;
   DateTime _date;
   String _name;
-  String _partName;
-  String _partId;
-  String _partSize;
-  String _serviceName;
+  String _cerId;
+  DateTime _cerDate;
+  String _cerName;
+  String _cerAuthority;
+  String _statement;
 
   @override
   void initState() {
     super.initState();
-    _id = widget.part?.id ?? '';
-    final start = widget.part?.date ?? DateTime.now();
+    _id = widget.electricShock?.id ?? '';
+    final start = widget.electricShock?.date ?? DateTime.now();
     _date = DateTime(start.year, start.month, start.day);
     _name = widget.name;
-    _partName = widget.part?.partName ?? '';
-    _partId = widget.part?.partId ?? '';
-    _partSize = widget.part?.partSize ?? '';
-    _serviceName = widget.part?.serviceName ?? '';
+    _cerId = widget.electricShock?.cerId ?? '';
+    final end = widget.electricShock?.cerDate ?? DateTime.now();
+    _cerDate = DateTime(end.year, end.month, end.day);
+    _cerName = widget.electricShock?.cerName ?? '';
+    _cerAuthority = widget.electricShock?.cerAuthority ?? '';
+    _statement = widget.electricShock?.statement ?? '';
   }
 
-  PartsModel _entryFromState() {
+  ElectricShockModel _entryFromState() {
     final date = DateTime(_date.year, _date.month, _date.day);
-    final id = widget.part?.id ?? documentIdFromCurrentDate();
-    return PartsModel(
+    final cerDate = DateTime(_cerDate.year, _cerDate.month, _cerDate.day);
+    final id = widget.electricShock?.id ?? documentIdFromCurrentDate();
+    return ElectricShockModel(
       id: id,
       date: date,
       name: _name,
-      partName: _partName,
-      partId: _partId,
-      partSize: _partSize,
-      serviceName: _serviceName,
+      cerId: _cerId,
+      cerDate: cerDate,
+      cerName: _cerName,
+      cerAuthority: _cerAuthority,
+      statement: _statement,
     );
   }
 
@@ -83,7 +88,7 @@ class _PartEntryPageState extends State<PartEntryPage> {
     try {
       final entry = _entryFromState();
       await widget.database
-          .setParts(entry, widget.company, widget.productId, entry.id);
+          .setElectricShock(entry, widget.company, widget.productId, entry.id);
       Navigator.of(context).pop();
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(
@@ -99,11 +104,11 @@ class _PartEntryPageState extends State<PartEntryPage> {
     return Scaffold(
       appBar: AppBar(
         elevation: 2.0,
-        title: Text('Cserélt fő darabok'),
+        title: Text('Érintésvédelem, egyéb mérések'),
         actions: <Widget>[
           TextButton(
             child: Text(
-              widget.part != null ? 'javítás' : 'létrehozás',
+              widget.electricShock != null ? 'javítás' : 'létrehozás',
               style: TextStyle(fontSize: 18.0, color: Colors.white),
             ),
             onPressed: () => _setEntryAndDismiss(context),
@@ -119,11 +124,13 @@ class _PartEntryPageState extends State<PartEntryPage> {
             children: <Widget>[
               _buildDate(),
               SizedBox(height: 8.0),
-              _buildPartId(),
-              _buildPartName(),
-              _buildPartSize(),
+              _buildCerId(),
+              _buildCerName(),
+              _buildCerAuthority(),
+              _buildCerDate(),
               SizedBox(height: 8.0),
-              _buildService(),
+              _buildStatement(),
+              SizedBox(height: 8.0),
             ],
           ),
         ),
@@ -133,69 +140,77 @@ class _PartEntryPageState extends State<PartEntryPage> {
 
   Widget _buildDate() {
     return DatePicker(
-      labelText: 'csere dátuma',
+      labelText: 'bejegyzés dátuma',
       selectedDate: _date,
       onSelectedDate: (date) => setState(() => _date = date),
     );
   }
 
-  Widget _buildPartId() {
-    return TextField(
-      keyboardType: TextInputType.text,
-      maxLength: 50,
-      controller: TextEditingController(text: _partId),
-      decoration: InputDecoration(
-        labelText: 'Azonosító',
-        labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-      ),
-      style: TextStyle(fontSize: 20.0, color: Colors.white),
-      maxLines: null,
-      onChanged: (partId) => _partId = partId,
+  Widget _buildCerDate() {
+    return DatePicker(
+      labelText: 'jegyzőkönyv kelte',
+      selectedDate: _cerDate,
+      onSelectedDate: (cerDate) => setState(() => _cerDate = cerDate),
     );
   }
 
-  Widget _buildPartName() {
+  Widget _buildCerId() {
     return TextField(
       keyboardType: TextInputType.text,
       maxLength: 50,
-      controller: TextEditingController(text: _partName),
+      controller: TextEditingController(text: _cerId),
       decoration: InputDecoration(
-        labelText: 'Alkatrész megnevezése',
+        labelText: 'mérési jegyzőkönyv száma',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
       maxLines: null,
-      onChanged: (partName) => _partName = partName,
+      onChanged: (cerId) => _cerId = cerId,
     );
   }
 
-  Widget _buildPartSize() {
+  Widget _buildCerName() {
     return TextField(
       keyboardType: TextInputType.text,
       maxLength: 50,
-      controller: TextEditingController(text: _partSize),
+      controller: TextEditingController(text: _cerName),
       decoration: InputDecoration(
-        labelText: 'Jellemző mérete',
+        labelText: 'jegyzőkönyv kiállítójának neve',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
       maxLines: null,
-      onChanged: (partSize) => _partSize = partSize,
+      onChanged: (cerName) => _cerName = cerName,
     );
   }
 
-  Widget _buildService() {
+  Widget _buildCerAuthority() {
     return TextField(
       keyboardType: TextInputType.text,
       maxLength: 50,
-      controller: TextEditingController(text: _serviceName),
+      controller: TextEditingController(text: _cerAuthority),
       decoration: InputDecoration(
-        labelText: 'Cserét végző',
+        labelText: 'jegyzőkönyv kiállítójának jogosultsága',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
       maxLines: null,
-      onChanged: (serviceName) => _serviceName = serviceName,
+      onChanged: (cerAuthority) => _cerAuthority = cerAuthority,
+    );
+  }
+
+  Widget _buildStatement() {
+    return TextField(
+      keyboardType: TextInputType.text,
+      maxLength: 50,
+      controller: TextEditingController(text: _statement),
+      decoration: InputDecoration(
+        labelText: 'Jegyzőkönyv megállapítása',
+        labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+      ),
+      style: TextStyle(fontSize: 20.0, color: Colors.white),
+      maxLines: null,
+      onChanged: (statement) => _statement = statement,
     );
   }
 }

@@ -116,8 +116,9 @@ class _UsersPageState extends State<UsersPage> {
                         onChanged: (value) => assignRole(
                             uid: operands[index].uid,
                             company: widget.company,
-                                role: value,
-                                index: index),
+                            role: value,
+                            index: index,
+                            name: operands[index].name),
                       ),
                       SizedBox(
                         width: 5,
@@ -138,7 +139,8 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index),
+                            index: index,
+                            name: operands[index].name),
                       ),
                       SizedBox(
                         width: 5,
@@ -159,7 +161,8 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index),
+                            index: index,
+                            name: operands[index].name),
                       ),
                       SizedBox(
                         width: 5,
@@ -181,7 +184,8 @@ class _UsersPageState extends State<UsersPage> {
                             uid: operands[index].uid,
                             company: widget.company,
                             role: value,
-                            index: index),
+                            index: index,
+                            name: operands[index].name),
                       ),
                       SizedBox(
                         width: 5,
@@ -219,8 +223,20 @@ class _UsersPageState extends State<UsersPage> {
   }
 
   Future<void> assignRole(
-      {String uid, String company, String role, int index}) async {
+      {String uid, String company, String role, int index, String name}) async {
+    print(role);
+    var listUid = [];
     try {
+      await widget.database
+          .identifiersStream(uid, company)
+          .first
+          .then((value) => value.forEach((element) {
+                listUid.add(element.identifier);
+              }));
+      for (var liu in listUid) {
+        await widget.database.setAssigneesItem(company, liu, name, role, uid);
+      }
+
       await widget.database.assignRole(uid, company, role).then((value) {
         widget._choice[index] = role;
       });

@@ -168,6 +168,7 @@ class _FindProductState extends State<FindProduct> {
                         ),
                         onPressed: () {
                           print('mehet');
+                          print('role: ${widget.role}');
                           _createId(
                               context,
                               productResult.identifier,

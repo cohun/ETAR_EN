@@ -28,6 +28,8 @@ class ShiftInspection extends StatefulWidget {
 }
 
 class _ShiftInspectionState extends State<ShiftInspection> {
+  List<bool> _isSelectedList = List.filled(100, true);
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -81,8 +83,9 @@ class _ShiftInspectionState extends State<ShiftInspection> {
                     ),
                     Container(
                       width: MediaQuery.of(context).size.width,
-                      height: MediaQuery.of(context).size.height,
+                      height: logs.length.toDouble() * 110,
                       child: ListView.separated(
+                        physics: BouncingScrollPhysics(),
                         separatorBuilder: (context, index) => Divider(
                           color: Colors.yellowAccent,
                         ),
@@ -108,19 +111,30 @@ class _ShiftInspectionState extends State<ShiftInspection> {
                                           ),
                               ),
                               ListTile(
-                                onTap: () => LogEntryPage.show(
-                                  context: context,
-                                  database: widget.database,
-                                  company: widget.company,
-                                  productId: widget.productId,
-                                  name: widget.name,
-                                  log: logs[index],
-                                ),
+                                onTap: () {
+                                  setState(() {
+                                    _isSelectedList = List.filled(100, true);
+                                    _isSelectedList[index] = false;
+                                  });
+
+                                  return LogEntryPage.show(
+                                    context: context,
+                                    database: widget.database,
+                                    company: widget.company,
+                                    productId: widget.productId,
+                                    name: widget.name,
+                                    log: logs[index],
+                                  );
+                                },
                                 leading: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                        'dátum: ${logs[index].date.toString().substring(0, 10)}'),
+                                      'dátum: ${logs[index].date.toString().substring(0, 16)}',
+                                      style: TextStyle(
+                                          decoration: TextDecoration.underline,
+                                          fontWeight: FontWeight.bold),
+                                    ),
                                     Text('műszak: ${logs[index].shift}'),
                                     Text(
                                         'gépkezelő: ${logs[index].operatorName}'),
@@ -135,17 +149,43 @@ class _ShiftInspectionState extends State<ShiftInspection> {
                                               padding:
                                                   const EdgeInsets.all(4.0),
                                               child: Text(
-                                                  'Javítás elvégezve: ${logs[index].repairDate.toString().substring(0, 10)}'),
+                                                'Javítás elvégezve: ${logs[index].repairDate.toString().substring(0, 10)}',
+                                                style: TextStyle(
+                                                    color:
+                                                        !_isSelectedList[index]
+                                                            ? Colors.white
+                                                            : Colors.blue),
+                                              ),
                                             ),
                                           )
                                         : logs[index].state
                                             ? Card(
-                                                child: Text(
-                                                    'Használatra alkalmas'),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Text(
+                                                    'Használatra alkalmas',
+                                                    style: TextStyle(
+                                                        color: !_isSelectedList[
+                                                                index]
+                                                            ? Colors.white
+                                                            : Colors.blue),
+                                                  ),
+                                                ),
                                               )
                                             : Card(
-                                                child: Text(
-                                                    'Használat csak saját felelősségre'),
+                                                child: Padding(
+                                                  padding:
+                                                      const EdgeInsets.all(4.0),
+                                                  child: Text(
+                                                    'Használat csak saját felelősségre',
+                                                    style: TextStyle(
+                                                        color: !_isSelectedList[
+                                                                index]
+                                                            ? Colors.white
+                                                            : Colors.blue),
+                                                  ),
+                                                ),
                                               ),
                                   ],
                                 ),
@@ -155,6 +195,7 @@ class _ShiftInspectionState extends State<ShiftInspection> {
                                     Text(' bejegyző: ${logs[index].name}'),
                                   ],
                                 ),
+                                selected: _isSelectedList[index],
                               ),
                             ],
                           );
