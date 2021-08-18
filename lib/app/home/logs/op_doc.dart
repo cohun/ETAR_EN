@@ -297,7 +297,7 @@ class _OpDocState extends State<OpDoc> {
                                         thickness: 2,
                                       ),
                                       Text(
-                                        'Hossz : ${snapshot.data.length}',
+                                        'Jellemző méret : ${snapshot.data.length}',
                                         textAlign: TextAlign.center,
                                       ),
                                       Divider(
