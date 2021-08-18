@@ -68,7 +68,8 @@ class _LogEntryPageState extends State<LogEntryPage> {
     _time = TimeOfDay.fromDateTime(start);
     _name = widget.name;
     _shift = widget.log?.shift ?? '';
-    _entry = widget.log?.entry ?? '';
+    _entry = widget.log?.entry ??
+        'műszakos vizsgálatot elvégeztem a berendezés üzemképes';
     _state = widget.log?.state ?? true;
     _repaired = widget.log?.repaired ?? false;
     _operatorName = widget.log?.operatorName ?? '';
@@ -242,6 +243,12 @@ class _LogEntryPageState extends State<LogEntryPage> {
   }
 
   Widget _buildEntry() {
+    _entry == 'berendezés üzemképtelen' && _state
+        ? _entry = 'műszakos vizsgálatot elvégeztem a berendezés üzemképes'
+        : _entry == 'műszakos vizsgálatot elvégeztem a berendezés üzemképes' &&
+                !_state
+            ? _entry = 'berendezés üzemképtelen'
+            : null;
     return TextField(
       keyboardType: TextInputType.text,
       maxLength: 100,
