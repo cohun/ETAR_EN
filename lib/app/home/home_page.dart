@@ -4,6 +4,7 @@ import 'package:etar_en/app/home/logs/log_book.dart';
 import 'package:etar_en/app/home/logs/op_doc.dart';
 import 'package:etar_en/app/home/operands/add_ops_page.dart';
 import 'package:etar_en/app/home/operands/show_operands_companies.dart';
+import 'package:etar_en/app/home/persons/persons_page.dart';
 import 'package:etar_en/app/home/users/assignees_products.dart';
 import 'package:etar_en/app/home/users/users_page.dart';
 import 'package:etar_en/app/models/operand_model.dart';
@@ -222,137 +223,143 @@ class _HomePageState extends State<HomePage> {
                     )
                   : null,
             ),
-            body: _selectedIndex == 1
-                ? TabBarView(
-                    children: [
-                      SingleChildScrollView(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 1.1,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0),
-                                child: Views(
-                                    color: Colors.blue,
-                                    text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
-                                    text2:
-                                        'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
-                                        'Gépi hajtású targoncáknál MSZ 16226 szerint',
-                                    text3:
-                                        'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
-                                        'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
-                                        'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .04,
-                              ),
-                              InkWell(
-                                child: Image.asset('images/image.jpg'),
-                                onTap: () => _showOpDoc(
-                                    context, widget.auth.currentUser.uid, operands),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .04,
-                              ),
-                              _user != null
-                                  ? ElevatedButton(
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.blue[800]),
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AssigneesProducts(
-                                                    database: database,
-                                                    company: _user.company,
-                                                    onSelect: _onSelectItem,
-                                                  )),
-                                        );
-                                      },
-                                      child: Text('Emelőgép kiválasztása'),
-                                    )
-                                  : Container(
-                                      height: 0,
-                                    ),
-                            ],
-                          ),
-                        ),
-                      ),
-                      SingleChildScrollView(
-                        child: Container(
-                          height: MediaQuery.of(context).size.height * 1.1,
-                          child: Column(
-                            children: <Widget>[
-                              Padding(
-                                padding: const EdgeInsets.symmetric(
-                                    horizontal: 18.0),
-                                child: Views(
-                                    color: Colors.orange[800],
-                                    text1: 'EMELŐGÉP NAPLÓ:',
-                                    text2:
-                                        'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
-                                    text3:
-                                        'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
-                                        'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .04,
-                              ),
-                              InkWell(
-                                child: Image.asset('images/image.jpg'),
-                                onTap: () => _showLogBook(context,
-                                    widget.auth.currentUser.uid, operands),
-                              ),
-                              SizedBox(
-                                height:
-                                    MediaQuery.of(context).size.height * .04,
-                              ),
-                              _user != null
-                                  ? ElevatedButton(
-                                      onPressed: () {
-                                        Navigator.push(
-                                          context,
-                                          MaterialPageRoute(
-                                              builder: (context) =>
-                                                  AssigneesProducts(
-                                                    database: database,
-                                                    company: _user.company,
-                                                    onSelect: _onSelectItem,
-                                                  )),
-                                        );
-                                      },
-                                      style: ElevatedButton.styleFrom(
-                                          primary: Colors.orange[900]),
-                                      child: Text(
-                                        'Emelőgép kiválasztása',
-                                      ),
-                                    )
-                                  : Container(
-                                      height: 0,
-                                    ),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+            body: _selectedIndex == 0
+                ? PersonsPage(
+                    database: database,
+                    uid: _user != null ? _user.uid : operands.uid,
+                    admin: _user != null ? true : false,
                   )
-                : _user != null
-                    ? UsersPage(
-                        company: _user.company,
-                        database: database,
+                : _selectedIndex == 1
+                    ? TabBarView(
+                        children: [
+                          SingleChildScrollView(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 1.1,
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 18.0),
+                                    child: Views(
+                                        color: Colors.blue,
+                                        text1: 'ÜZEMVITELI DOKUMENTÁCIÓ:',
+                                        text2:
+                                            'Gépi hajtású emelőgépek kísérő dokumentációja MSZ 9725 szerint.'
+                                            'Gépi hajtású targoncáknál MSZ 16226 szerint',
+                                        text3:
+                                            'Emelőgépek üzembehelyezésekor emelőgépenként, egyedileg kezelhető kisérő dokumentációt kell lefektetni. '
+                                            'Meg kell adni a főbb műszaki jellemzőket és az üzemvitellel kapcsolatos adatokat. '
+                                            'Nyilván kell tartani az időszakos vizsgálatokat, javításokat, fődarab cseréket és működési időt'),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .04,
+                                  ),
+                                  InkWell(
+                                    child: Image.asset('images/image.jpg'),
+                                    onTap: () => _showOpDoc(context,
+                                        widget.auth.currentUser.uid, operands),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .04,
+                                  ),
+                                  _user != null
+                                      ? ElevatedButton(
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Colors.blue[800]),
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AssigneesProducts(
+                                                        database: database,
+                                                        company: _user.company,
+                                                        onSelect: _onSelectItem,
+                                                      )),
+                                            );
+                                          },
+                                          child: Text('Emelőgép kiválasztása'),
+                                        )
+                                      : Container(
+                                          height: 0,
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                          SingleChildScrollView(
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 1.1,
+                              child: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: const EdgeInsets.symmetric(
+                                        horizontal: 18.0),
+                                    child: Views(
+                                        color: Colors.orange[800],
+                                        text1: 'EMELŐGÉP NAPLÓ:',
+                                        text2:
+                                            'Teher emeléséhez használt munkaeszközhöz naplót kell rendszeresíteni: 10/2016. (IV.5) NGM rendelet ',
+                                        text3:
+                                            'Az emelőgép napló az emelőgéppel kapcsolatos üzemeltetői tapasztalatok és üzembiztonsággal kapcsolatos események '
+                                            'rögzítésére valamint e feljegyzések megőrzésére szolgál. '),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .04,
+                                  ),
+                                  InkWell(
+                                    child: Image.asset('images/image.jpg'),
+                                    onTap: () => _showLogBook(context,
+                                        widget.auth.currentUser.uid, operands),
+                                  ),
+                                  SizedBox(
+                                    height: MediaQuery.of(context).size.height *
+                                        .04,
+                                  ),
+                                  _user != null
+                                      ? ElevatedButton(
+                                          onPressed: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      AssigneesProducts(
+                                                        database: database,
+                                                        company: _user.company,
+                                                        onSelect: _onSelectItem,
+                                                      )),
+                                            );
+                                          },
+                                          style: ElevatedButton.styleFrom(
+                                              primary: Colors.orange[900]),
+                                          child: Text(
+                                            'Emelőgép kiválasztása',
+                                          ),
+                                        )
+                                      : Container(
+                                          height: 0,
+                                        ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ],
                       )
-                    : ShowOperandsCompanies(
-                        operand: operands,
-                        onSelect: _onSelectCompany,
-                        database: database,
-                        selectedCompany: _selectedCompany,
-                        onItemSelect: _onSelectItem,
-                      ),
+                    : _user != null
+                        ? UsersPage(
+                            company: _user.company,
+                            database: database,
+                          )
+                        : ShowOperandsCompanies(
+                            operand: operands,
+                            onSelect: _onSelectCompany,
+                            database: database,
+                            selectedCompany: _selectedCompany,
+                            onItemSelect: _onSelectItem,
+                          ),
             bottomNavigationBar: _buildNavigationBar(
                 context,
                 _isEmpty,
@@ -387,15 +394,15 @@ class _HomePageState extends State<HomePage> {
                         style: TextStyle(color: Colors.green, fontSize: 11),
                       ),
                       Text(
-                  'gy.sz.:',
-                  style: Theme.of(context).textTheme.caption,
-                ),
-                Text(
-                  ' $_id',
-                  style: TextStyle(color: Colors.green, fontSize: 11),
-                ),
-              ],
-            ),
+                        'gy.sz.:',
+                        style: Theme.of(context).textTheme.caption,
+                      ),
+                      Text(
+                        ' $_id',
+                        style: TextStyle(color: Colors.green, fontSize: 11),
+                      ),
+                    ],
+                  ),
           );
         }
         return Center(

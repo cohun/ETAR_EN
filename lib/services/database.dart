@@ -95,6 +95,8 @@ abstract class Database {
       List<String> _newCompanyList, String uid);
 
   Future<ProductModel> retrieveProductFromId(company, productId);
+
+  Future<Operand> retrieveOperand(uid);
 }
 
 //***********************************************************************
@@ -439,5 +441,13 @@ class FirestoreDatabase implements Database {
         .doc(productId)
         .get()
         .then((value) => ProductModel.fromMap(value.data()));
+  }
+
+  Future<Operand> retrieveOperand(uid) async {
+    final ref = FirebaseFirestore.instance.collection('operands');
+    return await ref
+        .doc(uid)
+        .get()
+        .then((value) => Operand.fromMap(value.data()));
   }
 }

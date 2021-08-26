@@ -158,6 +158,19 @@ class _LogEntryPageState extends State<LogEntryPage> {
                       height: 0,
                     )
                   : _buildRepairDate(),
+              SizedBox(
+                height: 8,
+              ),
+              !_repaired
+                  ? Container(
+                      height: 0,
+                    )
+                  : Center(
+                      child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text('Jegyzőkönyv'),
+                      ),
+                    ),
             ],
           ),
         ),
