@@ -192,11 +192,13 @@ class FirestoreDatabase implements Database {
   Stream<List<OperationModel>> operationStream(
       String company, String identifier) {
     final path = APIPath.operations(company, identifier);
-    final reference = FirebaseFirestore.instance.collection(path);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('startDate', descending: true);
     final snapshots = reference.snapshots();
     return snapshots.map(
-          (snapshot) => snapshot.docs.map(
-            (snapshot) {
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
           final data = snapshot.data();
           return data != null ? OperationModel.fromMap(data) : null;
         },
@@ -281,7 +283,9 @@ class FirestoreDatabase implements Database {
   Stream<List<InspectionModel>> inspectionStream(
       String company, String identifier) {
     final path = APIPath.inspections(company, identifier);
-    final reference = FirebaseFirestore.instance.collection(path);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('cerDate', descending: true);
     final snapshots = reference.snapshots();
     return snapshots.map(
       (snapshot) => snapshot.docs.map(
