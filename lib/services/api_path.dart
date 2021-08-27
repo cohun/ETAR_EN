@@ -65,4 +65,12 @@ class APIPath {
 
   static String inspection(String company, String identifier, String entryId) =>
       'companies/$company/products/$identifier/inspections/$entryId';
+
+  //********************* ETAR API *********************************
+
+  static String operationStart(String company, String nr) =>
+      'companies/$company/operationStart/$nr';
+
+  static String inspectionEtar(String company, String nr) =>
+      'companies/$company/inspections/$nr';
 }

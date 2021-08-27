@@ -142,7 +142,29 @@ class _PersonsPageState extends State<PersonsPage> {
       body: widget.admin
           ? Center(
               child: Card(
-                child: Text('admin'),
+                margin: EdgeInsets.symmetric(vertical: 100.0),
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'Adminisztrátorként további informácók az',
+                        style: TextStyle(color: Colors.white54, fontSize: 18),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 50.0),
+                      child: Image.asset('images/ETAR.png'),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(20.0),
+                      child: Text(
+                        'applikációban érhetőek el!',
+                        style: TextStyle(color: Colors.white54, fontSize: 18),
+                      ),
+                    ),
+                  ],
+                ),
               ),
             )
           : _operand != null

@@ -1,17 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/logs/date_picker.dart';
+import 'package:etar_en/app/models/etar_inspection_model.dart';
 import 'package:etar_en/app/models/operation_model.dart';
 import 'package:etar_en/dialogs/show_exception_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class OperationEntryPage extends StatefulWidget {
   const OperationEntryPage(
       {@required this.database,
-        @required this.company,
-        this.productId,
-        this.operation,
-        this.name});
+      @required this.company,
+      this.productId,
+      this.operation,
+      this.name});
 
   final Database database;
   final String company;
@@ -21,11 +23,11 @@ class OperationEntryPage extends StatefulWidget {
 
   static Future<void> show(
       {BuildContext context,
-        Database database,
-        String company,
-        String name,
-        String productId,
-        OperationModel operation}) async {
+      Database database,
+      String company,
+      String name,
+      String productId,
+      OperationModel operation}) async {
     await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => OperationEntryPage(
@@ -82,7 +84,8 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
   OperationModel _entryFromState() {
     final date = DateTime(_date.year, _date.month, _date.day);
     final cerDate = DateTime(_cerDate.year, _cerDate.month, _cerDate.day);
-    final startDate = DateTime(_startDate.year, _startDate.month, _startDate.day);
+    final startDate =
+        DateTime(_startDate.year, _startDate.month, _startDate.day);
     final id = widget.operation?.id ?? documentIdFromCurrentDate();
     return OperationModel(
       id: id,
@@ -102,6 +105,9 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
 
   Future<void> _setEntryAndDismiss(BuildContext context) async {
     try {
+      if (_state) {
+        await _submitOpStart();
+      }
       final entry = _entryFromState();
       await widget.database
           .setOperation(entry, widget.company, widget.productId, entry.id);
@@ -114,6 +120,34 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       );
     }
   }
+
+  //************************ writing opStart in ETAR **************************************
+
+  Future<void> _submitOpStart() async {
+    try {
+      final opStart = EtarInspectionModel(
+        type: "Üzembehelyezés",
+        productID: widget.productId,
+        doer: _startName,
+        comment: _cerAuthority,
+        result: 'Megfelelt',
+        date: _startDate.toIso8601String().substring(0, 10),
+        nextDate: _startDate.toIso8601String().substring(0, 10),
+        nr: (DateTime.now().millisecondsSinceEpoch -
+                    _date.millisecondsSinceEpoch)
+                .toString()
+                .substring(2, 8) +
+            '/${DateTime.now().year}',
+      );
+      await widget.database.setOperationStart(widget.company, opStart);
+    } on PlatformException catch (e) {
+      AlertDialog(
+        title: Text('Művelet sikertelen'),
+      );
+    }
+  }
+
+  //**************************************************************
 
   @override
   Widget build(BuildContext context) {
@@ -150,7 +184,11 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
               _buildStartAuthority(),
               _buildStartDate(),
               SizedBox(height: 8.0),
-              _state ? Container(height: 0,) : _buildCause(),
+              _state
+                  ? Container(
+                      height: 0,
+                    )
+                  : _buildCause(),
             ],
           ),
         ),
@@ -188,15 +226,18 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
     print(_state);
     _state ? val = -1 : val = 1;
     return Theme(
-        data: ThemeData(
-            unselectedWidgetColor: Colors.green
-        ),
-        child:ListTile(
-          title: _state ? Text("Üzemeltetés elrendelése:", style: TextStyle(color: Colors.green),)
-              : Text("Üzemeltetés leállítása:", style: TextStyle(color: Colors.red)),
-          leading:Radio(
+        data: ThemeData(unselectedWidgetColor: Colors.green),
+        child: ListTile(
+          title: _state
+              ? Text(
+                  "Üzemeltetés elrendelése:",
+                  style: TextStyle(color: Colors.green),
+                )
+              : Text("Üzemeltetés leállítása:",
+                  style: TextStyle(color: Colors.red)),
+          leading: Radio(
             value: 1,
-            groupValue:val,
+            groupValue: val,
             onChanged: (value) {
               setState(() {
                 _state = !_state;
@@ -207,8 +248,7 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
             activeColor: Colors.red,
             toggleable: true,
           ),
-        )
-    );
+        ));
   }
 
   Widget _buildCerId() {
@@ -217,7 +257,8 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _cerId),
       decoration: InputDecoration(
-        labelText: _state ? 'vizsgálati jegyzőkönyv száma' : 'intézkedés azonosítója',
+        labelText:
+            _state ? 'vizsgálati jegyzőkönyv száma' : 'intézkedés azonosítója',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -232,7 +273,9 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _cerName),
       decoration: InputDecoration(
-        labelText: _state ? 'jegyzőkönyv kiállítójának neve' : 'intézkedés kiállítójának neve',
+        labelText: _state
+            ? 'jegyzőkönyv kiállítójának neve'
+            : 'intézkedés kiállítójának neve',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -247,7 +290,9 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _cerAuthority),
       decoration: InputDecoration(
-        labelText: _state ? 'jegyzőkönyv kiállítójának jogosultsága' : 'intézkedés kiállítójának jogosultsága',
+        labelText: _state
+            ? 'jegyzőkönyv kiállítójának jogosultsága'
+            : 'intézkedés kiállítójának jogosultsága',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -262,7 +307,9 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _startName),
       decoration: InputDecoration(
-        labelText: _state ? 'üzembehelyezést elrendelő neve' : 'Leállítást elrendelő neve',
+        labelText: _state
+            ? 'üzembehelyezést elrendelő neve'
+            : 'Leállítást elrendelő neve',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -277,7 +324,9 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       maxLength: 50,
       controller: TextEditingController(text: _startAuthority),
       decoration: InputDecoration(
-        labelText: _state ? 'üzembehelyezést elrendelő beosztása' : 'leállítást elrendelő beosztása',
+        labelText: _state
+            ? 'üzembehelyezést elrendelő beosztása'
+            : 'leállítást elrendelő beosztása',
         labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
       ),
       style: TextStyle(fontSize: 20.0, color: Colors.white),
@@ -300,5 +349,4 @@ class _OperationEntryPageState extends State<OperationEntryPage> {
       onChanged: (cause) => _cause = cause,
     );
   }
-
 }

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:etar_en/app/home/logs/date_picker.dart';
+import 'package:etar_en/app/models/etar_inspection_model.dart';
 import 'package:etar_en/app/models/inspection_model.dart';
 import 'package:etar_en/dialogs/show_exception_alert_dialog.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class InspectionEntryPage extends StatefulWidget {
   const InspectionEntryPage(
@@ -88,6 +90,7 @@ class _InspectionEntryPageState extends State<InspectionEntryPage> {
   }
 
   Future<void> _setEntryAndDismiss(BuildContext context) async {
+    await _submitEtarInspection();
     try {
       final entry = _entryFromState();
       await widget.database
@@ -98,6 +101,32 @@ class _InspectionEntryPageState extends State<InspectionEntryPage> {
         context,
         title: 'Operation failed',
         exception: e,
+      );
+    }
+  }
+
+  //************************ writing opStart in ETAR **************************************
+
+  Future<void> _submitEtarInspection() async {
+    try {
+      final inspectionEtar = EtarInspectionModel(
+        type: "$_kind vizsgálat",
+        productID: widget.productId,
+        doer: _cerName,
+        comment: _cerAuthority,
+        result: 'Megfelelt',
+        date: _cerDate.toIso8601String().substring(0, 10),
+        nextDate: _cerDate.toIso8601String().substring(0, 10),
+        nr: (DateTime.now().millisecondsSinceEpoch -
+                    _date.millisecondsSinceEpoch)
+                .toString()
+                .substring(2, 8) +
+            '/${DateTime.now().year}',
+      );
+      await widget.database.setEtarInspection(widget.company, inspectionEtar);
+    } on PlatformException catch (e) {
+      AlertDialog(
+        title: Text('Művelet sikertelen'),
       );
     }
   }

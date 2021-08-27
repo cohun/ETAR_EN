@@ -3,6 +3,7 @@ import 'package:etar_en/app/models/assignees_model.dart';
 import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
 import 'package:etar_en/app/models/electric_shock_model.dart';
+import 'package:etar_en/app/models/etar_inspection_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/inspection_model.dart';
 import 'package:etar_en/app/models/log_model.dart';
@@ -97,6 +98,12 @@ abstract class Database {
   Future<ProductModel> retrieveProductFromId(company, productId);
 
   Future<Operand> retrieveOperand(uid);
+
+//**************** ETAR method *************************
+
+  Future<void> setOperationStart(company, EtarInspectionModel opStartModel);
+
+  Future<void> setEtarInspection(company, EtarInspectionModel inspectionModel);
 }
 
 //***********************************************************************
@@ -450,4 +457,21 @@ class FirestoreDatabase implements Database {
         .get()
         .then((value) => Operand.fromMap(value.data()));
   }
+
+  //**************** ETAR method *************************
+
+  Future<void> setOperationStart(
+          company, EtarInspectionModel opStartModel) async =>
+      _service.setData(
+        path: APIPath.operationStart(company, opStartModel.nr.substring(0, 6)),
+        data: opStartModel.toMap(),
+      );
+
+  Future<void> setEtarInspection(
+          company, EtarInspectionModel inspectionModel) async =>
+      _service.setData(
+        path:
+            APIPath.inspectionEtar(company, inspectionModel.nr.substring(0, 6)),
+        data: inspectionModel.toMap(),
+      );
 }
