@@ -53,6 +53,7 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
   String _classNr;
   String _periodThoroughEx;
   String _periodInspection;
+  int nrMonths;
 
   @override
   void initState() {
@@ -189,47 +190,172 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
   }
 
   Widget _buildClassNr() {
-    return TextField(
-      keyboardType: TextInputType.text,
-      maxLength: 50,
-      controller: TextEditingController(text: _classNr),
-      decoration: InputDecoration(
-        labelText: 'Üzemi csoportszám',
-        labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+    return Center(
+      child: Column(
+        children: [
+          SizedBox(
+            height: 18,
+          ),
+          Text(
+            'Válassz a legördülő menüből:',
+            style: Theme.of(context).textTheme.headline5,
+          ),
+          SizedBox(
+            height: 4,
+          ),
+          DropdownButton<String>(
+            items: [
+              DropdownMenuItem<String>(
+                child: Text(
+                  '\"1 -es\" vizsgálati csoportszám MSZ 9750 szerint',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                value: '8',
+              ),
+              DropdownMenuItem<String>(
+                child: Text(
+                  '\"2 -es\" vizsgálati csoportszám MSZ 9750 szerint',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                value: '7',
+              ),
+              DropdownMenuItem<String>(
+                child: Text(
+                  '\"3 -es\" vizsgálati csoportszám MSZ 9750 szerint',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                value: '6',
+              ),
+              DropdownMenuItem<String>(
+                child: Text(
+                  '\"4 -es\" vizsgálati csoportszám MSZ 9750 szerint',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                value: '4',
+              ),
+              DropdownMenuItem<String>(
+                child: Text(
+                  '\"5 -es\" vizsgálati csoportszám MSZ 9750 szerint',
+                  overflow: TextOverflow.ellipsis,
+                ),
+                value: '3',
+              ),
+              DropdownMenuItem<String>(
+                child: Text('Egyedi'),
+                value: '',
+              ),
+            ],
+            onChanged: (String value) {
+              if (value != '') {
+                nrMonths = int.tryParse(value);
+                print(nrMonths);
+                _periodInspection = '$nrMonths hó';
+                _periodThoroughEx = '${nrMonths * 3} hó';
+                setClassNr(value);
+              } else {
+                _classNr = '';
+              }
+              setState(() {});
+            },
+            hint: Text('Üzemi csoportszám'),
+            value:
+                _classNr != '' ? _periodInspection.substring(0, 1) : _classNr,
+          ),
+          Divider(
+            thickness: 2,
+          ),
+        ],
       ),
-      style: TextStyle(fontSize: 20.0, color: Colors.white),
-      maxLines: null,
-      onChanged: (classNr) => _classNr = classNr,
     );
+  }
+
+  setClassNr(String value) {
+    switch (value) {
+      case '8':
+        setState(() {
+          _classNr = '1';
+        });
+        break; // The switch statement must be told to exit, or it will execute every case.
+      case '7':
+        setState(() {
+          _classNr = '2';
+        });
+        break;
+      case '6':
+        setState(() {
+          _classNr = '3';
+        });
+        break;
+      case '4':
+        setState(() {
+          _classNr = '4';
+        });
+        break;
+      case '3':
+        setState(() {
+          _classNr = '5';
+        });
+        break;
+      default:
+        print('choose a different number!');
+        setState(() {
+          _classNr = '';
+        });
+        break;
+    }
   }
 
   Widget _buildThoroughEx() {
-    return TextField(
-      keyboardType: TextInputType.text,
-      maxLength: 50,
-      controller: TextEditingController(text: _periodThoroughEx),
-      decoration: InputDecoration(
-        labelText: 'Fővizsgálat időköze',
-        labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-      ),
-      style: TextStyle(fontSize: 20.0, color: Colors.white),
-      maxLines: null,
-      onChanged: (periodThoroughEx) => _periodThoroughEx = periodThoroughEx,
-    );
+    return _classNr == ''
+        ? TextField(
+            keyboardType: TextInputType.text,
+            maxLength: 50,
+            controller: TextEditingController(text: _periodThoroughEx),
+            decoration: InputDecoration(
+              hintText: 'pl. 36 hó',
+              labelText: 'Fővizsgálat időköze',
+              labelStyle:
+                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+            ),
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
+            maxLines: null,
+            onChanged: (periodThoroughEx) =>
+                _periodThoroughEx = periodThoroughEx,
+          )
+        : Container(
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.only(top: 20.0, left: 8),
+              child: Text(
+                  'Fővizsgálat időköze: ${_periodThoroughEx != null ? _periodThoroughEx : nrMonths * 3}'),
+            ),
+          );
   }
 
   Widget _buildinspection() {
-    return TextField(
-      keyboardType: TextInputType.text,
-      maxLength: 50,
-      controller: TextEditingController(text: _periodInspection),
-      decoration: InputDecoration(
-        labelText: 'szerkezeti vizsgálatok időköze',
-        labelStyle: TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
-      ),
-      style: TextStyle(fontSize: 20.0, color: Colors.white),
-      maxLines: null,
-      onChanged: (periodInspection) => _periodInspection = periodInspection,
-    );
+    return _classNr == ''
+        ? TextField(
+            keyboardType: TextInputType.text,
+            maxLength: 50,
+            controller: TextEditingController(text: _periodInspection),
+            decoration: InputDecoration(
+              hintText: 'pl. 12 hó',
+              labelText: 'szerkezeti vizsgálatok időköze',
+              labelStyle:
+                  TextStyle(fontSize: 18.0, fontWeight: FontWeight.w500),
+            ),
+            style: TextStyle(fontSize: 20.0, color: Colors.white),
+            maxLines: null,
+            onChanged: (periodInspection) =>
+                _periodInspection = periodInspection,
+          )
+        : Container(
+            height: 40,
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Text(
+                  'Szerkezeti vizsgálatok időköze: ${_periodInspection != null ? _periodInspection : nrMonths}'),
+            ),
+          );
   }
 }
