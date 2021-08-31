@@ -4,6 +4,7 @@ import 'package:etar_en/app/home/logs/inspection_page.dart';
 import 'package:etar_en/app/home/logs/load_test_page.dart';
 import 'package:etar_en/app/home/logs/operation_data_page.dart';
 import 'package:etar_en/app/home/logs/parts_page.dart';
+import 'package:etar_en/app/home/logs/similar_safety_page.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -402,6 +403,14 @@ class _OpDocState extends State<OpDoc> {
                   database: widget.database,
                 ),
                 LoadTest(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                SimilarSafety(
                   controller: _controller,
                   snapshot: snapshot,
                   name: widget.name,

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:etar_en/app/home/logs/similar_safety_page.dart';
 import 'package:etar_en/app/models/assignees_model.dart';
 import 'package:etar_en/app/models/classification_model.dart';
 import 'package:etar_en/app/models/counter_model.dart';
@@ -13,6 +14,7 @@ import 'package:etar_en/app/models/operation_model.dart';
 import 'package:etar_en/app/models/parts_model.dart';
 import 'package:etar_en/app/models/product_model.dart';
 import 'package:etar_en/app/models/role_model.dart';
+import 'package:etar_en/app/models/similar_safety_model.dart';
 import 'package:etar_en/services/api_path.dart';
 import 'package:etar_en/services/firestore_service.dart';
 import 'package:flutter/material.dart';
@@ -50,6 +52,9 @@ abstract class Database {
 
   Stream<List<LoadTestModel>> loadTestStream(String company, String identifier);
 
+  Stream<List<SimilarSafetyModel>> similarSafetyStream(
+      String company, String identifier);
+
   Stream<List<PartsModel>> partsStream(String company, String identifier);
 
   Stream<List<LogModel>> logsStream(String company, String identifier);
@@ -73,8 +78,8 @@ abstract class Database {
   Future<void> setOperation(OperationModel operation, String company,
       String identifier, String entryId);
 
-  Future<void> setParts(
-      PartsModel parts, String company, String identifier, String entryId);
+  Future<void> setParts(PartsModel parts, String company, String identifier,
+      String entryId);
 
   Future<void> setElectricShock(ElectricShockModel electricShock,
       String company, String identifier, String entryId);
@@ -85,8 +90,12 @@ abstract class Database {
   Future<void> setLoadTest(LoadTestModel loadTest, String company,
       String identifier, String entryId);
 
-  Future<void> setLog(
-      LogModel log, String company, String identifier, String entryId);
+  Future<void> setSimilarSafety(SimilarSafetyModel similarSafety,
+      String company,
+      String identifier, String entryId);
+
+  Future<void> setLog(LogModel log, String company, String identifier,
+      String entryId);
 
   Future<void> assignRole(String uid, String company, String role);
 
@@ -322,6 +331,30 @@ class FirestoreDatabase implements Database {
         (snapshot) {
           final data = snapshot.data();
           return data != null ? LoadTestModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Future<void> setSimilarSafety(SimilarSafetyModel similarSafety,
+          String company, String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.similarSafety(company, identifier, entryId),
+        data: similarSafety.toMap(),
+      );
+
+  Stream<List<SimilarSafetyModel>> similarSafetyStream(
+      String company, String identifier) {
+    final path = APIPath.similarSafeties(company, identifier);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('cerDate', descending: true);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? SimilarSafetyModel.fromMap(data) : null;
         },
       ).toList(),
     );
