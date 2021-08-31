@@ -74,7 +74,10 @@ class _PartsPageState extends State<PartsPage> {
                     ),
                     Text(
                       'Cserélt fő darabok:',
-                      style: Theme.of(context).textTheme.overline,
+                      style: Theme.of(context)
+                          .textTheme
+                          .overline
+                          .copyWith(color: Colors.lightBlueAccent),
                     ),
                     SizedBox(
                       height: 24,

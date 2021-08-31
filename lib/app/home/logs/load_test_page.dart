@@ -1,11 +1,11 @@
-import 'package:etar_en/app/home/log_entries/electric_shock_entry_page.dart';
+import 'package:etar_en/app/home/log_entries/load_test_entry_page.dart';
 import 'package:etar_en/app/home/logs/empty_content.dart';
-import 'package:etar_en/app/models/electric_shock_model.dart';
+import 'package:etar_en/app/models/load_test_model.dart';
 import 'package:etar_en/services/database.dart';
 import 'package:flutter/material.dart';
 
-class ElectricShock extends StatefulWidget {
-  const ElectricShock({
+class LoadTest extends StatefulWidget {
+  const LoadTest({
     Key key,
     @required PageController controller,
     this.snapshot,
@@ -24,20 +24,20 @@ class ElectricShock extends StatefulWidget {
   final String company;
 
   @override
-  _ElectricShockState createState() => _ElectricShockState();
+  _LoadTestState createState() => _LoadTestState();
 }
 
-class _ElectricShockState extends State<ElectricShock> {
+class _LoadTestState extends State<LoadTest> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: StreamBuilder<List<ElectricShockModel>>(
-        stream: widget.database
-            .electricShockStream(widget.company, widget.productId),
+      body: StreamBuilder<List<LoadTestModel>>(
+        stream:
+            widget.database.loadTestStream(widget.company, widget.productId),
         builder: (context, snapshot) {
           if (snapshot.hasData) {
-            final electricShocks = snapshot.data;
-            if (electricShocks.isNotEmpty) {
+            final loadTests = snapshot.data;
+            if (loadTests.isNotEmpty) {
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -74,7 +74,7 @@ class _ElectricShockState extends State<ElectricShock> {
                       height: 12,
                     ),
                     Text(
-                      'Érintésvédelem, egyéb mérések:',
+                      'Terhelési próba:',
                       style: Theme.of(context)
                           .textTheme
                           .overline
@@ -90,34 +90,39 @@ class _ElectricShockState extends State<ElectricShock> {
                         separatorBuilder: (context, index) => Divider(
                           color: Colors.yellowAccent,
                         ),
-                        itemCount: electricShocks.length,
+                        itemCount: loadTests.length,
                         itemBuilder: (context, index) {
                           return Column(
                             children: [
                               ListTile(
-                                onTap: () => ElectricShockEntryPage.show(
+                                onTap: () => LoadTestEntryPage.show(
                                   context: context,
                                   database: widget.database,
                                   company: widget.company,
                                   productId: widget.productId,
                                   name: widget.name,
-                                  electricShock: electricShocks[index],
+                                  loadTest: loadTests[index],
                                 ),
                                 leading: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'jegyzőkönyv száma: ${electricShocks[index].cerId}',
+                                      'jegyzőkönyv száma: ${loadTests[index].cerId}',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
                                     Text(
-                                      'dátuma: ${electricShocks[index].cerDate.toString().substring(0, 10)}',
+                                      'jellege: ${loadTests[index].kind}',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
                                     Text(
-                                      'aláírója: ${electricShocks[index].cerName}',
+                                      'dátuma: ${loadTests[index].cerDate.toString().substring(0, 10)}',
+                                      style:
+                                          Theme.of(context).textTheme.overline,
+                                    ),
+                                    Text(
+                                      'aláírója: ${loadTests[index].cerName}',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
@@ -127,7 +132,7 @@ class _ElectricShockState extends State<ElectricShock> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      'Jkv. megállapítása:',
+                                      'próbateher súlya:',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
@@ -135,7 +140,7 @@ class _ElectricShockState extends State<ElectricShock> {
                                       child: Padding(
                                         padding: const EdgeInsets.all(6.0),
                                         child: Text(
-                                          '${electricShocks[index].statement}',
+                                          '${loadTests[index].load}',
                                           style: TextStyle(
                                               color: Colors.orange[300]),
                                         ),
@@ -147,12 +152,12 @@ class _ElectricShockState extends State<ElectricShock> {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                                     Text(
-                                      ' bejegyző: ${electricShocks[index].name}',
+                                      ' bejegyző: ${loadTests[index].name}',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
                                     Text(
-                                      ' kelt: ${electricShocks[index].date.toString().substring(0, 10)}',
+                                      ' kelt: ${loadTests[index].date.toString().substring(0, 10)}',
                                       style:
                                           Theme.of(context).textTheme.overline,
                                     ),
@@ -181,7 +186,7 @@ class _ElectricShockState extends State<ElectricShock> {
           Icons.add,
           color: Colors.white,
         ),
-        onPressed: () => ElectricShockEntryPage.show(
+        onPressed: () => LoadTestEntryPage.show(
             context: context,
             database: widget.database,
             company: widget.company,

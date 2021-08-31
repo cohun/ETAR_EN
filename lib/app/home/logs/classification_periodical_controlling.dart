@@ -75,10 +75,10 @@ class _ClassificationState extends State<Classification> {
                     ),
                     Text(
                       'Vizsgálati csoportszám és vizsgálatok időköze:',
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
-                          .overline,
+                          .overline
+                          .copyWith(color: Colors.lightBlueAccent),
                     ),
                     SizedBox(
                       height: 24,

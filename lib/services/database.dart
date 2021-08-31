@@ -6,6 +6,7 @@ import 'package:etar_en/app/models/electric_shock_model.dart';
 import 'package:etar_en/app/models/etar_inspection_model.dart';
 import 'package:etar_en/app/models/identifier_model.dart';
 import 'package:etar_en/app/models/inspection_model.dart';
+import 'package:etar_en/app/models/load_test_model.dart';
 import 'package:etar_en/app/models/log_model.dart';
 import 'package:etar_en/app/models/operand_model.dart';
 import 'package:etar_en/app/models/operation_model.dart';
@@ -47,6 +48,8 @@ abstract class Database {
   Stream<List<InspectionModel>> inspectionStream(
       String company, String identifier);
 
+  Stream<List<LoadTestModel>> loadTestStream(String company, String identifier);
+
   Stream<List<PartsModel>> partsStream(String company, String identifier);
 
   Stream<List<LogModel>> logsStream(String company, String identifier);
@@ -77,6 +80,9 @@ abstract class Database {
       String company, String identifier, String entryId);
 
   Future<void> setInspection(InspectionModel inspection, String company,
+      String identifier, String entryId);
+
+  Future<void> setLoadTest(LoadTestModel loadTest, String company,
       String identifier, String entryId);
 
   Future<void> setLog(
@@ -292,6 +298,30 @@ class FirestoreDatabase implements Database {
         (snapshot) {
           final data = snapshot.data();
           return data != null ? InspectionModel.fromMap(data) : null;
+        },
+      ).toList(),
+    );
+  }
+
+  Future<void> setLoadTest(LoadTestModel loadTest, String company,
+          String identifier, String entryId) async =>
+      await _service.setData(
+        path: APIPath.loadTest(company, identifier, entryId),
+        data: loadTest.toMap(),
+      );
+
+  Stream<List<LoadTestModel>> loadTestStream(
+      String company, String identifier) {
+    final path = APIPath.loadTests(company, identifier);
+    final reference = FirebaseFirestore.instance
+        .collection(path)
+        .orderBy('cerDate', descending: true);
+    final snapshots = reference.snapshots();
+    return snapshots.map(
+      (snapshot) => snapshot.docs.map(
+        (snapshot) {
+          final data = snapshot.data();
+          return data != null ? LoadTestModel.fromMap(data) : null;
         },
       ).toList(),
     );

@@ -54,6 +54,12 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
   String _periodThoroughEx;
   String _periodInspection;
   int nrMonths;
+  final SnackBar _snackBar = SnackBar(
+      content: Text(
+    'Adatok feltöltve',
+    style: TextStyle(color: Colors.green, fontSize: 20),
+    textAlign: TextAlign.center,
+  ));
 
   @override
   void initState() {
@@ -94,6 +100,7 @@ class _ClassificationEntryPageState extends State<ClassificationEntryPage> {
       final entry = _entryFromState();
       await widget.database
           .setClassification(entry, widget.company, widget.productId, entry.id);
+      ScaffoldMessenger.of(context).showSnackBar(_snackBar);
       Navigator.of(context).pop();
     } on FirebaseException catch (e) {
       showExceptionAlertDialog(

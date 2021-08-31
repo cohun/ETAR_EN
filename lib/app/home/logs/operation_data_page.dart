@@ -75,10 +75,10 @@ class _OperationState extends State<Operation> {
                     ),
                     Text(
                       'Üzemeltetésre vonatkozó adatok:',
-                      style: Theme
-                          .of(context)
+                      style: Theme.of(context)
                           .textTheme
-                          .overline,
+                          .overline
+                          .copyWith(color: Colors.lightBlueAccent),
                     ),
                     SizedBox(
                       height: 24,

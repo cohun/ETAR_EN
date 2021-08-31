@@ -102,29 +102,32 @@ class _SecondPageState extends State<SecondPage> {
                             'Fő adatok',
                             style: TextStyle(color: Colors.amber),
                           )),
-                    ],
-                  ),
-                  Divider(
-                    thickness: 2,
-                  ),
-                  SizedBox(
-                    height: 12,
-                  ),
-                  Text(
-                    'Alábbi személyek jogosultak naplóbejegyzésre:',
-                    style: Theme.of(context).textTheme.overline,
-                  ),
-                  SizedBox(
-                    height: 24,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        width: MediaQuery.of(context).size.width * 0.4,
-                        height: 40,
-                        child: Card(
-                          color: Colors.green[200],
+                          ],
+                        ),
+                        Divider(
+                          thickness: 2,
+                        ),
+                        SizedBox(
+                          height: 12,
+                        ),
+                        Text(
+                          'Alábbi személyek jogosultak naplóbejegyzésre:',
+                          style: Theme.of(context)
+                              .textTheme
+                              .overline
+                              .copyWith(color: Colors.lightBlueAccent),
+                        ),
+                        SizedBox(
+                          height: 24,
+                        ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Container(
+                              width: MediaQuery.of(context).size.width * 0.4,
+                              height: 40,
+                              child: Card(
+                                color: Colors.green[200],
                           child: Padding(
                             padding: const EdgeInsets.all(8.0),
                             child: SingleChildScrollView(

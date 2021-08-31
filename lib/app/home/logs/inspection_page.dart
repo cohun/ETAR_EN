@@ -75,7 +75,10 @@ class _InspectionState extends State<Inspection> {
                     ),
                     Text(
                       'Időszakos vizsgálatok:',
-                      style: Theme.of(context).textTheme.overline,
+                      style: Theme.of(context)
+                          .textTheme
+                          .overline
+                          .copyWith(color: Colors.lightBlueAccent),
                     ),
                     SizedBox(
                       height: 24,

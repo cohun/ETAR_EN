@@ -1,6 +1,7 @@
 import 'package:etar_en/app/home/logs/classification_periodical_controlling.dart';
 import 'package:etar_en/app/home/logs/electric_shock_page.dart';
 import 'package:etar_en/app/home/logs/inspection_page.dart';
+import 'package:etar_en/app/home/logs/load_test_page.dart';
 import 'package:etar_en/app/home/logs/operation_data_page.dart';
 import 'package:etar_en/app/home/logs/parts_page.dart';
 import 'package:etar_en/services/database.dart';
@@ -47,7 +48,8 @@ class _OpDocState extends State<OpDoc> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        iconTheme: IconThemeData(color: Colors.black87),
+        centerTitle: true,
+        iconTheme: IconThemeData(color: Colors.white70),
         backgroundColor: Colors.blue[900],
         title: Text(
           'Üzemviteli dokumentáció',
@@ -392,6 +394,14 @@ class _OpDocState extends State<OpDoc> {
                   database: widget.database,
                 ),
                 Inspection(
+                  controller: _controller,
+                  snapshot: snapshot,
+                  name: widget.name,
+                  company: widget.company,
+                  productId: widget.productId,
+                  database: widget.database,
+                ),
+                LoadTest(
                   controller: _controller,
                   snapshot: snapshot,
                   name: widget.name,

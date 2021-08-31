@@ -76,7 +76,10 @@ class _ShiftInspectionState extends State<ShiftInspection> {
                     ),
                     Text(
                       'Napló bejegyzések:',
-                      style: Theme.of(context).textTheme.overline,
+                      style: Theme.of(context)
+                          .textTheme
+                          .overline
+                          .copyWith(color: Colors.lightBlueAccent),
                     ),
                     SizedBox(
                       height: 24,
